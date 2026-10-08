@@ -1,0 +1,2298 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WBCMS | Material & Inventory</title>
+
+    <!-- Google Fonts: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap Icons & Font Awesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Unified Premium Theme -->
+    <link rel="stylesheet" href="/css/premium-theme.css">
+    <link rel="stylesheet" href="/css/unified-pages.css">
+    <script src="/js/theme-init.js"></script>
+
+    <style>
+        /* =====================================================
+           PROJECT DASHBOARD THEME: INVENTORY & RIGHT PANEL
+        ====================================================== */
+        .inventory-layout {
+            display: grid !important;
+            grid-template-columns: minmax(0, 1fr) 350px !important;
+            gap: 24px !important;
+            align-items: start !important;
+            width: 100% !important;
+            min-width: 0 !important;
+            margin-bottom: 24px !important;
+        }
+
+        @media (max-width: 1200px) {
+            .inventory-layout {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        .inventory-card {
+            background: rgba(255, 255, 255, 0.94) !important;
+            backdrop-filter: blur(16px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+            border: 1px solid rgba(226, 232, 240, 0.9) !important;
+            border-radius: 20px !important;
+            padding: 24px 26px !important;
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.035), 0 1px 3px rgba(15, 23, 42, 0.02) !important;
+            min-width: 0 !important;
+        }
+
+        .right-panel {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 20px !important;
+            min-width: 0 !important;
+        }
+
+        .side-card {
+            background: rgba(255, 255, 255, 0.94) !important;
+            backdrop-filter: blur(16px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+            border: 1px solid rgba(226, 232, 240, 0.9) !important;
+            border-radius: 20px !important;
+            padding: 22px 24px !important;
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.035), 0 1px 3px rgba(15, 23, 42, 0.02) !important;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+
+        .side-card:hover {
+            box-shadow: 0 8px 30px rgba(15, 23, 42, 0.06) !important;
+            border-color: rgba(203, 213, 225, 0.95) !important;
+        }
+
+        .side-card-header {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            margin-bottom: 16px !important;
+            padding-bottom: 12px !important;
+            border-bottom: 1px solid #f1f5f9 !important;
+        }
+
+        .side-card-badge {
+            font-size: 10px !important;
+            font-weight: 800 !important;
+            letter-spacing: 1.2px !important;
+            color: #1a56db !important;
+            text-transform: uppercase !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+            margin-bottom: 4px !important;
+        }
+
+        .side-card-header h3 {
+            font-family: 'Outfit', sans-serif !important;
+            font-size: 17px !important;
+            font-weight: 800 !important;
+            color: #0f172a !important;
+            margin: 0 !important;
+            letter-spacing: -0.01em !important;
+        }
+
+        .side-card-btn {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+            padding: 6px 14px !important;
+            border-radius: 999px !important;
+            font-size: 11.5px !important;
+            font-weight: 700 !important;
+            background: #eff6ff !important;
+            color: #1a56db !important;
+            border: 1px solid #bfdbfe !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+            text-decoration: none !important;
+            box-shadow: 0 1px 2px rgba(26, 86, 219, 0.05) !important;
+        }
+
+        .side-card-btn:hover {
+            background: #1a56db !important;
+            color: #ffffff !important;
+            border-color: #1a56db !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 12px rgba(26, 86, 219, 0.25) !important;
+        }
+
+        .side-card-btn i {
+            font-size: 11px !important;
+            transition: transform 0.2s ease !important;
+        }
+
+        .side-card-btn:hover i {
+            transform: translateX(2px) !important;
+        }
+
+        /* Stock Alert Items */
+        .alert-list {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 12px !important;
+        }
+
+        .stock-alert-item {
+            background: rgba(248, 250, 252, 0.9) !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 14px !important;
+            padding: 13px 15px !important;
+            display: flex !important;
+            gap: 13px !important;
+            align-items: flex-start !important;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            cursor: pointer !important;
+        }
+
+        .stock-alert-item:hover {
+            background: #ffffff !important;
+            border-color: #cbd5e1 !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06) !important;
+        }
+
+        .stock-alert-item.warning {
+            border-left: 4px solid #ea580c !important;
+        }
+
+        .stock-alert-item.online {
+            border-left: 4px solid #10b981 !important;
+        }
+
+        .stock-alert-item.info {
+            border-left: 4px solid #1a56db !important;
+        }
+
+        .alert-icon-box {
+            width: 38px !important;
+            height: 38px !important;
+            border-radius: 11px !important;
+            display: grid !important;
+            place-items: center !important;
+            font-size: 17px !important;
+            flex-shrink: 0 !important;
+            transition: transform 0.2s ease !important;
+        }
+
+        .stock-alert-item:hover .alert-icon-box {
+            transform: scale(1.08) !important;
+        }
+
+        .alert-icon-box.warning {
+            background: rgba(234, 88, 12, 0.12) !important;
+            color: #ea580c !important;
+            border: 1px solid rgba(234, 88, 12, 0.2) !important;
+        }
+
+        .alert-icon-box.online {
+            background: rgba(16, 185, 129, 0.12) !important;
+            color: #10b981 !important;
+            border: 1px solid rgba(16, 185, 129, 0.2) !important;
+        }
+
+        .alert-icon-box.info {
+            background: rgba(26, 86, 219, 0.12) !important;
+            color: #1a56db !important;
+            border: 1px solid rgba(26, 86, 219, 0.2) !important;
+        }
+
+        .alert-item-content {
+            flex: 1 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 3px !important;
+            min-width: 0 !important;
+        }
+
+        .alert-item-top {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            gap: 8px !important;
+        }
+
+        .alert-item-top strong {
+            font-family: 'Outfit', sans-serif !important;
+            font-size: 13.5px !important;
+            font-weight: 700 !important;
+            color: #0f172a !important;
+        }
+
+        .alert-pill {
+            font-size: 10.5px !important;
+            font-weight: 700 !important;
+            padding: 2.5px 8px !important;
+            border-radius: 999px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 4px !important;
+            white-space: nowrap !important;
+        }
+
+        .alert-pill.warning {
+            background: #fff7ed !important;
+            color: #c2410c !important;
+            border: 1px solid #ffedd5 !important;
+        }
+
+        .alert-pill.online {
+            background: #ecfdf5 !important;
+            color: #047857 !important;
+            border: 1px solid #d1fae5 !important;
+        }
+
+        .alert-pill.info {
+            background: #eff6ff !important;
+            color: #1d4ed8 !important;
+            border: 1px solid #dbeafe !important;
+        }
+
+        .live-dot-mini {
+            width: 6px !important;
+            height: 6px !important;
+            border-radius: 50% !important;
+            background: #10b981 !important;
+            display: inline-block !important;
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3) !important;
+            animation: livePulseDot 2s infinite ease-in-out !important;
+        }
+
+        .alert-item-content span {
+            font-size: 12px !important;
+            color: #475569 !important;
+            line-height: 1.4 !important;
+        }
+
+        .alert-item-content small {
+            font-size: 11px !important;
+            color: #64748b !important;
+            font-weight: 500 !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 5px !important;
+            margin-top: 2px !important;
+        }
+
+        /* Material Categories */
+        .category-list {
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 10px !important;
+        }
+
+        .category-item {
+            background: rgba(248, 250, 252, 0.85) !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 12px !important;
+            padding: 10px 12px !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 10px !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+            user-select: none !important;
+        }
+
+        .category-item:hover {
+            background: #ffffff !important;
+            border-color: #cbd5e1 !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05) !important;
+        }
+
+        .category-color {
+            width: 32px !important;
+            height: 32px !important;
+            border-radius: 9px !important;
+            display: grid !important;
+            place-items: center !important;
+            font-size: 15px !important;
+            flex-shrink: 0 !important;
+        }
+
+        .category-color.orange-dot {
+            background: rgba(234, 88, 12, 0.12) !important;
+            color: #ea580c !important;
+            border: 1px solid rgba(234, 88, 12, 0.2) !important;
+        }
+
+        .category-color.purple-dot {
+            background: rgba(147, 51, 234, 0.12) !important;
+            color: #9333ea !important;
+            border: 1px solid rgba(147, 51, 234, 0.2) !important;
+        }
+
+        .category-color.yellow-dot {
+            background: rgba(234, 179, 8, 0.12) !important;
+            color: #ca8a04 !important;
+            border: 1px solid rgba(234, 179, 8, 0.2) !important;
+        }
+
+        .category-color.blue-dot {
+            background: rgba(2, 132, 199, 0.12) !important;
+            color: #0284c7 !important;
+            border: 1px solid rgba(2, 132, 199, 0.2) !important;
+        }
+
+        .category-color.green-dot {
+            background: rgba(16, 185, 129, 0.12) !important;
+            color: #10b981 !important;
+            border: 1px solid rgba(16, 185, 129, 0.2) !important;
+        }
+
+        .category-item span {
+            font-family: 'Outfit', sans-serif !important;
+            font-size: 12.5px !important;
+            font-weight: 700 !important;
+            color: #0f172a !important;
+        }
+
+        /* System Activity / Info */
+        .activity-list {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 10px !important;
+        }
+
+        .activity-item {
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px !important;
+            padding: 12px 14px !important;
+            background: rgba(248, 250, 252, 0.85) !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 12px !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .activity-item:hover {
+            background: #ffffff !important;
+            border-color: #cbd5e1 !important;
+            transform: translateX(3px) !important;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05) !important;
+        }
+
+        .activity-icon {
+            width: 36px !important;
+            height: 36px !important;
+            border-radius: 10px !important;
+            display: grid !important;
+            place-items: center !important;
+            font-size: 17px !important;
+            flex-shrink: 0 !important;
+        }
+
+        .activity-icon.received {
+            background: rgba(14, 165, 233, 0.12) !important;
+            color: #0284c7 !important;
+            border: 1px solid rgba(14, 165, 233, 0.25) !important;
+        }
+
+        .activity-icon.added {
+            background: rgba(234, 88, 12, 0.12) !important;
+            color: #ea580c !important;
+            border: 1px solid rgba(234, 88, 12, 0.25) !important;
+        }
+
+        .activity-icon.adjusted {
+            background: rgba(16, 185, 129, 0.12) !important;
+            color: #10b981 !important;
+            border: 1px solid rgba(16, 185, 129, 0.25) !important;
+        }
+
+        .activity-item > div {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 2px !important;
+            min-width: 0 !important;
+        }
+
+        .activity-item strong {
+            font-family: 'Outfit', sans-serif !important;
+            font-size: 13px !important;
+            font-weight: 700 !important;
+            color: #0f172a !important;
+        }
+
+        .activity-item span {
+            font-size: 11.5px !important;
+            color: #64748b !important;
+        }
+
+        /* Bottom Summary Grid */
+        .summary-grid {
+            display: grid !important;
+            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+            gap: 20px !important;
+            margin-top: 28px !important;
+            margin-bottom: 24px !important;
+            width: 100% !important;
+        }
+
+        @media (max-width: 992px) {
+            .summary-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        .summary-card {
+            background: rgba(255, 255, 255, 0.94) !important;
+            backdrop-filter: blur(16px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+            border: 1px solid rgba(226, 232, 240, 0.9) !important;
+            border-radius: 18px !important;
+            padding: 22px 24px !important;
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            gap: 18px !important;
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.035), 0 1px 3px rgba(15, 23, 42, 0.02) !important;
+            position: relative !important;
+            overflow: hidden !important;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+
+        .summary-card::before {
+            content: "" !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            bottom: 0 !important;
+            width: 4px !important;
+            border-radius: 4px 0 0 4px !important;
+        }
+
+        .summary-card.card-cyan::before,
+        .summary-card:first-child::before {
+            background: linear-gradient(180deg, #0284c7, #38bdf8) !important;
+        }
+
+        .summary-card.card-orange::before,
+        .summary-card:nth-child(2)::before {
+            background: linear-gradient(180deg, #ea580c, #ff7a1a) !important;
+        }
+
+        .summary-card.card-purple::before,
+        .summary-card:nth-child(3)::before {
+            background: linear-gradient(180deg, #7c3aed, #a855f7) !important;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-3px) !important;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08) !important;
+            border-color: rgba(203, 213, 225, 0.9) !important;
+        }
+
+        .summary-icon {
+            width: 52px !important;
+            height: 52px !important;
+            min-width: 52px !important;
+            border-radius: 14px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 22px !important;
+            transition: transform 0.25s ease !important;
+            flex-shrink: 0 !important;
+        }
+
+        .summary-card:hover .summary-icon {
+            transform: scale(1.08) !important;
+        }
+
+        .summary-icon.icon-cyan,
+        .summary-card.card-cyan .summary-icon,
+        .summary-card:first-child .summary-icon {
+            background: rgba(2, 132, 199, 0.12) !important;
+            color: #0284c7 !important;
+            border: 1px solid rgba(2, 132, 199, 0.25) !important;
+        }
+
+        .summary-icon.icon-orange,
+        .summary-card.card-orange .summary-icon,
+        .summary-card:nth-child(2) .summary-icon {
+            background: rgba(234, 88, 12, 0.12) !important;
+            color: #ea580c !important;
+            border: 1px solid rgba(234, 88, 12, 0.25) !important;
+        }
+
+        .summary-icon.icon-purple,
+        .summary-card.card-purple .summary-icon,
+        .summary-card:nth-child(3) .summary-icon {
+            background: rgba(124, 58, 237, 0.12) !important;
+            color: #7c3aed !important;
+            border: 1px solid rgba(124, 58, 237, 0.25) !important;
+        }
+
+        .summary-info {
+            flex: 1 !important;
+            min-width: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 4px !important;
+        }
+
+        .summary-tag {
+            font-size: 10px !important;
+            font-weight: 800 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1.1px !important;
+            display: block !important;
+        }
+
+        .card-cyan .summary-tag,
+        .summary-card:first-child .summary-tag {
+            color: #0284c7 !important;
+        }
+
+        .card-orange .summary-tag,
+        .summary-card:nth-child(2) .summary-tag {
+            color: #ea580c !important;
+        }
+
+        .card-purple .summary-tag,
+        .summary-card:nth-child(3) .summary-tag {
+            color: #7c3aed !important;
+        }
+
+        .summary-card h2,
+        .summary-card h3 {
+            font-family: 'Outfit', sans-serif !important;
+            margin: 0 !important;
+            font-size: 18px !important;
+            font-weight: 800 !important;
+            color: #0f172a !important;
+            letter-spacing: -0.01em !important;
+            line-height: 1.2 !important;
+        }
+
+        .summary-subtext {
+            font-size: 12px !important;
+            color: #64748b !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 7px !important;
+            margin-top: 2px !important;
+            font-weight: 500 !important;
+        }
+
+        .live-pulse-dot {
+            width: 8px !important;
+            height: 8px !important;
+            border-radius: 50% !important;
+            background: #10b981 !important;
+            display: inline-block !important;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25) !important;
+            animation: livePulseDot 2s infinite ease-in-out !important;
+        }
+
+        .summary-link {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+            padding: 6px 14px !important;
+            margin-top: 4px !important;
+            border-radius: 999px !important;
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            background: #f5f3ff !important;
+            color: #7c3aed !important;
+            border: 1px solid #ddd6fe !important;
+            cursor: pointer !important;
+            text-decoration: none !important;
+            width: fit-content !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .summary-link:hover {
+            background: #7c3aed !important;
+            color: #ffffff !important;
+            border-color: #7c3aed !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25) !important;
+        }
+
+        .summary-link i {
+            font-size: 11px !important;
+            transition: transform 0.2s ease !important;
+        }
+
+        .summary-link:hover i {
+            transform: translateX(3px) !important;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Ambient Light Backdrop -->
+<div class="dashboard-backdrop">
+    <div class="dashboard-backdrop-img"></div>
+    <div class="dashboard-backdrop-overlay"></div>
+</div>
+
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside
+        class="sidebar"
+        id="sidebar">
+
+
+    <div class="sidebar-brand">
+
+        <div class="brand-logo">
+
+            <i class="bi bi-buildings-fill"></i>
+
+        </div>
+
+        <div>
+
+            <h2>
+                WBCMS
+            </h2>
+
+            <span>
+                CONSTRUCTION
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <nav class="sidebar-navigation">
+
+        <p class="nav-title">
+            MAIN MENU
+        </p>
+
+
+        <a
+                href="/dashboard.html"
+                class="nav-item">
+
+            <i class="bi bi-grid-1x2-fill"></i>
+
+            <span>
+                Dashboard
+            </span>
+
+        </a>
+
+
+        <a
+                href="/material-inventory.html"
+                class="nav-item active">
+
+            <i class="bi bi-box-seam-fill"></i>
+
+            <span>
+                Material & Inventory
+            </span>
+
+        </a>
+
+
+        <a
+                href="/projects.html"
+                class="nav-item">
+
+            <i class="bi bi-building"></i>
+
+            <span>
+                Projects
+            </span>
+
+        </a>
+
+
+        <a
+                href="/tasks.html"
+                class="nav-item">
+
+            <i class="bi bi-clipboard-check"></i>
+
+            <span>
+                Tasks
+            </span>
+
+        </a>
+
+
+        <p class="nav-title management-title">
+            MANAGEMENT
+        </p>
+
+
+        <a
+                href="/reports.html"
+                class="nav-item">
+
+            <i class="bi bi-bar-chart-line"></i>
+
+            <span>
+                Reports
+            </span>
+
+        </a>
+
+
+        <a
+                href="/suppliers.html"
+                class="nav-item">
+
+            <i class="bi bi-truck"></i>
+
+            <span>
+                Suppliers
+            </span>
+
+        </a>
+
+
+        <a
+                href="/users.html"
+                class="nav-item">
+
+            <i class="bi bi-people-fill"></i>
+
+            <span>
+                Users
+            </span>
+
+        </a>
+
+
+        <a
+                href="/roles.html"
+                class="nav-item">
+
+            <i class="bi bi-shield-lock-fill"></i>
+
+            <span>
+                Roles & Access
+            </span>
+
+        </a>
+
+
+        <a
+                href="/settings.html"
+                class="nav-item">
+
+            <i class="bi bi-gear-fill"></i>
+
+            <span>
+                Settings
+            </span>
+
+        </a>
+
+    </nav>
+
+
+    <div class="sidebar-footer">
+
+        <div class="sidebar-version">
+
+            WBCMS v1.0
+
+            <span>
+                Construction Management System
+            </span>
+
+        </div>
+
+
+        <button
+                class="logout-button"
+                onclick="logout()">
+
+            <i class="bi bi-box-arrow-left"></i>
+
+            Logout
+
+        </button>
+
+    </div>
+
+</aside>
+
+
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
+<main class="main-content">
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="top-header">
+
+        <div class="header-left">
+
+            <button
+                    class="mobile-menu"
+                    onclick="toggleSidebar()"
+                    aria-label="Toggle navigation">
+                <i class="bi bi-list"></i>
+            </button>
+
+            <div class="header-module-badge">
+                <div class="module-icon">
+                    <i class="bi bi-boxes"></i>
+                </div>
+                <div class="module-text">
+                    <span class="module-title">Inventory Console</span>
+                    <span class="module-sub"><span class="live-pulse-dot"></span> Live DB</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="header-center">
+            <div class="header-admin-nav">
+                <button class="hdr-btn primary" onclick="openMaterialModal()" title="Add New Material to Inventory">
+                    <i class="bi bi-plus-circle-fill"></i>
+                    <span>Add Material</span>
+                </button>
+                <button class="hdr-btn" onclick="openStockModal('receive')" title="Receive Inbound Stock">
+                    <i class="bi bi-box-arrow-in-down"></i>
+                    <span>Receive</span>
+                </button>
+                <button class="hdr-btn" onclick="openStockModal('issue')" title="Issue Outbound Stock">
+                    <i class="bi bi-box-arrow-up"></i>
+                    <span>Issue</span>
+                </button>
+                <a href="/material-requests.html" class="hdr-btn" title="View Material Requisitions">
+                    <i class="bi bi-clipboard2-check-fill"></i>
+                    <span>Requests</span>
+                </a>
+                <a href="/suppliers.html" class="hdr-btn" title="Suppliers Directory">
+                    <i class="bi bi-truck"></i>
+                    <span>Suppliers</span>
+                </a>
+                <button class="hdr-btn" onclick="generateReport()" title="Export Inventory Audit Report">
+                    <i class="bi bi-file-earmark-arrow-down-fill"></i>
+                    <span>Export</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="header-right">
+
+            <button
+                    class="notification-button"
+                    title="Notifications">
+                <i class="bi bi-bell"></i>
+                <span class="notification-badge">2</span>
+            </button>
+
+            <div class="header-separator"></div>
+
+            <div class="profile" onclick="this.classList.toggle('open')" id="profileCard">
+
+                <div class="profile-avatar">
+                    ST
+                </div>
+
+                <div class="profile-details">
+                    <strong id="profileName">
+                        Staff User
+                    </strong>
+                    <span id="profileRole">
+                        Staff
+                    </span>
+                </div>
+
+                <i class="bi bi-chevron-down"></i>
+
+                <div class="profile-dropdown-menu">
+                    <div class="dropdown-user-header">
+                        <strong id="dropdownUserName">Staff User</strong>
+                        <span>Procurement & Inventory</span>
+                    </div>
+                    <a href="/suppliers.html" class="dropdown-item">
+                        <i class="bi bi-truck"></i>
+                        <span>Suppliers</span>
+                    </a>
+                    <a href="/reports.html" class="dropdown-item">
+                        <i class="bi bi-file-earmark-text"></i>
+                        <span>Reports</span>
+                    </a>
+                    <a href="/users.html" class="dropdown-item">
+                        <i class="bi bi-people"></i>
+                        <span>User Management</span>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item logout" onclick="logout()">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Sign Out</span>
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         PAGE CONTENT
+    ====================================================== -->
+
+    <section class="page-content">
+
+
+        <!-- HERO -->
+
+        <div class="hero-section">
+
+            <div class="hero-overlay"></div>
+
+
+            <div class="hero-content">
+
+                <span class="hero-label">
+                    MATERIAL & INVENTORY
+                </span>
+
+
+                <h1>
+
+                    Manage Materials.<br>
+
+                    <span>
+                        Build Better.
+                    </span>
+
+                </h1>
+
+
+                <p>
+
+                    Track inventory, manage supplies,
+                    reduce waste and keep your
+                    construction projects on schedule.
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             STATISTICS
+        ================================================== -->
+
+        <section class="statistics-grid">
+
+
+            <!-- TOTAL -->
+
+            <div class="stat-card">
+
+                <div class="stat-icon orange">
+
+                    <i class="bi bi-box-seam"></i>
+
+                </div>
+
+
+                <div class="stat-content">
+
+                    <span>
+                        Total Materials
+                    </span>
+
+
+                    <h2 id="totalMaterials">
+                        0
+                    </h2>
+
+
+                    <small class="positive">
+
+                        <i class="bi bi-database-check"></i>
+
+                        From database
+
+                    </small>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- IN STOCK -->
+
+            <div class="stat-card">
+
+                <div class="stat-icon green">
+
+                    <i class="bi bi-boxes"></i>
+
+                </div>
+
+
+                <div class="stat-content">
+
+                    <span>
+                        In Stock
+                    </span>
+
+
+                    <h2 id="inStock">
+                        0
+                    </h2>
+
+
+                    <small class="positive">
+
+                        <i class="bi bi-check-circle"></i>
+
+                        Available
+
+                    </small>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- LOW STOCK -->
+
+            <div class="stat-card">
+
+                <div class="stat-icon warning">
+
+                    <i class="bi bi-exclamation-triangle"></i>
+
+                </div>
+
+
+                <div class="stat-content">
+
+                    <span>
+                        Low Stock
+                    </span>
+
+
+                    <h2 id="lowStock">
+                        0
+                    </h2>
+
+
+                    <small class="negative">
+
+                        <i class="bi bi-exclamation-circle"></i>
+
+                        Needs attention
+
+                    </small>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- OUT OF STOCK -->
+
+            <div class="stat-card">
+
+                <div class="stat-icon blue">
+
+                    <i class="bi bi-cart-check"></i>
+
+                </div>
+
+
+                <div class="stat-content">
+
+                    <span>
+                        Out of Stock
+                    </span>
+
+
+                    <h2 id="pendingOrders">
+                        0
+                    </h2>
+
+
+                    <small class="neutral">
+
+                        <i class="bi bi-clock"></i>
+
+                        Needs replenishment
+
+                    </small>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             QUICK ACTIONS
+        ================================================== -->
+
+        <section class="quick-actions">
+
+
+            <button
+                    class="action-button primary"
+                    onclick="openMaterialModal()">
+
+                <i class="bi bi-plus-lg"></i>
+
+                <span>
+                    Add Material
+                </span>
+
+            </button>
+
+
+            <button
+                    class="action-button"
+                    onclick="openStockModal('receive')">
+
+                <i class="bi bi-box-arrow-in-down"></i>
+
+                <span>
+                    Receive Stock
+                </span>
+
+            </button>
+
+
+            <button
+                    class="action-button"
+                    onclick="openStockModal('issue')">
+
+                <i class="bi bi-box-arrow-up"></i>
+
+                <span>
+                    Issue Stock
+                </span>
+
+            </button>
+
+
+            <button
+                    class="action-button"
+                    onclick="openStockModal('adjust')">
+
+                <i class="bi bi-arrow-left-right"></i>
+
+                <span>
+                    Stock Adjustment
+                </span>
+
+            </button>
+
+
+            <button
+                    class="action-button"
+                    onclick="generateReport()">
+
+                <i class="bi bi-file-earmark-bar-graph"></i>
+
+                <span>
+                    Generate Report
+                </span>
+
+            </button>
+
+        </section>
+
+
+
+        <!-- =================================================
+             INVENTORY LAYOUT
+        ================================================== -->
+
+        <div class="inventory-layout">
+
+
+            <!-- =================================================
+                 INVENTORY TABLE
+            ================================================== -->
+
+            <section class="inventory-card">
+
+
+                <div class="inventory-header">
+
+                    <div>
+
+                        <span class="section-label">
+                            INVENTORY CONTROL
+                        </span>
+
+
+                        <h2>
+                            Inventory Overview
+                        </h2>
+
+
+                        <p>
+                            Manage your materials and monitor stock levels.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- TABS -->
+
+                <!-- TABS (5 FILTER OPTIONS) -->
+                <div class="inventory-tabs">
+
+                    <button class="tab-button active" onclick="changeTab('all', this)">
+                        All Materials
+                        <span id="allCount">0</span>
+                    </button>
+
+                    <button class="tab-button" onclick="changeTab('in', this)">
+                        In Stock
+                        <span id="inStockCount">0</span>
+                    </button>
+
+                    <button class="tab-button" onclick="changeTab('low', this)">
+                        Low Stock
+                        <span id="lowCount">0</span>
+                    </button>
+
+                    <button class="tab-button" onclick="changeTab('out', this)">
+                        Out of Stock
+                        <span id="outCount">0</span>
+                    </button>
+
+                    <button class="tab-button" onclick="changeTab('recent', this)">
+                        Recently Added
+                    </button>
+
+                </div>
+
+                <!-- FILTERS (BEAUTIFUL UNIFIED SEARCH & FILTERS) -->
+                <div class="filter-area">
+
+                    <div class="material-search">
+                        <i class="bi bi-search search-icon"></i>
+                        <input type="text"
+                               id="materialSearch"
+                               placeholder="Search material name, code or supplier..."
+                               autocomplete="off">
+                    </div>
+
+                    <div class="filter-select-wrapper">
+                        <i class="bi bi-grid filter-select-icon"></i>
+                        <select id="categoryFilter">
+                            <option value="">All Categories</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-select-wrapper">
+                        <i class="bi bi-funnel filter-select-icon"></i>
+                        <select id="statusFilter">
+                            <option value="">All Status</option>
+                            <option value="In Stock">In Stock</option>
+                            <option value="Low Stock">Low Stock</option>
+                            <option value="Out of Stock">Out of Stock</option>
+                        </select>
+                    </div>
+
+                    <button class="reset-button"
+                            onclick="resetFilters()"
+                            title="Reset all search & filters">
+                        <i class="bi bi-arrow-clockwise"></i>
+                        <span>Reset</span>
+                    </button>
+
+                </div>
+
+
+
+                <!-- TABLE -->
+
+                <div class="table-container">
+
+
+                    <table>
+
+                        <thead>
+
+                        <tr>
+
+                            <th>
+                                #
+                            </th>
+
+                            <th>
+                                Material Code
+                            </th>
+
+                            <th>
+                                Material Name
+                            </th>
+
+                            <th>
+                                Category
+                            </th>
+
+                            <th>
+                                Supplier
+                            </th>
+
+                            <th>
+                                Stock Qty
+                            </th>
+
+                            <th>
+                                Unit
+                            </th>
+
+                            <th>
+                                Unit Price ($)
+                            </th>
+
+                            <th>
+                                Stock Value ($)
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                        </thead>
+
+
+                        <tbody id="materialTableBody">
+                        </tbody>
+
+                    </table>
+
+
+
+                    <!-- EMPTY STATE -->
+
+                    <div
+                            class="empty-table"
+                            id="emptyTable"
+                            style="display:none;">
+
+                        <i class="bi bi-search"></i>
+
+
+                        <h3>
+                            No materials found
+                        </h3>
+
+
+                        <p>
+                            Try changing your search or filter.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- TABLE FOOTER -->
+
+                <div class="table-footer">
+
+
+                    <span id="tableResult">
+
+                        Loading materials...
+
+                    </span>
+
+
+                    <div class="pagination">
+
+                        <button
+                                disabled
+                                type="button">
+
+                            <i class="bi bi-chevron-left"></i>
+
+                        </button>
+
+
+                        <span class="page-number active">
+                            1
+                        </span>
+
+
+                        <button
+                                disabled
+                                type="button">
+
+                            <i class="bi bi-chevron-right"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 RIGHT PANEL
+            ================================================== -->
+
+            <aside class="right-panel">
+
+
+                <!-- STOCK ALERTS (REDESIGNED & PROFESSIONAL) -->
+                <section class="side-card alerts-side-card">
+
+                    <div class="side-card-header">
+                        <div>
+                            <span class="side-card-badge"><i class="bi bi-shield-exclamation"></i> MONITORING</span>
+                            <h3>Stock Alerts</h3>
+                        </div>
+
+                        <button class="side-card-btn"
+                                onclick="showLowStock()"
+                                title="Filter materials by low stock">
+                            <span>View All</span>
+                            <i class="bi bi-arrow-right"></i>
+                        </button>
+                    </div>
+
+                    <div class="alert-list">
+
+                        <div class="stock-alert-item warning" onclick="showLowStock()" title="Click to view Low Stock tab">
+                            <div class="alert-icon-box warning">
+                                <i class="bi bi-exclamation-triangle-fill"></i>
+                            </div>
+                            <div class="alert-item-content">
+                                <div class="alert-item-top">
+                                    <strong>Low Stock Items</strong>
+                                    <span class="alert-pill warning">Attention</span>
+                                </div>
+                                <span>Check materials below safety threshold</span>
+                                <small><i class="bi bi-binoculars"></i> Inventory monitoring active</small>
+                            </div>
+                        </div>
+
+                        <div class="stock-alert-item online">
+                            <div class="alert-icon-box online">
+                                <i class="bi bi-database-check"></i>
+                            </div>
+                            <div class="alert-item-content">
+                                <div class="alert-item-top">
+                                    <strong>Database Connected</strong>
+                                    <span class="alert-pill online"><span class="live-dot-mini"></span> Live</span>
+                                </div>
+                                <span>Materials loaded from SQL Server</span>
+                                <small><i class="bi bi-hdd-network"></i> Real-time inventory sync</small>
+                            </div>
+                        </div>
+
+                        <div class="stock-alert-item info" onclick="window.location.href='/material-requests.html'" title="View Site Material Requisitions">
+                            <div class="alert-icon-box info">
+                                <i class="bi bi-clipboard2-check-fill"></i>
+                            </div>
+                            <div class="alert-item-content">
+                                <div class="alert-item-top">
+                                    <strong>Material Requests</strong>
+                                    <span class="alert-pill info">Requisitions</span>
+                                </div>
+                                <span>Manage site material requisitions</span>
+                                <small><i class="bi bi-truck"></i> Procurement tracking</small>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- MATERIAL CATEGORIES -->
+                <section class="side-card">
+                    <div class="side-card-header">
+                        <div>
+                            <span class="side-card-badge"><i class="bi bi-tags-fill"></i> INVENTORY</span>
+                            <h3>Material Categories</h3>
+                        </div>
+                    </div>
+
+                    <div class="category-list">
+                        <div class="category-item" title="Construction Materials">
+                            <div class="category-color orange-dot">
+                                <i class="bi bi-bricks"></i>
+                            </div>
+                            <span>Construction</span>
+                        </div>
+
+                        <div class="category-item" title="Finishing Materials">
+                            <div class="category-color purple-dot">
+                                <i class="bi bi-paint-bucket"></i>
+                            </div>
+                            <span>Finishing</span>
+                        </div>
+
+                        <div class="category-item" title="Electrical Materials">
+                            <div class="category-color yellow-dot">
+                                <i class="bi bi-lightning-charge-fill"></i>
+                            </div>
+                            <span>Electrical</span>
+                        </div>
+
+                        <div class="category-item" title="Plumbing Materials">
+                            <div class="category-color blue-dot">
+                                <i class="bi bi-droplet-fill"></i>
+                            </div>
+                            <span>Plumbing</span>
+                        </div>
+
+                        <div class="category-item" title="Safety Materials">
+                            <div class="category-color green-dot">
+                                <i class="bi bi-shield-fill-check"></i>
+                            </div>
+                            <span>Safety</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SYSTEM INFORMATION -->
+                <section class="side-card">
+                    <div class="side-card-header">
+                        <div>
+                            <span class="side-card-badge"><i class="bi bi-cpu-fill"></i> SYSTEM</span>
+                            <h3>Inventory Control</h3>
+                        </div>
+                    </div>
+
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <div class="activity-icon received">
+                                <i class="bi bi-cloud-check"></i>
+                            </div>
+                            <div>
+                                <strong>Backend Connected</strong>
+                                <span>Spring Boot REST API</span>
+                            </div>
+                        </div>
+
+                        <div class="activity-item">
+                            <div class="activity-icon added">
+                                <i class="bi bi-database"></i>
+                            </div>
+                            <div>
+                                <strong>SQL Server</strong>
+                                <span>ConstructionDB</span>
+                            </div>
+                        </div>
+
+                        <div class="activity-item">
+                            <div class="activity-icon adjusted">
+                                <i class="bi bi-shield-check"></i>
+                            </div>
+                            <div>
+                                <strong>Staff Access</strong>
+                                <span>Role-based authentication</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </aside>
+
+        </div>
+
+
+
+        <!-- =================================================
+             BOTTOM SUMMARY
+        ================================================== -->
+
+        <section class="summary-grid">
+
+            <div class="summary-card card-cyan">
+                <div class="summary-icon icon-cyan">
+                    <i class="bi bi-activity"></i>
+                </div>
+                <div class="summary-info">
+                    <span class="summary-tag">Inventory System</span>
+                    <h2>Live Data</h2>
+                    <div class="summary-subtext">
+                        <span class="live-pulse-dot"></span>
+                        <span>Connected to backend (SQL Server)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="summary-card card-orange">
+                <div class="summary-icon icon-orange">
+                    <i class="bi bi-boxes"></i>
+                </div>
+                <div class="summary-info">
+                    <span class="summary-tag">Stock Management</span>
+                    <h2>CRUD Operations</h2>
+                    <div class="summary-subtext">
+                        <i class="bi bi-check2-circle"></i>
+                        <span>Create · Read · Update · Delete</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="summary-card card-purple">
+                <div class="summary-icon icon-purple">
+                    <i class="bi bi-truck"></i>
+                </div>
+                <div class="summary-info">
+                    <span class="summary-tag">Suppliers</span>
+                    <h2>Material Suppliers</h2>
+                    <button class="summary-link"
+                            onclick="window.location.href='/suppliers.html'"
+                            title="Manage suppliers">
+                        <span>View suppliers</span>
+                        <i class="bi bi-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+
+
+        <!-- FOOTER -->
+
+        <footer class="page-footer">
+
+            <span>
+                © 2026 WBCMS. Construction Management System.
+            </span>
+
+
+            <span>
+                BUILD BETTER TOGETHER.
+            </span>
+
+        </footer>
+
+    </section>
+
+</main>
+
+
+
+<!-- =========================================================
+     ADD / EDIT MATERIAL MODAL
+========================================================= -->
+
+<div
+        class="modal-overlay"
+        id="materialModal">
+
+
+    <div class="modal-box">
+
+
+        <div class="modal-header">
+
+
+            <div>
+
+                <span>
+                    INVENTORY MANAGEMENT
+                </span>
+
+
+                <h2 id="modalTitle">
+                    Add New Material
+                </h2>
+
+            </div>
+
+
+            <button
+                    type="button"
+                    class="modal-close"
+                    onclick="closeMaterialModal()">
+
+                <i class="bi bi-x-lg"></i>
+
+            </button>
+
+        </div>
+
+
+
+        <form
+                id="materialForm"
+                onsubmit="saveMaterial(event)"
+                novalidate>
+
+
+            <input
+                    type="hidden"
+                    id="materialId">
+
+
+
+            <!-- CODE -->
+
+            <div class="form-group">
+
+                <label for="materialCode">
+
+                    Material Code
+                    <span>*</span>
+
+                </label>
+
+
+                <input
+                        type="text"
+                        id="materialCode"
+                        placeholder="Example: MAT006"
+                        required>
+
+
+                <small
+                        class="validation-message"
+                        id="codeError">
+                </small>
+
+            </div>
+
+
+
+            <!-- NAME -->
+
+            <div class="form-group">
+
+                <label for="materialName">
+
+                    Material Name
+                    <span>*</span>
+
+                </label>
+
+
+                <input
+                        type="text"
+                        id="materialName"
+                        placeholder="Example: Cement"
+                        required>
+
+
+                <small
+                        class="validation-message"
+                        id="nameError">
+                </small>
+
+            </div>
+
+
+
+            <!-- CATEGORY + UNIT -->
+
+            <div class="form-row">
+
+
+                <div class="form-group">
+
+                    <label for="materialCategory">
+
+                        Category
+                        <span>*</span>
+
+                    </label>
+
+
+                    <select
+                            id="materialCategory"
+                            required>
+
+                        <option value="">
+                            Select category
+                        </option>
+
+                        <option value="Construction">
+                            Construction
+                        </option>
+
+                        <option value="Electrical">
+                            Electrical
+                        </option>
+
+                        <option value="Plumbing">
+                            Plumbing
+                        </option>
+
+                        <option value="Finishing">
+                            Finishing
+                        </option>
+
+                        <option value="Safety">
+                            Safety
+                        </option>
+
+                    </select>
+
+
+                    <small
+                            class="validation-message"
+                            id="categoryError">
+                    </small>
+
+                </div>
+
+
+
+                <div class="form-group">
+
+                    <label for="materialUnit">
+
+                        Unit
+                        <span>*</span>
+
+                    </label>
+
+
+                    <select
+                            id="materialUnit"
+                            required>
+
+                        <option value="">
+                            Select unit
+                        </option>
+
+                        <option value="Bags">
+                            Bags
+                        </option>
+
+                        <option value="Pieces">
+                            Pieces
+                        </option>
+
+                        <option value="Tons">
+                            Tons
+                        </option>
+
+                        <option value="Litres">
+                            Litres
+                        </option>
+
+                        <option value="Meters">
+                            Meters
+                        </option>
+
+                        <option value="Boxes">
+                            Boxes
+                        </option>
+
+                    </select>
+
+
+                    <small
+                            class="validation-message"
+                            id="unitError">
+                    </small>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- SUPPLIER -->
+
+            <div class="form-group">
+
+                <label for="materialSupplier">
+
+                    Supplier
+                    <span>*</span>
+
+                </label>
+
+
+                <input
+                        type="text"
+                        id="materialSupplier"
+                        placeholder="Enter supplier name"
+                        required>
+
+
+                <small
+                        class="validation-message"
+                        id="supplierError">
+                </small>
+
+            </div>
+
+
+
+            <!-- QUANTITY -->
+
+            <div class="form-row">
+
+
+                <div class="form-group">
+
+                    <label for="materialQuantity">
+
+                        Current Quantity
+                        <span>*</span>
+
+                    </label>
+
+
+                    <input
+                            type="number"
+                            id="materialQuantity"
+                            min="0"
+                            step="0.001"
+                            placeholder="0"
+                            required>
+
+
+                    <small
+                            class="validation-message"
+                            id="quantityError">
+                    </small>
+
+                </div>
+
+
+
+                <div class="form-group">
+
+                    <label for="minimumStock">
+
+                        Minimum Stock Level
+                        <span>*</span>
+
+                    </label>
+
+
+                    <input
+                            type="number"
+                            id="minimumStock"
+                            min="0"
+                            step="0.001"
+                            placeholder="0"
+                            required>
+
+
+                    <small
+                            class="validation-message"
+                            id="minimumError">
+                    </small>
+
+                </div>
+
+
+
+                <div class="form-group">
+
+                    <label for="materialUnitPrice">
+
+                        Unit Price ($)
+
+                    </label>
+
+
+                    <input
+                            type="number"
+                            id="materialUnitPrice"
+                            min="0"
+                            step="0.01"
+                            placeholder="0.00"
+                            value="0.00">
+
+
+                    <small
+                            class="validation-message"
+                            id="priceError">
+                    </small>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="form-group">
+
+                <label for="materialDescription">
+
+                    Description
+
+                </label>
+
+
+                <textarea
+                        id="materialDescription"
+                        rows="3"
+                        placeholder="Optional material description..."></textarea>
+
+            </div>
+
+
+
+            <!-- ACTIONS -->
+
+            <div class="modal-actions">
+
+
+                <button
+                        type="button"
+                        class="cancel-button"
+                        onclick="closeMaterialModal()">
+
+                    Cancel
+
+                </button>
+
+
+                <button
+                        type="submit"
+                        class="save-button">
+
+                    <i class="bi bi-check-lg"></i>
+
+                    Save Material
+
+                </button>
+
+            </div>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     STOCK MODAL
+========================================================= -->
+
+<div
+        class="modal-overlay"
+        id="stockModal">
+
+
+    <div class="modal-box small-modal">
+
+
+        <div class="modal-header">
+
+
+            <div>
+
+                <span>
+                    INVENTORY TRANSACTION
+                </span>
+
+
+                <h2 id="stockModalTitle">
+                    Receive Stock
+                </h2>
+
+            </div>
+
+
+            <button
+                    type="button"
+                    class="modal-close"
+                    onclick="closeStockModal()">
+
+                <i class="bi bi-x-lg"></i>
+
+            </button>
+
+        </div>
+
+
+
+        <form
+                id="stockForm"
+                onsubmit="processStock(event)">
+
+
+            <div class="form-group">
+
+                <label for="stockMaterial">
+
+                    Material
+                    <span>*</span>
+
+                </label>
+
+
+                <select
+                        id="stockMaterial"
+                        required>
+
+                    <option value="">
+                        Select material
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <div class="form-group">
+
+                <label for="stockQuantity">
+
+                    Quantity
+                    <span>*</span>
+
+                </label>
+
+
+                <input
+                        type="number"
+                        id="stockQuantity"
+                        min="1"
+                        step="0.001"
+                        placeholder="Enter quantity"
+                        required>
+
+            </div>
+
+
+
+            <div class="form-group">
+
+                <label for="stockNote">
+
+                    Reference / Note
+
+                </label>
+
+
+                <textarea
+                        id="stockNote"
+                        rows="3"
+                        placeholder="Optional note..."></textarea>
+
+            </div>
+
+
+
+            <div class="modal-actions">
+
+
+                <button
+                        type="button"
+                        class="cancel-button"
+                        onclick="closeStockModal()">
+
+                    Cancel
+
+                </button>
+
+
+                <button
+                        type="submit"
+                        class="save-button">
+
+                    <i class="bi bi-check-circle"></i>
+
+                    Confirm Transaction
+
+                </button>
+
+            </div>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     TOAST
+========================================================= -->
+
+<div
+        class="toast"
+        id="toast">
+
+
+    <i class="bi bi-check-circle-fill"></i>
+
+
+    <span id="toastMessage">
+        Operation successful
+    </span>
+
+</div>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script src="/js/material-inventory.js"></script>
+<script src="/js/notifications.js"></script>
+
+</body>
+
+</html>

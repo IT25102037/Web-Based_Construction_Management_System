@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WBCMS | Supplier Management</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap Icons & Themes -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/css/premium-theme.css">
+    <link rel="stylesheet" href="/css/unified-pages.css">
+    <script src="/js/theme-init.js"></script>
+
+    <style>
+        /* Supplier-Specific Rich Enhancements (Light Construction Theme) */
+        .company-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .company-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
+            border: 1px solid rgba(37, 99, 235, 0.2);
+            color: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+        }
+
+        .company-info strong {
+            display: block;
+            color: #0f172a;
+            font-size: 13.5px;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        .company-info span {
+            display: block;
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        .contact-link {
+            color: #334155;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.15s ease;
+        }
+
+        .contact-link:hover {
+            color: #2563eb;
+            text-decoration: underline;
+        }
+
+        .copy-chip {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 2px 6px;
+            font-size: 11px;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+
+        .copy-chip:hover {
+            background: #eff6ff;
+            border-color: #bfdbfe;
+            color: #1d4ed8;
+        }
+
+        /* Supplier Dossier Modal */
+        .dossier-hero {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 20px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            margin-bottom: 20px;
+        }
+
+        .dossier-avatar {
+            width: 54px;
+            height: 54px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 800;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.28);
+            flex-shrink: 0;
+        }
+
+        .dossier-info h3 {
+            margin: 0 0 4px 0;
+            color: #0f172a;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .dossier-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .dossier-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .dossier-item {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px 14px;
+        }
+
+        .dossier-item label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #64748b;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dossier-item-value {
+            color: #0f172a;
+            font-size: 13.5px;
+            font-weight: 600;
+            word-break: break-all;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .dossier-materials {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 18px;
+        }
+
+        .dossier-materials-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .dossier-materials h4 {
+            margin: 0;
+            font-size: 13px;
+            color: #0f172a;
+            font-weight: 700;
+        }
+
+        .supplied-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #1d4ed8;
+            margin: 3px;
+        }
+
+        .supplied-pill-badge {
+            background: #dbeafe;
+            padding: 1px 6px;
+            border-radius: 6px;
+            font-size: 10.5px;
+            font-weight: 700;
+        }
+
+        /* Inquiry Modal */
+        .template-preview {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-family: inherit;
+            color: #0f172a;
+            font-size: 13px;
+            width: 100%;
+            resize: vertical;
+        }
+
+        /* Pagination & Table Footer */
+        .table-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 18px;
+            margin-top: 14px;
+            border-top: 1px solid #f1f5f9;
+            color: #64748b;
+            font-size: 12.5px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .pagination {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .page-btn {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .page-btn:hover:not(:disabled) {
+            background: #eff6ff;
+            border-color: #bfdbfe;
+            color: #1d4ed8;
+        }
+
+        .page-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        .page-number.active {
+            background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+        }
+
+        /* Modal Light Aesthetic Enhancements */
+        .modal-box {
+            background: #ffffff !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 18px !important;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15) !important;
+            color: #0f172a !important;
+            padding: 24px 28px !important;
+        }
+
+        .modal-header {
+            border-bottom: 1px solid #f1f5f9 !important;
+            padding-bottom: 16px !important;
+            margin-bottom: 18px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+        }
+
+        .modal-header h2 {
+            margin: 2px 0 0 !important;
+            color: #0f172a !important;
+            font-size: 19px !important;
+            font-weight: 700 !important;
+        }
+
+        .modal-close {
+            background: #f8fafc !important;
+            border: 1px solid #e2e8f0 !important;
+            color: #64748b !important;
+            font-size: 15px !important;
+            width: 32px !important;
+            height: 32px !important;
+            border-radius: 8px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .modal-close:hover {
+            color: #0f172a !important;
+            background: #f1f5f9 !important;
+            border-color: #cbd5e1 !important;
+        }
+
+        .form-group label {
+            color: #334155 !important;
+            font-size: 12px !important;
+            font-weight: 600 !important;
+            margin-bottom: 6px !important;
+            display: block !important;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            background: #ffffff !important;
+            border: 1px solid #cbd5e1 !important;
+            color: #0f172a !important;
+            border-radius: 10px !important;
+            padding: 10px 14px !important;
+            font-size: 13px !important;
+            width: 100% !important;
+            outline: none !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #2563eb !important;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
+            background: #ffffff !important;
+        }
+
+        .modal-actions {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: flex-end !important;
+            gap: 12px !important;
+            margin-top: 22px !important;
+            padding-top: 16px !important;
+            border-top: 1px solid #f1f5f9 !important;
+        }
+
+        .cancel-button {
+            background: #f8fafc !important;
+            border: 1px solid #e2e8f0 !important;
+            color: #475569 !important;
+            padding: 9px 18px !important;
+            border-radius: 10px !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .cancel-button:hover {
+            background: #f1f5f9 !important;
+            color: #0f172a !important;
+            border-color: #cbd5e1 !important;
+        }
+
+        .save-button {
+            background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%) !important;
+            border: none !important;
+            color: #ffffff !important;
+            padding: 9px 20px !important;
+            border-radius: 10px !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.28) !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .save-button:hover {
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4) !important;
+            transform: translateY(-1px) !important;
+        }
+
+        @media (max-width: 768px) {
+            .dossier-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Ambient Construction Backdrop -->
+<div class="dashboard-backdrop">
+    <div class="dashboard-backdrop-img"></div>
+    <div class="dashboard-backdrop-overlay"></div>
+</div>
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+<aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-brand">
+        <div class="brand-logo">
+            <i class="bi bi-buildings-fill"></i>
+        </div>
+        <div>
+            <h2>WBCMS</h2>
+            <span>CONSTRUCTION</span>
+        </div>
+    </div>
+
+    <nav class="sidebar-navigation">
+        <p class="nav-title">MAIN MENU</p>
+
+        <a href="/dashboard.html" class="nav-item">
+            <i class="bi bi-grid-1x2-fill"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="/material-inventory.html" class="nav-item">
+            <i class="bi bi-box-seam-fill"></i>
+            <span>Material & Inventory</span>
+        </a>
+
+        <a href="/material-requests.html" class="nav-item">
+            <i class="bi bi-file-earmark-plus-fill"></i>
+            <span>Material Requests</span>
+        </a>
+
+        <a href="/projects.html" class="nav-item">
+            <i class="bi bi-building"></i>
+            <span>Projects</span>
+        </a>
+
+        <a href="/tasks.html" class="nav-item">
+            <i class="bi bi-clipboard-check"></i>
+            <span>Tasks</span>
+        </a>
+
+        <a href="/progress.html" class="nav-item">
+            <i class="bi bi-graph-up-arrow"></i>
+            <span>Progress Monitoring</span>
+        </a>
+
+        <a href="/documents.html" class="nav-item">
+            <i class="bi bi-file-earmark-text-fill"></i>
+            <span>Documents</span>
+        </a>
+
+        <p class="nav-title management-title">MANAGEMENT</p>
+
+        <a href="/reports.html" class="nav-item">
+            <i class="bi bi-bar-chart-line"></i>
+            <span>Reports</span>
+        </a>
+
+        <a href="/suppliers.html" class="nav-item active">
+            <i class="bi bi-truck"></i>
+            <span>Suppliers</span>
+        </a>
+
+        <a href="/users.html" class="nav-item">
+            <i class="bi bi-people-fill"></i>
+            <span>Users</span>
+        </a>
+
+        <a href="/roles.html" class="nav-item">
+            <i class="bi bi-shield-lock-fill"></i>
+            <span>Roles & Access</span>
+        </a>
+
+        <a href="/settings.html" class="nav-item">
+            <i class="bi bi-gear-fill"></i>
+            <span>Settings</span>
+        </a>
+    </nav>
+
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+        <div class="sidebar-version">
+            WBCMS v1.0
+            <span>Construction Management</span>
+        </div>
+        <button class="logout-button" onclick="logout()">
+            <i class="bi bi-box-arrow-left"></i>
+            Logout
+        </button>
+    </div>
+
+</aside>
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+<main class="main-content">
+
+    <!-- =====================================================
+         TOP HEADER (Identical to Material Inventory)
+    ====================================================== -->
+    <header class="top-header">
+
+        <div class="header-left">
+            <button class="mobile-menu" onclick="toggleSidebar()" aria-label="Toggle navigation">
+                <i class="bi bi-list"></i>
+            </button>
+
+            <div class="header-module-badge">
+                <div class="module-icon">
+                    <i class="bi bi-truck"></i>
+                </div>
+                <div class="module-text">
+                    <span class="module-title">Supplier Console</span>
+                    <span class="module-sub"><span class="live-pulse-dot"></span> Live DB</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-center">
+            <div class="header-admin-nav">
+                <button class="hdr-btn primary" onclick="openSupplierModal()" title="Add New Supplier">
+                    <i class="bi bi-plus-circle-fill"></i>
+                    <span>Add Supplier</span>
+                </button>
+                <a href="/material-inventory.html" class="hdr-btn" title="View Material & Inventory">
+                    <i class="bi bi-boxes"></i>
+                    <span>Inventory</span>
+                </a>
+                <a href="/material-requests.html" class="hdr-btn" title="View Material Requisitions">
+                    <i class="bi bi-clipboard2-check-fill"></i>
+                    <span>Requests</span>
+                </a>
+                <button class="hdr-btn" onclick="exportSuppliersCSV()" title="Export Supplier Directory to CSV">
+                    <i class="bi bi-file-earmark-arrow-down-fill"></i>
+                    <span>Export CSV</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <button class="notification-button" title="Notifications">
+                <i class="bi bi-bell"></i>
+                <span class="notification-badge">2</span>
+            </button>
+
+            <div class="header-separator"></div>
+
+            <div class="profile" onclick="this.classList.toggle('open')" id="profileCard">
+                <div class="profile-avatar" id="avatarInitials">
+                    ST
+                </div>
+                <div class="profile-details">
+                    <strong id="profileName">Staff User</strong>
+                    <span id="profileRole">Staff</span>
+                </div>
+                <i class="bi bi-chevron-down"></i>
+
+                <div class="profile-dropdown-menu">
+                    <div class="dropdown-user-header">
+                        <strong id="dropdownUserName">Staff User</strong>
+                        <span>Procurement & Logistics</span>
+                    </div>
+                    <a href="/material-inventory.html" class="dropdown-item">
+                        <i class="bi bi-boxes"></i>
+                        <span>Material Inventory</span>
+                    </a>
+                    <a href="/reports.html" class="dropdown-item">
+                        <i class="bi bi-file-earmark-text"></i>
+                        <span>Reports</span>
+                    </a>
+                    <a href="/users.html" class="dropdown-item">
+                        <i class="bi bi-people"></i>
+                        <span>User Management</span>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item logout" onclick="logout()">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Sign Out</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+    <!-- =====================================================
+         PAGE CONTENT
+    ====================================================== -->
+    <section class="page-content" style="padding: 24px 32px 40px;">
+
+        <!-- HERO SECTION -->
+        <div class="hero-section">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <span class="hero-label">PROCUREMENT & VENDOR ECOSYSTEM</span>
+                <h1>
+                    Manage Suppliers.<br>
+                    <span>Strengthen Your Supply Chain.</span>
+                </h1>
+                <p>
+                    Register, monitor, and manage material vendors, contractors, and supply partners to keep your construction worksites stocked and on schedule.
+                </p>
+            </div>
+        </div>
+
+        <!-- =================================================
+             STATISTICS (4 Cards with Glows & Database Subtitle)
+        ================================================== -->
+        <section class="statistics-grid">
+
+            <!-- TOTAL SUPPLIERS -->
+            <div class="stat-card">
+                <div class="stat-icon orange">
+                    <i class="bi bi-truck"></i>
+                </div>
+                <div class="stat-content">
+                    <span>Total Suppliers</span>
+                    <h2 id="totalSuppliers">0</h2>
+                    <small class="positive">
+                        <i class="bi bi-database-check"></i>
+                        From database
+                    </small>
+                </div>
+            </div>
+
+            <!-- ACTIVE SUPPLIERS -->
+            <div class="stat-card">
+                <div class="stat-icon green">
+                    <i class="bi bi-patch-check-fill"></i>
+                </div>
+                <div class="stat-content">
+                    <span>Active Partners</span>
+                    <h2 id="activeSuppliers">0</h2>
+                    <small class="positive">
+                        <i class="bi bi-check-circle"></i>
+                        In good standing
+                    </small>
+                </div>
+            </div>
+
+            <!-- INACTIVE SUPPLIERS -->
+            <div class="stat-card">
+                <div class="stat-icon warning">
+                    <i class="bi bi-pause-circle-fill"></i>
+                </div>
+                <div class="stat-content">
+                    <span>Inactive / On-Hold</span>
+                    <h2 id="pendingOrders">0</h2>
+                    <small class="neutral">
+                        <i class="bi bi-clock-history"></i>
+                        Needs review
+                    </small>
+                </div>
+            </div>
+
+            <!-- LINKED MATERIALS -->
+            <div class="stat-card">
+                <div class="stat-icon blue">
+                    <i class="bi bi-boxes"></i>
+                </div>
+                <div class="stat-content">
+                    <span>Supplies Cataloged</span>
+                    <h2 id="linkedMaterialsCount">0</h2>
+                    <small class="positive">
+                        <i class="bi bi-link-45deg"></i>
+                        Inventory items
+                    </small>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- =================================================
+             QUICK ACTIONS BAR
+        ================================================== -->
+        <section class="quick-actions">
+            <button class="action-button primary" onclick="openSupplierModal()">
+                <i class="bi bi-plus-lg"></i>
+                <span>Add Supplier</span>
+            </button>
+
+            <button class="action-button" onclick="exportSuppliersCSV()">
+                <i class="bi bi-file-earmark-arrow-down-fill"></i>
+                <span>Export Directory</span>
+            </button>
+
+            <button class="action-button" onclick="openInquiryModal()">
+                <i class="bi bi-envelope-at-fill"></i>
+                <span>Quick Inquiry</span>
+            </button>
+
+            <button class="action-button" onclick="printDirectory()">
+                <i class="bi bi-printer-fill"></i>
+                <span>Print Directory</span>
+            </button>
+
+            <button class="action-button" onclick="loadSuppliers()">
+                <i class="bi bi-arrow-clockwise"></i>
+                <span>Refresh Data</span>
+            </button>
+        </section>
+
+        <!-- =================================================
+             SUPPLIER DIRECTORY CARD & FILTERS
+        ================================================== -->
+        <section class="inventory-card" style="margin-bottom: 24px;">
+
+            <div class="inventory-header">
+                <div>
+                    <span class="section-label" style="display:block; font-size:11px; font-weight:700; color:var(--orange); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:4px;">
+                        VENDOR CONTROL
+                    </span>
+                    <h2>Registered Suppliers Directory</h2>
+                    <p style="margin:2px 0 0 0; color:var(--muted); font-size:12.5px;">
+                        Search, filter by status, sort, and manage vendor records with real-time SQL synchronization.
+                    </p>
+                </div>
+            </div>
+
+            <!-- TABS (5 FILTER OPTIONS - Matching Material Inventory) -->
+            <div class="inventory-tabs">
+                <button class="tab-button active" onclick="changeTab('all', this)">
+                    All Suppliers
+                    <span id="allCount">0</span>
+                </button>
+
+                <button class="tab-button" onclick="changeTab('ACTIVE', this)">
+                    Active Partners
+                    <span id="activeCount">0</span>
+                </button>
+
+                <button class="tab-button" onclick="changeTab('INACTIVE', this)">
+                    Inactive
+                    <span id="inactiveCount">0</span>
+                </button>
+
+                <button class="tab-button" onclick="changeTab('recent', this)">
+                    Recently Added
+                </button>
+
+                <button class="tab-button" onclick="changeTab('with_email', this)">
+                    With Direct Email
+                </button>
+            </div>
+
+            <!-- FILTERS (BEAUTIFUL UNIFIED SEARCH & FILTER BAR) -->
+            <div class="filter-area">
+                <div class="material-search">
+                    <i class="bi bi-search search-icon"></i>
+                    <input type="text"
+                           id="supplierSearch"
+                           placeholder="Search supplier name, contact person, phone, email, address..."
+                           autocomplete="off">
+                </div>
+
+                <div class="filter-select-wrapper">
+                    <i class="bi bi-funnel filter-select-icon"></i>
+                    <select id="statusFilter" onchange="applyFilters()">
+                        <option value="">All Status</option>
+                        <option value="ACTIVE">Active</option>
+                        <option value="INACTIVE">Inactive</option>
+                    </select>
+                </div>
+
+                <div class="filter-select-wrapper">
+                    <i class="bi bi-sort-alpha-down filter-select-icon"></i>
+                    <select id="sortFilter" onchange="applyFilters()">
+                        <option value="newest">Newest First</option>
+                        <option value="name_asc">Name: A to Z</option>
+                        <option value="name_desc">Name: Z to A</option>
+                        <option value="oldest">Oldest First</option>
+                    </select>
+                </div>
+
+                <button class="reset-button"
+                        onclick="resetFilters()"
+                        title="Reset all search & filters">
+                    <i class="bi bi-arrow-clockwise"></i>
+                    <span>Reset</span>
+                </button>
+            </div>
+
+            <!-- TABLE CONTAINER -->
+            <div class="table-container">
+                <table>
+                    <thead>
+                    <tr>
+                        <th style="width: 40px;">#</th>
+                        <th>Supplier / Company</th>
+                        <th>Contact Person</th>
+                        <th>Phone Number</th>
+                        <th>Email Address</th>
+                        <th>Physical Address</th>
+                        <th>Status</th>
+                        <th style="text-align: right; width: 140px;">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="supplierTableBody">
+                    <tr>
+                        <td colspan="8" style="text-align:center; padding:36px;">
+                            <i class="bi bi-arrow-repeat" style="font-size:24px; animation:spin 1s linear infinite; display:inline-block; color:var(--orange);"></i>
+                            <p style="margin-top:8px; color:#8a99ad;">Loading suppliers from SQL Server...</p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <!-- EMPTY STATE -->
+                <div class="empty-state" id="emptyTable" style="display:none; text-align:center; padding:48px 20px;">
+                    <i class="bi bi-truck" style="font-size:44px; color:#64748b;"></i>
+                    <h4 style="margin:12px 0 4px; color:#cbd5e1; font-size:16px;">No Suppliers Found</h4>
+                    <p style="color:#64748b; font-size:13px; max-width:380px; margin:0 auto 16px;">
+                        No supplier records currently match your search query or filter selection.
+                    </p>
+                    <button class="reset-button" onclick="resetFilters()">
+                        <i class="bi bi-arrow-clockwise"></i>
+                        <span>Reset Filters</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- TABLE FOOTER -->
+            <div class="table-footer">
+                <span id="tableResult">Loading suppliers...</span>
+
+                <div class="pagination" id="paginationContainer">
+                    <button class="page-btn" id="prevPageBtn" onclick="changePage(-1)" disabled>
+                        <i class="bi bi-chevron-left"></i>
+                    </button>
+                    <span class="page-btn page-number active" id="currentPageDisplay">1</span>
+                    <button class="page-btn" id="nextPageBtn" onclick="changePage(1)" disabled>
+                        <i class="bi bi-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- =================================================
+             BOTTOM SUMMARY CARDS (Live Data, Logistics, Inventory)
+        ================================================== -->
+        <section class="summary-grid">
+            <div class="summary-card card-cyan">
+                <div class="module-icon" style="background: rgba(56, 189, 248, 0.16); border-color: rgba(56, 189, 248, 0.4); color: #38bdf8; width: 42px; height: 42px; font-size: 18px;">
+                    <i class="bi bi-shield-check"></i>
+                </div>
+                <div>
+                    <span class="summary-tag">Vetted Vendor Network</span>
+                    <h3>100% Reliable Partners</h3>
+                    <small class="positive">
+                        <i class="bi bi-check-circle-fill"></i>
+                        Active vendor SLA enforcement
+                    </small>
+                </div>
+            </div>
+
+            <div class="summary-card card-orange">
+                <div class="module-icon" style="background: rgba(255, 122, 26, 0.16); border-color: rgba(255, 122, 26, 0.4); color: #ff8522; width: 42px; height: 42px; font-size: 18px;">
+                    <i class="bi bi-lightning-charge-fill"></i>
+                </div>
+                <div>
+                    <span class="summary-tag">Rapid Procurement</span>
+                    <h3>Instant Site Replenishment</h3>
+                    <small class="positive">
+                        <i class="bi bi-telephone-outbound-fill"></i>
+                        One-click vendor communication
+                    </small>
+                </div>
+            </div>
+
+            <div class="summary-card card-purple">
+                <div class="module-icon" style="background: rgba(168, 85, 247, 0.16); border-color: rgba(168, 85, 247, 0.4); color: #c084fc; width: 42px; height: 42px; font-size: 18px;">
+                    <i class="bi bi-box-seam-fill"></i>
+                </div>
+                <div>
+                    <span class="summary-tag">Catalog Linkage</span>
+                    <h3>Direct Material Inventory</h3>
+                    <a href="/material-inventory.html" class="summary-link" style="margin-top: 4px;">
+                        <span>Browse Stock</span>
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </section>
+</main>
+
+<!-- =========================================================
+     MODAL 1: ADD / EDIT SUPPLIER MODAL (All IDs Preserved)
+========================================================= -->
+<div class="modal-overlay" id="supplierModal">
+    <div class="modal-box" style="max-width: 580px; width: 100%;">
+
+        <div class="modal-header">
+            <div>
+                <span style="font-size: 11px; font-weight: 700; color: var(--orange); letter-spacing: 0.08em; text-transform: uppercase;">
+                    SUPPLIER RECORD
+                </span>
+                <h2 id="modalTitle">Add New Supplier</h2>
+            </div>
+            <button type="button" class="modal-close" onclick="closeSupplierModal()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <form id="supplierForm" onsubmit="saveSupplier(event)">
+            <!-- Hidden ID -->
+            <input type="hidden" id="supplierId">
+
+            <!-- Supplier Name -->
+            <div class="form-group">
+                <label for="supplierName">
+                    Supplier / Company Name <span>*</span>
+                </label>
+                <input type="text"
+                       id="supplierName"
+                       placeholder="e.g. UltraBuild Concrete Ltd."
+                       maxlength="150"
+                       required>
+                <small class="validation-message" id="nameError"></small>
+            </div>
+
+            <!-- Contact Person & Phone -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="contactPerson">Contact Person</label>
+                    <input type="text"
+                           id="contactPerson"
+                           placeholder="e.g. John Doe"
+                           maxlength="120">
+                </div>
+
+                <div class="form-group">
+                    <label for="supplierPhone">Phone Number</label>
+                    <input type="text"
+                           id="supplierPhone"
+                           placeholder="e.g. +94 77 123 4567"
+                           maxlength="40">
+                </div>
+            </div>
+
+            <!-- Email & Status -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="supplierEmail">Email Address</label>
+                    <input type="email"
+                           id="supplierEmail"
+                           placeholder="supplier@example.com"
+                           maxlength="120">
+                    <small class="validation-message" id="emailError"></small>
+                </div>
+
+                <div class="form-group">
+                    <label for="supplierStatus">Status <span>*</span></label>
+                    <select id="supplierStatus" required>
+                        <option value="ACTIVE">ACTIVE</option>
+                        <option value="INACTIVE">INACTIVE</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Physical Address -->
+            <div class="form-group">
+                <label for="supplierAddress">Physical Address</label>
+                <textarea id="supplierAddress"
+                          rows="3"
+                          maxlength="500"
+                          placeholder="Factory, warehouse, or office address..."></textarea>
+            </div>
+
+            <!-- Modal Actions -->
+            <div class="modal-actions">
+                <button type="button" class="cancel-button" onclick="closeSupplierModal()">
+                    Cancel
+                </button>
+                <button type="submit" class="save-button">
+                    <i class="bi bi-check-lg"></i>
+                    <span>Save Supplier</span>
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<!-- =========================================================
+     MODAL 2: BEAUTIFUL SUPPLIER DOSSIER / VIEW MODAL
+========================================================= -->
+<div class="modal-overlay" id="viewSupplierModal">
+    <div class="modal-box" style="max-width: 650px; width: 100%;">
+
+        <div class="modal-header">
+            <div>
+                <span style="font-size: 11px; font-weight: 700; color: var(--blue); letter-spacing: 0.08em; text-transform: uppercase;">
+                    SUPPLIER PROFILE
+                </span>
+                <h2>Supplier Dossier</h2>
+            </div>
+            <button type="button" class="modal-close" onclick="closeViewSupplierModal()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <div class="dossier-hero">
+            <div class="dossier-avatar" id="viewAvatar">
+                UB
+            </div>
+            <div class="dossier-info" style="flex:1;">
+                <h3 id="viewName">Company Name</h3>
+                <div class="dossier-meta">
+                    <span id="viewStatusBadge" class="status-badge active">ACTIVE</span>
+                    <span id="viewIdTag" style="color:#64748b;">ID: #1</span>
+                    <span id="viewLastUpdated" style="font-size:11px;">Updated: Today</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="dossier-grid">
+            <div class="dossier-item">
+                <label><i class="bi bi-person"></i> Contact Person</label>
+                <div class="dossier-item-value" id="viewContact">-</div>
+            </div>
+
+            <div class="dossier-item">
+                <label><i class="bi bi-telephone"></i> Direct Phone</label>
+                <div class="dossier-item-value">
+                    <span id="viewPhone">-</span>
+                    <button class="copy-chip" id="copyPhoneBtn" title="Copy Phone Number">
+                        <i class="bi bi-clipboard"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="dossier-item">
+                <label><i class="bi bi-envelope"></i> Email Address</label>
+                <div class="dossier-item-value">
+                    <span id="viewEmail">-</span>
+                    <button class="copy-chip" id="copyEmailBtn" title="Copy Email Address">
+                        <i class="bi bi-clipboard"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="dossier-item">
+                <label><i class="bi bi-geo-alt"></i> Operating Address</label>
+                <div class="dossier-item-value" id="viewAddress">-</div>
+            </div>
+        </div>
+
+        <!-- Cross-Referenced Materials Supplied -->
+        <div class="dossier-materials">
+            <div class="dossier-materials-header">
+                <h4><i class="bi bi-boxes" style="color:var(--orange); margin-right:6px;"></i> Supplied Materials Catalog</h4>
+                <span id="viewMaterialCount" style="font-size:11.5px; color:#94a3b8;">0 items linked</span>
+            </div>
+            <div id="viewMaterialsList" style="display:flex; flex-wrap:wrap; gap:6px; min-height:36px; align-items:center;">
+                <span style="font-size:12.5px; color:#64748b;">No inventory items specifically linked to this supplier.</span>
+            </div>
+        </div>
+
+        <div class="modal-actions" style="margin-top:10px;">
+            <button type="button" class="cancel-button" onclick="closeViewSupplierModal()">
+                Close
+            </button>
+            <button type="button" class="action-button" id="dossierInquiryBtn" style="margin-left:auto;">
+                <i class="bi bi-envelope-at"></i>
+                <span>Send Inquiry</span>
+            </button>
+            <button type="button" class="action-button primary" id="dossierEditBtn">
+                <i class="bi bi-pencil"></i>
+                <span>Edit Supplier</span>
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<!-- =========================================================
+     MODAL 3: QUICK INQUIRY / OUTREACH MODAL
+========================================================= -->
+<div class="modal-overlay" id="inquiryModal">
+    <div class="modal-box" style="max-width: 600px; width: 100%;">
+
+        <div class="modal-header">
+            <div>
+                <span style="font-size: 11px; font-weight: 700; color: var(--green); letter-spacing: 0.08em; text-transform: uppercase;">
+                    VENDOR COMMUNICATION
+                </span>
+                <h2>Send Supplier Inquiry</h2>
+            </div>
+            <button type="button" class="modal-close" onclick="closeInquiryModal()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <div class="form-group">
+            <label for="inquirySupplierSelect">Recipient Supplier <span>*</span></label>
+            <select id="inquirySupplierSelect" onchange="onInquirySupplierChange()">
+                <option value="">Select a supplier...</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="inquiryTypeSelect">Inquiry Template <span>*</span></label>
+            <select id="inquiryTypeSelect" onchange="generateInquiryTemplate()">
+                <option value="rfq">Request for Quotation (RFQ)</option>
+                <option value="stock">Stock Availability & Lead Time Check</option>
+                <option value="po_followup">Purchase Order & Delivery Status</option>
+                <option value="custom">Custom Message</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="inquirySubject">Subject Line</label>
+            <input type="text" id="inquirySubject" placeholder="Email subject...">
+        </div>
+
+        <div class="form-group">
+            <label for="inquiryBody">Message Draft</label>
+            <textarea id="inquiryBody" rows="6" class="template-preview"></textarea>
+        </div>
+
+        <div class="modal-actions">
+            <button type="button" class="cancel-button" onclick="closeInquiryModal()">
+                Cancel
+            </button>
+            <button type="button" class="action-button" onclick="copyInquiryText()">
+                <i class="bi bi-clipboard"></i>
+                <span>Copy Draft</span>
+            </button>
+            <button type="button" class="action-button primary" onclick="launchEmailClient()">
+                <i class="bi bi-send-fill"></i>
+                <span>Launch in Email App</span>
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<!-- =========================================================
+     TOAST NOTIFICATION
+========================================================= -->
+<div class="toast" id="toast">
+    <i class="bi bi-check-circle-fill"></i>
+    <span id="toastMessage">Action successful.</span>
+</div>
+
+<!-- JAVASCRIPT -->
+<script src="/js/suppliers.js"></script>
+<script src="/js/notifications.js"></script>
+
+</body>
+</html>
