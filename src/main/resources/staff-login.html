@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>WBCMS | Staff Login</title>
+
+    <!-- Main CSS -->
+    <link rel="stylesheet"
+          href="/css/style.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+
+        /* =========================================
+           STAFF LOGIN EXTRA STYLES
+        ========================================= */
+
+        .login-role {
+            width: 100%;
+            margin-top: 8px;
+            padding: 13px;
+
+            outline: none;
+
+            color: white;
+            background: #0b1524;
+
+            border: 1px solid #314359;
+            border-radius: 10px;
+
+            font-size: 13px;
+
+            cursor: pointer;
+
+            transition:
+                    border-color 0.2s ease,
+                    box-shadow 0.2s ease;
+        }
+
+        .login-role:focus {
+            border-color: var(--orange);
+
+            box-shadow:
+                    0 0 0 3px rgba(255, 107, 22, 0.1);
+        }
+
+        .login-role option {
+            background: #0b1524;
+            color: white;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper input {
+            padding-right: 45px;
+        }
+
+        .toggle-password {
+            position: absolute;
+
+            right: 12px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            border: none;
+            background: transparent;
+
+            color: #8294aa;
+
+            cursor: pointer;
+
+            font-size: 14px;
+        }
+
+        .toggle-password:hover {
+            color: white;
+        }
+
+        .back-home {
+            display: inline-flex;
+
+            align-items: center;
+            gap: 7px;
+
+            margin-bottom: 25px;
+
+            color: #91a2ba;
+
+            font-size: 11px;
+
+            transition: 0.2s;
+        }
+
+        .back-home:hover {
+            color: var(--orange);
+        }
+
+        .staff-badge {
+            display: inline-flex;
+
+            align-items: center;
+            gap: 7px;
+
+            margin-bottom: 15px;
+
+            padding: 7px 11px;
+
+            border-radius: 20px;
+
+            color: #ff9b4a;
+
+            background: rgba(255, 107, 22, 0.10);
+
+            border: 1px solid rgba(255, 107, 22, 0.18);
+
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .staff-badge i {
+            font-size: 10px;
+        }
+
+        .login-form-area .btn {
+            border: none;
+        }
+
+        .login-form-area form label {
+            margin-bottom: 18px;
+        }
+
+        .role-label {
+            display: block;
+
+            color: #d5deea;
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .form-message.success {
+            color: var(--green);
+        }
+
+        .form-message.error {
+            color: var(--red);
+        }
+
+        .secure-note {
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+
+            gap: 7px;
+
+            margin-top: 18px;
+
+            color: #6f8299;
+
+            font-size: 10px;
+        }
+
+        .secure-note i {
+            color: var(--green);
+        }
+
+    </style>
+
+</head>
+
+
+<body class="login-page">
+
+
+<div class="login-shell">
+
+
+    <div class="login-panel">
+
+
+        <!-- =================================================
+             LEFT SIDE - LOGIN FORM
+        ================================================== -->
+
+        <div class="login-form-area">
+
+
+            <!-- BACK HOME -->
+
+            <a href="/index.html"
+               class="back-home">
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+                Back to WBCMS
+
+            </a>
+
+
+            <!-- STAFF BADGE -->
+
+            <div class="staff-badge">
+
+                <i class="fa-solid fa-shield-halved"></i>
+
+                STAFF PORTAL
+
+            </div>
+
+
+            <!-- HEADING -->
+
+            <div class="login-heading">
+
+                <h1 id="staffHeadingTitle">
+                    Staff Sign In
+                </h1>
+
+                <p id="staffHeadingSub">
+                    Access your WBCMS management workspace.
+                </p>
+
+            </div>
+
+
+            <!-- LOGIN FORM -->
+
+            <form id="staffLoginForm">
+
+
+                <!-- USERNAME / EMAIL -->
+
+                <label>
+
+                    Username or Email
+
+                    <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder="Enter your username or email"
+                            autocomplete="username"
+                            required
+                    >
+
+                </label>
+
+
+                <!-- PASSWORD -->
+
+                <label>
+
+                    Password
+
+                    <div class="password-wrapper">
+
+                        <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                required
+                        >
+
+                        <button
+                                type="button"
+                                class="toggle-password"
+                                id="togglePassword">
+
+                            <i class="fa-solid fa-eye"></i>
+
+                        </button>
+
+                    </div>
+
+                </label>
+
+
+                <!-- ROLE -->
+
+                <label class="role-label">
+
+                    Staff Role
+
+                    <select
+                            id="role"
+                            name="role"
+                            class="login-role">
+
+                        <option value="">
+                            Auto-Detect Role (Any Staff)
+                        </option>
+
+                        <option value="PROJECT_MANAGER">
+                            Project Manager
+                        </option>
+
+                        <option value="SITE_ENGINEER">
+                            Site Engineer
+                        </option>
+
+                        <option value="CONSTRUCTION_SUPERVISOR">
+                            Construction Supervisor
+                        </option>
+
+                        <option value="PROCUREMENT_OFFICER">
+                            Procurement Officer
+                        </option>
+
+                        <option value="SYSTEM_ADMINISTRATOR">
+                            System Administrator
+                        </option>
+
+                    </select>
+
+                </label>
+
+
+                <!-- REMEMBER ME -->
+
+                <div class="remember-row" style="display: flex; align-items: center; justify-content: space-between; margin-top: -6px; margin-bottom: 16px;">
+                    <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 0; color: #a9bad1; font-size: 12px; font-weight: 500;">
+                        <input type="checkbox" id="rememberMe" style="width: 15px; height: 15px; accent-color: var(--orange); cursor: pointer;">
+                        <span>Remember Me</span>
+                    </label>
+                </div>
+
+
+                <!-- MESSAGE -->
+
+                <div
+                        id="formMessage"
+                        class="form-message">
+
+                </div>
+
+
+                <!-- LOGIN BUTTON -->
+
+                <button
+                        type="submit"
+                        id="loginButton"
+                        class="btn btn-primary btn-full">
+
+                    <i class="fa-solid fa-right-to-bracket"></i>
+
+                    Sign In to Dashboard
+
+                </button>
+
+
+            </form>
+
+
+            <!-- =============================================
+                 STAFF REGISTRATION FORM
+            ============================================== -->
+
+            <form id="staffRegisterForm" style="display:none;">
+
+                <!-- FULL NAME -->
+                <label>
+                    Full Name
+                    <input type="text" id="regFullName" placeholder="Enter your full name" required>
+                </label>
+
+                <!-- USERNAME -->
+                <label>
+                    Username
+                    <input type="text" id="regUsername" placeholder="Choose a username" autocomplete="username" required>
+                </label>
+
+                <!-- EMAIL -->
+                <label>
+                    Work Email
+                    <input type="email" id="regEmail" placeholder="Enter your work email" required>
+                </label>
+
+                <!-- ROLE -->
+                <label class="role-label">
+                    Staff Role
+                    <select id="regRole" class="login-role" required>
+                        <option value="">Select your role</option>
+                        <option value="SITE_ENGINEER">Site Engineer</option>
+                        <option value="PROJECT_MANAGER">Project Manager</option>
+                        <option value="CONSTRUCTION_SUPERVISOR">Construction Supervisor</option>
+                        <option value="PROCUREMENT_OFFICER">Procurement Officer</option>
+                        <option value="SYSTEM_ADMINISTRATOR">System Administrator</option>
+                    </select>
+                </label>
+
+                <!-- PHONE NUMBER -->
+                <label>
+                    Phone Number
+                    <input type="tel" id="regPhone" placeholder="+94 77 123 4567">
+                </label>
+
+                <!-- PASSWORD -->
+                <label>
+                    Password
+                    <div class="password-wrapper">
+                        <input type="password" id="regPassword" placeholder="Minimum 8 characters" autocomplete="new-password" required>
+                        <button type="button" class="toggle-password" id="regTogglePassword">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </label>
+
+                <!-- CONFIRM PASSWORD -->
+                <label>
+                    Confirm Password
+                    <div class="password-wrapper">
+                        <input type="password" id="regConfirmPassword" placeholder="Re-enter password" autocomplete="new-password" required>
+                        <button type="button" class="toggle-password" id="regToggleConfirmPassword">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </label>
+
+                <div id="regMessage" class="form-message"></div>
+
+                <button type="submit" id="regSubmitButton" class="btn btn-primary btn-full">
+                    <i class="fa-solid fa-user-plus"></i> Create Staff Account
+                </button>
+
+            </form>
+
+
+            <!-- SWITCH BETWEEN SIGN IN & REGISTER -->
+            <div class="login-switch" style="margin-top: 18px; text-align: center; font-size: 12px; color: #8294aa;">
+                <span id="authSwitchPrompt">Don't have a staff account?</span>
+                <button type="button" id="authSwitchBtn" style="background:none; border:none; color:var(--orange); font-weight:700; cursor:pointer; margin-left:6px; text-decoration:underline;">
+                    Register Now
+                </button>
+            </div>
+
+
+            <!-- SECURITY -->
+
+            <div class="secure-note">
+
+                <i class="fa-solid fa-lock"></i>
+
+                Secure role-based staff access
+
+            </div>
+
+
+            <!-- CLIENT LINK -->
+
+            <div class="login-note">
+
+                Are you a client?
+
+                <a href="/client-login.html">
+                    Client Portal →
+                </a>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             RIGHT SIDE - IMAGE
+        ================================================== -->
+
+        <div class="login-image">
+
+            <div class="image-dark"></div>
+
+
+            <div class="login-quote">
+
+
+                <h2>
+
+                    Manage every
+
+                    <br>
+
+                    project with confidence.
+
+                </h2>
+
+
+                <ul>
+
+                    <li>
+                        Project management
+                    </li>
+
+                    <li>
+                        Task assignment
+                    </li>
+
+                    <li>
+                        Progress monitoring
+                    </li>
+
+                    <li>
+                        Materials & inventory
+                    </li>
+
+                    <li>
+                        Reports & notifications
+                    </li>
+
+                </ul>
+
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     JAVASCRIPT
+====================================================== -->
+
+<script>
+
+
+    const loginForm =
+        document.getElementById("staffLoginForm");
+
+
+    const usernameInput =
+        document.getElementById("username");
+
+
+    const passwordInput =
+        document.getElementById("password");
+
+
+    const roleInput =
+        document.getElementById("role");
+
+
+    const message =
+        document.getElementById("formMessage");
+
+
+    const loginButton =
+        document.getElementById("loginButton");
+
+    const togglePassword =
+        document.getElementById("togglePassword");
+
+    const rememberMeInput =
+        document.getElementById("rememberMe");
+
+    /* =====================================================
+       PRE-FILL REMEMBERED USERNAME
+    ===================================================== */
+    const rememberedUsername =
+        localStorage.getItem("wbcms_remember_username");
+
+    if (rememberedUsername) {
+        usernameInput.value = rememberedUsername;
+        if (rememberMeInput) {
+            rememberMeInput.checked = true;
+        }
+        passwordInput.focus();
+    }
+
+    /* =====================================================
+       PASSWORD SHOW / HIDE
+    ===================================================== */
+
+    togglePassword.addEventListener(
+        "click",
+        function () {
+
+            if (passwordInput.type === "password") {
+
+                passwordInput.type = "text";
+
+                togglePassword.innerHTML =
+                    '<i class="fa-solid fa-eye-slash"></i>';
+
+            } else {
+
+                passwordInput.type = "password";
+
+                togglePassword.innerHTML =
+                    '<i class="fa-solid fa-eye"></i>';
+
+            }
+
+        }
+    );
+
+
+
+    /* =====================================================
+       LOGIN
+    ===================================================== */
+
+    loginForm.addEventListener(
+        "submit",
+        async function (event) {
+
+            event.preventDefault();
+
+
+            message.textContent = "";
+            message.className = "form-message";
+
+
+            const username =
+                usernameInput.value.trim();
+
+
+            const password =
+                passwordInput.value;
+
+
+            const selectedRole =
+                roleInput.value;
+
+            const rememberMe =
+                rememberMeInput ? rememberMeInput.checked : false;
+
+
+
+            /* =============================================
+               BASIC VALIDATION
+            ============================================= */
+
+            if (!username) {
+
+                showError(
+                    "Please enter your username or email."
+                );
+
+                usernameInput.focus();
+
+                return;
+
+            }
+
+
+            if (!password) {
+
+                showError(
+                    "Please enter your password."
+                );
+
+                passwordInput.focus();
+
+                return;
+
+            }
+
+
+            /* =============================================
+               BUTTON LOADING
+            ============================================= */
+
+            loginButton.disabled = true;
+
+            loginButton.innerHTML =
+                '<i class="fa-solid fa-spinner fa-spin"></i> Signing in...';
+
+
+
+            try {
+
+
+                /* =========================================
+                   SEND LOGIN REQUEST
+                ========================================== */
+
+                const response =
+                    await fetch("/api/auth/login", {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+
+                            username: username,
+
+                            password: password,
+
+                            expectedRole: selectedRole || null,
+
+                            portalType: "STAFF",
+
+                            rememberMe: rememberMe
+
+                        })
+
+                    });
+
+
+
+                /* =========================================
+                   RESPONSE
+                ========================================== */
+
+                const data =
+                    await response.json()
+                        .catch(() => null);
+
+
+
+                /* =========================================
+                   INVALID LOGIN
+                ========================================== */
+
+                if (!response.ok) {
+
+                    const errorMsg =
+                        (data && (data.message || data.error))
+                            ? (data.message || data.error)
+                            : "Invalid username/email or password.";
+
+                    showError(errorMsg);
+
+                    return;
+
+                }
+
+
+                /* =========================================
+                   NO TOKEN
+                ========================================== */
+
+                if (!data || !data.token) {
+
+                    showError(
+                        "Login failed. No authentication token received."
+                    );
+
+                    return;
+
+                }
+
+
+
+                /* =========================================
+                   CHECK ROLE
+                ========================================== */
+
+                if (!data.role) {
+
+                    showError(
+                        "Your account does not have a valid staff role."
+                    );
+
+                    return;
+
+                }
+
+
+                const returnedRole =
+                    String(data.role).toUpperCase();
+
+
+
+                /* =========================================
+                   CLIENT CANNOT USE STAFF LOGIN
+                ========================================== */
+
+                if (returnedRole === "CLIENT") {
+
+                    showError(
+                        "This is a client account. Please use the Client Portal."
+                    );
+
+                    return;
+
+                }
+
+
+
+                /* =========================================
+                   CHECK SELECTED ROLE (IF EXPLICITLY CHOSEN)
+                ========================================== */
+
+                if (selectedRole && returnedRole !== selectedRole) {
+
+                    showError(
+                        "The selected role does not match your account role (" + returnedRole + ")."
+                    );
+
+                    return;
+
+                }
+
+
+
+                /* =========================================
+                   SAVE LOGIN SESSION
+                ========================================== */
+
+                if (rememberMe) {
+                    localStorage.setItem("wbcms_remember_username", username);
+                } else {
+                    localStorage.removeItem("wbcms_remember_username");
+                }
+
+                localStorage.setItem(
+                    "wbcms_token",
+                    data.token
+                );
+
+
+                localStorage.setItem(
+                    "wbcms_user_id",
+                    data.userId
+                );
+
+
+                localStorage.setItem(
+                    "wbcms_username",
+                    data.username || username
+                );
+
+
+                localStorage.setItem(
+                    "wbcms_role",
+                    returnedRole
+                );
+
+
+                localStorage.setItem(
+                    "wbcms_user_type",
+                    "STAFF"
+                );
+
+                if (data.fullName) {
+                    localStorage.setItem(
+                        "wbcms_full_name",
+                        data.fullName
+                    );
+                }
+
+                localStorage.setItem(
+                    "wbcms_user",
+                    JSON.stringify({
+                        id: data.userId,
+                        username: data.username || username,
+                        role: returnedRole,
+                        fullName: data.fullName
+                    })
+                );
+
+                /* =========================================
+                   SUCCESS & ROLE-BASED ACCESS
+                ========================================== */
+
+                if (returnedRole === "PROJECT_MANAGER") {
+                    showSuccess(
+                        "Login successful. Detected role: Project Manager. Opening Project Management Dashboard..."
+                    );
+
+                    setTimeout(
+                        function () {
+                            window.location.replace(
+                                "/projects.html"
+                            );
+                        },
+                        500
+                    );
+                } else {
+                    showSuccess(
+                        "Login successful. Detected role: " + returnedRole.replace(/_/g, ' ') + ". Opening dashboard..."
+                    );
+
+                    setTimeout(
+                        function () {
+                            window.location.replace(
+                                "/dashboard.html"
+                            );
+                        },
+                        500
+                    );
+                }
+
+
+            } catch (error) {
+
+                console.error(
+                    "Staff login error:",
+                    error
+                );
+
+
+                showError(
+                    "Cannot connect to the server. Please make sure Spring Boot is running."
+                );
+
+            } finally {
+
+                loginButton.disabled = false;
+
+                loginButton.innerHTML =
+                    '<i class="fa-solid fa-right-to-bracket"></i> Sign In to Dashboard';
+
+            }
+
+        }
+    );
+
+
+
+    /* =====================================================
+       SWITCH BETWEEN SIGN IN & REGISTER
+    ===================================================== */
+    const authSwitchBtn = document.getElementById("authSwitchBtn");
+    const authSwitchPrompt = document.getElementById("authSwitchPrompt");
+    const registerForm = document.getElementById("staffRegisterForm");
+    const staffHeadingTitle = document.getElementById("staffHeadingTitle");
+    const staffHeadingSub = document.getElementById("staffHeadingSub");
+    let isRegisterMode = false;
+
+    if (authSwitchBtn) {
+        authSwitchBtn.addEventListener("click", function () {
+            isRegisterMode = !isRegisterMode;
+            message.textContent = "";
+            message.className = "form-message";
+
+            if (isRegisterMode) {
+                loginForm.style.display = "none";
+                registerForm.style.display = "block";
+                staffHeadingTitle.textContent = "Create Staff Account";
+                staffHeadingSub.textContent = "Register with your assigned company role.";
+                authSwitchPrompt.textContent = "Already have an account?";
+                authSwitchBtn.textContent = "Sign In";
+            } else {
+                loginForm.style.display = "block";
+                registerForm.style.display = "none";
+                staffHeadingTitle.textContent = "Staff Sign In";
+                staffHeadingSub.textContent = "Access your WBCMS management workspace.";
+                authSwitchPrompt.textContent = "Don't have a staff account?";
+                authSwitchBtn.textContent = "Register Now";
+            }
+        });
+    }
+
+    /* =====================================================
+       REGISTER PASSWORD SHOW / HIDE
+    ===================================================== */
+    function setupToggle(inputId, btnId) {
+        const input = document.getElementById(inputId);
+        const btn = document.getElementById(btnId);
+        if (input && btn) {
+            btn.addEventListener("click", function () {
+                if (input.type === "password") {
+                    input.type = "text";
+                    btn.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+                } else {
+                    input.type = "password";
+                    btn.innerHTML = '<i class="fa-solid fa-eye"></i>';
+                }
+            });
+        }
+    }
+    setupToggle("regPassword", "regTogglePassword");
+    setupToggle("regConfirmPassword", "regToggleConfirmPassword");
+
+    /* =====================================================
+       STAFF REGISTRATION SUBMIT
+    ===================================================== */
+    if (registerForm) {
+        registerForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const regMsg = document.getElementById("regMessage");
+            const regBtn = document.getElementById("regSubmitButton");
+            regMsg.textContent = "";
+            regMsg.className = "form-message";
+
+            const fullName = document.getElementById("regFullName").value.trim();
+            const username = document.getElementById("regUsername").value.trim();
+            const email = document.getElementById("regEmail").value.trim();
+            const role = document.getElementById("regRole").value;
+            const phone = document.getElementById("regPhone").value.trim();
+            const password = document.getElementById("regPassword").value;
+            const confirmPassword = document.getElementById("regConfirmPassword").value;
+
+            if (!fullName || !username || !email || !role || !password) {
+                regMsg.textContent = "Please fill in all required fields.";
+                regMsg.className = "form-message error";
+                return;
+            }
+
+            if (password.length < 8) {
+                regMsg.textContent = "Password must be at least 8 characters long.";
+                regMsg.className = "form-message error";
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                regMsg.textContent = "Passwords do not match.";
+                regMsg.className = "form-message error";
+                return;
+            }
+
+            regBtn.disabled = true;
+            regBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating Account...';
+
+            try {
+                const response = await fetch("/api/auth/register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        fullName: fullName,
+                        username: username,
+                        email: email,
+                        phoneNumber: phone || null,
+                        role: role,
+                        password: password
+                    })
+                });
+
+                const data = await response.json().catch(() => null);
+
+                if (!response.ok) {
+                    const err = (data && (data.message || data.error)) 
+                        ? (data.message || data.error) 
+                        : "Registration failed. Username or email may already be in use.";
+                    regMsg.textContent = err;
+                    regMsg.className = "form-message error";
+                    return;
+                }
+
+                regMsg.textContent = "Staff account created successfully! Switching to sign in...";
+                regMsg.className = "form-message success";
+
+                setTimeout(function () {
+                    if (authSwitchBtn) authSwitchBtn.click();
+                    usernameInput.value = username;
+                    passwordInput.value = "";
+                    if (roleInput) roleInput.value = role;
+                    showSuccess("Account registered successfully! Enter your password to sign in.");
+                    passwordInput.focus();
+                }, 1200);
+
+            } catch (err) {
+                console.error("Staff registration error:", err);
+                regMsg.textContent = "Cannot connect to the server. Please try again.";
+                regMsg.className = "form-message error";
+            } finally {
+                regBtn.disabled = false;
+                regBtn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Create Staff Account';
+            }
+        });
+    }
+
+
+
+    /* =====================================================
+       ERROR MESSAGE
+    ===================================================== */
+
+    function showError(text) {
+
+        message.textContent = text;
+
+        message.className =
+            "form-message error";
+
+    }
+
+
+
+    /* =====================================================
+       SUCCESS MESSAGE
+    ===================================================== */
+
+    function showSuccess(text) {
+
+        message.textContent = text;
+
+        message.className =
+            "form-message success";
+
+    }
+
+
+</script>
+
+
+</body>
+
+</html>
