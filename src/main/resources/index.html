@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WBCMS | Enterprise Construction & Project Management</title>
+    <meta name="description" content="Plan, manage, monitor and deliver enterprise construction projects with real-time materials inventory, task dispatching, and client transparency.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap Icons & Font Awesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/landing-premium.css">
+    <link rel="stylesheet" href="css/client-portal-integration.css">
+
+    <style>
+        /* Interactive Project Filter Animations */
+        .project-card-luxury.hide-project {
+            display: none !important;
+        }
+
+        /* Interactive Newsletter Toast */
+        .newsletter-toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(13, 22, 41, 0.95);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            border-radius: 12px;
+            padding: 14px 20px;
+            color: #ffffff;
+            font-size: 13px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            animation: slideInUp 0.3s ease;
+        }
+
+        .newsletter-toast.show {
+            display: flex;
+        }
+
+        @keyframes slideInUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+
+<body class="landing-page">
+
+<!-- =========================================================
+     HEADER & NAVIGATION
+========================================================= -->
+<header class="site-header">
+    <!-- BRAND LOGO -->
+    <a class="brand" href="/index.html">
+        <span class="brand-mark">🏗️</span>
+        <span style="font-weight:900; letter-spacing:-0.5px;">WBCMS</span>
+    </a>
+
+    <!-- NAVIGATION LINKS -->
+    <nav>
+        <a href="#projects">Finished Projects</a>
+        <a href="#features">Capabilities</a>
+        <a href="#workflow">Workflow</a>
+        <a href="#about">About</a>
+        <a href="#location">Headquarters</a>
+        <a href="#reviews">Reviews</a>
+    </nav>
+
+    <!-- HEADER ACTIONS (GUEST MODE) -->
+    <div class="header-actions" id="guestHeaderActions">
+        <button class="btn btn-ghost" onclick="openLoginChoice()">
+            <i class="fa-solid fa-right-to-bracket"></i> Sign In
+        </button>
+        <button class="btn btn-primary" onclick="openLoginChoice()">
+            <i class="fa-solid fa-rocket"></i> Get Started
+        </button>
+    </div>
+
+    <!-- HEADER ACTIONS (LOGGED-IN CLIENT) -->
+    <div class="header-actions cw-header-actions" id="clientHeaderActions" style="display:none;">
+        <a href="/client-project-requests.html" class="cw-notif-btn" id="headerNotifBtn" title="View Notifications & Project Requests">
+            <span class="cw-notif-badge" id="cwNotifBadge">1</span>
+            <i class="fa-solid fa-bell"></i>
+        </a>
+
+        <div class="cw-profile-dropdown" id="clientProfileDropdown">
+            <a href="/client-project-requests.html" class="cw-profile-btn" id="headerProfileBox" title="Click to open Client Dashboard">
+                <span class="cw-profile-name" id="headerClientName">Client User</span>
+                <i class="fa-solid fa-chevron-down cw-chevron"></i>
+                <img src="" alt="Profile" class="cw-avatar-img" id="headerClientAvatarImg" style="display:none;">
+            </a>
+
+            <div class="client-profile-menu" id="clientProfileMenu">
+                <div class="profile-menu-header">
+                    <strong id="menuClientFullName">Client User</strong>
+                    <span id="menuClientEmail">client@example.com</span>
+                </div>
+                <a href="/client-project-requests.html" class="profile-menu-item">
+                    <i class="fa-solid fa-gauge-high"></i>
+                    <span>Client Dashboard</span>
+                </a>
+                <a href="/client-project-requests.html" class="profile-menu-item">
+                    <i class="fa-solid fa-folder-open"></i>
+                    <span>My Project Requests</span>
+                </a>
+                <a href="/client-project-requests.html?tab=profile" class="profile-menu-item">
+                    <i class="fa-solid fa-user-circle"></i>
+                    <span>My Profile</span>
+                </a>
+                <div class="profile-menu-divider"></div>
+                <button type="button" class="profile-menu-item danger-item" onclick="window.ClientPortal.logout()">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Sign Out</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+
+    <!-- =====================================================
+         HERO SECTION
+    ====================================================== -->
+    <section class="hero-luxury">
+        <div class="hero-luxury-copy">
+            <div class="hero-luxury-badge">
+                <i class="fa-solid fa-bolt"></i> Next-Generation Construction Platform
+            </div>
+
+            <h1 class="hero-title">
+                Build Smarter.
+                <br>
+                <span class="gradient-text">Deliver Greater.</span>
+            </h1>
+
+            <p class="hero-subtitle">
+                The all-in-one construction management operating system. Connect project managers, field engineers, procurement teams, and clients seamlessly with live database tracking.
+            </p>
+
+            <div class="hero-btn-row">
+                <button class="btn btn-primary" style="padding:14px 28px; font-size:14px;" onclick="openLoginChoice()">
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i> Access Platform Portal
+                </button>
+                <a href="#projects" class="btn btn-ghost" style="padding:14px 24px; font-size:14px;">
+                    <i class="fa-solid fa-images"></i> Explore Finished Projects
+                </a>
+            </div>
+
+            <!-- LIVE METRICS -->
+            <div class="hero-stats-glass">
+                <div class="hero-stat-box">
+                    <strong>50+</strong>
+                    <span>Completed Builds</span>
+                </div>
+                <div class="hero-stat-box">
+                    <strong>99.4%</strong>
+                    <span>Client Satisfaction</span>
+                </div>
+                <div class="hero-stat-box">
+                    <strong>15+</strong>
+                    <span>Partner Firms</span>
+                </div>
+                <div class="hero-stat-box">
+                    <strong>24/7</strong>
+                    <span>Live Monitoring</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- FLOATING LIVE DASHBOARD PREVIEW CARD -->
+        <div class="hero-visual-card">
+            <div class="visual-card-header">
+                <div class="visual-card-title">
+                    <i class="fa-solid fa-cubes-stacked" style="color:var(--lp-orange);"></i>
+                    <span>WBCMS Live Operations Console</span>
+                </div>
+                <span class="live-pulse-badge">
+                    <span class="pulse-dot-green"></span> Live Sync
+                </span>
+            </div>
+
+            <div class="visual-metric-grid">
+                <div class="visual-metric-tile">
+                    <small>Active Sites</small>
+                    <b>12 Commercial Sites</b>
+                </div>
+                <div class="visual-metric-tile">
+                    <small>Inventory Health</small>
+                    <b style="color:#34d399;">98.6% In Stock</b>
+                </div>
+                <div class="visual-metric-tile">
+                    <small>Milestone Schedule</small>
+                    <b style="color:#38bdf8;">Ahead of Target</b>
+                </div>
+                <div class="visual-metric-tile">
+                    <small>Active Team</small>
+                    <b>84 Field Staff</b>
+                </div>
+            </div>
+
+            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:16px;">
+                <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:8px;">
+                    <span style="color:#cbd5e1; font-weight:600;"><i class="fa-solid fa-building"></i> The Lumina Skyscraper Build</span>
+                    <span style="color:var(--lp-orange); font-weight:700;">88% Completed</span>
+                </div>
+                <div style="background:rgba(255,255,255,0.08); height:7px; border-radius:10px; overflow:hidden;">
+                    <div style="background:linear-gradient(90deg, #ff7a1a, #10b981); width:88%; height:100%; border-radius:10px;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =====================================================
+         FINISHED PROJECTS SHOWCASE
+    ====================================================== -->
+    <section id="projects" class="luxury-section">
+        <div class="section-head-center">
+            <span class="section-eyebrow">PORTFOLIO & TRACK RECORD</span>
+            <h2 class="section-main-title">Our Featured <span>Finished Projects</span></h2>
+            <p class="section-desc-text">
+                Explore our landmark infrastructure, commercial high-rises, luxury resorts, and sustainable corporate campuses delivered to perfection.
+            </p>
+        </div>
+
+        <!-- Filter Category Tabs -->
+        <div class="project-filter-bar">
+            <button class="filter-chip active" onclick="filterProjects('all', this)">All Projects</button>
+            <button class="filter-chip" onclick="filterProjects('commercial', this)">Commercial & Towers</button>
+            <button class="filter-chip" onclick="filterProjects('hospitality', this)">Hospitality & Resorts</button>
+            <button class="filter-chip" onclick="filterProjects('infrastructure', this)">Infrastructure & Bridges</button>
+            <button class="filter-chip" onclick="filterProjects('sustainable', this)">Sustainable & Eco-Campus</button>
+        </div>
+
+        <!-- Projects Grid with Real Images -->
+        <div class="finished-projects-grid">
+            
+            <!-- Project 1: Lumina Tower -->
+            <article class="project-card-luxury" data-category="commercial">
+                <div class="project-img-wrapper">
+                    <img src="/images/project-lumina-tower.jpg" alt="The Lumina Commercial Tower" loading="lazy">
+                    <span class="project-category-tag">Commercial</span>
+                    <span class="project-badge-completed"><i class="fa-solid fa-circle-check"></i> Completed 2025</span>
+                </div>
+                <div class="project-card-body">
+                    <h3>The Lumina Commercial Tower</h3>
+                    <div class="project-location-sub">
+                        <i class="fa-solid fa-location-dot"></i> Central Business District, Colombo 03
+                    </div>
+                    <p class="project-desc">
+                        A prestigious 48-story corporate skyscraper featuring energy-efficient double-glazed curtain walls, integrated rooftop skygardens, and intelligent building automation.
+                    </p>
+                    <div class="project-spec-pills">
+                        <span class="spec-pill"><i class="fa-solid fa-dollar-sign"></i> Budget: <strong>$42.5M</strong></span>
+                        <span class="spec-pill"><i class="fa-solid fa-clock"></i> Duration: <strong>26 Months</strong></span>
+                        <span class="spec-pill"><i class="fa-solid fa-star" style="color:#fbbf24;"></i> Client: <strong>5.0 / 5.0</strong></span>
+                    </div>
+                    <button class="project-view-btn" onclick="openProjectModal('The Lumina Commercial Tower', 'Colombo 03', 'Commercial Development', '$42.5 Million USD', '26 Months (Delivered 2 Weeks Ahead)', '48 Floors, Sky Garden Atrium, LEED Gold Certified, High-speed smart elevators, Earthquake-resilient foundation structure.', '/images/project-lumina-tower.jpg')">
+                        <i class="fa-solid fa-circle-info"></i> View Project Dossier
+                    </button>
+                </div>
+            </article>
+
+            <!-- Project 2: Luna Mar Resort -->
+            <article class="project-card-luxury" data-category="hospitality">
+                <div class="project-img-wrapper">
+                    <img src="/images/project-luna-mar-resort.jpg" alt="Luna Mar Beachfront Resort" loading="lazy">
+                    <span class="project-category-tag">Hospitality</span>
+                    <span class="project-badge-completed"><i class="fa-solid fa-circle-check"></i> Completed 2025</span>
+                </div>
+                <div class="project-card-body">
+                    <h3>Luna Mar Oceanfront Resort & Villas</h3>
+                    <div class="project-location-sub">
+                        <i class="fa-solid fa-location-dot"></i> Coastal Highway, Negombo
+                    </div>
+                    <p class="project-desc">
+                        A 5-star tropical luxury resort featuring cantilevered timber decks, a 70m infinity horizon pool, overwater private suites, and coastal marine-grade engineering.
+                    </p>
+                    <div class="project-spec-pills">
+                        <span class="spec-pill"><i class="fa-solid fa-dollar-sign"></i> Budget: <strong>$28.0M</strong></span>
+                        <span class="spec-pill"><i class="fa-solid fa-clock"></i> Duration: <strong>18 Months</strong></span>
+                        <span class="spec-pill"><i class="fa-solid fa-star" style="color:#fbbf24;"></i> Client: <strong>5.0 / 5.0</strong></span>
+                    </div>
+                    <button class="project-view-btn" onclick="openProjectModal('Luna Mar Oceanfront Resort & Villas', 'Negombo Coastline', 'Luxury Hospitality & Resort', '$28.0 Million USD', '18 Months', '120 Guest Suites, 70m Infinity Pool, Solar Thermal Water Heating, Marine-Resistant Reinforced Concrete, Private Marina Pier.', '/images/project-luna-mar-resort.jpg')">
+                        <i class="fa-solid fa-circle-info"></i> View Project Dossier
+                    </button>
+                </div>
+            </article>
+
+            <!-- Project 3: Harbor Cable Bridge -->
+            <article class="project-card-luxury" data-category="infrastructure">
+                <div class="project-img-wrapper">
+                    <img src="/images/project-harbor-bridge.jpg" alt="Harbor Bridge Expansion" loading="lazy">
+                    <span class="project-category-tag">Civil Infrastructure</span>
+                    <span class="project-badge-completed"><i class="fa-solid fa-circle-check"></i> Completed 2024</span>
+                </div>
+                <div class="project-card-body">
+                    <h3>The Ocean Gateway Cable-Stayed Bridge</h3>
+                    <div class="project-location-sub">
+                        <i class="fa-solid fa-location-dot"></i> Port & Harbor Corridor, Galle
+                    </div>
+                    <p class="project-desc">
+                        A 2.4 km multi-lane cable-stayed suspension bridge connecting the deep-sea port with regional expressways, engineered with high-tensile stay cables and navigational clearance.
+                    </p>
+                    <div class="project-spec-pills">
+                        <span class="spec-pill"><i class="fa-solid fa-dollar-sign"></i> Budget: <strong>$65.0M</strong></span>
+                        <span class="spec-pill"><i class="fa-solid fa-clock"></i> Duration: <strong>32 Months</strong></span>
+                        <span class="spec-pill"><i class="fa-solid fa-star" style="color:#fbbf24;"></i> Client: <strong>4.9 / 5.0</strong></span>
+                    </div>
+                    <button class="project-view-btn" onclick="openProjectModal('The Ocean Gateway Cable-Stayed Bridge', 'Galle Port Corridor', 'Civil Infrastructure & Transport', '$65.0 Million USD', '32 Months', '2.4 km Span, 6-Lane Highway Capacity, 160m Pylon Height, Seismic Class 9 Dampers, Real-time Fiber Optic Structural Health Monitoring.', '/images/project-harbor-bridge.jpg')">
+                        <i class="fa-solid fa-circle-info"></i> View Project Dossier
+                    </button>
+                </div>
+            </article>
+
+            <!-- Project 4: Eco Tech Campus -->
+            <article class="project-card-luxury" data-category="sustainable">
+                <div class="project-img-wrapper">
+                    <img src="/images/project-eco-campus.jpg" alt="Verdant Eco Tech Park" loading="lazy">
+                    <span class="project-category-tag">Sustainable Tech</span>
+                    <span class="project-badge-completed"><i class="fa-solid fa-circle-check"></i> Completed 2025</span>
+                </div>
+                <div class="project-card-body">
+                    <h3>Verdant Solar Tech Innovation Campus</h3>
+                    <div class="project-location-sub">
+                        <i class="fa-solid fa-location-dot"></i> Technology Innovation Hub, Malabe
+                    </div>
+                    <p class="project-desc">
+                        A net-zero carbon corporate research park featuring undulating rooftop photovoltaic solar arrays, rainwater bio-filtration ponds, and natural airflow architecture.
+                    </p>
+                    <div class="project-spec-pills">
+                        <span class="spec-pill"><i class="fa-solid fa-dollar-sign"></i> Budget: <strong>$35.2M</strong></span>
+                        <span class="spec-pill"><i class="fa-solid fa-clock"></i> Duration: <strong>22 Months</strong></span>
+                        <span class="spec-pill"><i class="fa-solid fa-star" style="color:#fbbf24;"></i> Client: <strong>5.0 / 5.0</strong></span>
+                    </div>
+                    <button class="project-view-btn" onclick="openProjectModal('Verdant Solar Tech Innovation Campus', 'Malabe Technology Hub', 'Green Tech & Sustainable Architecture', '$35.2 Million USD', '22 Months', '1.2 MW Rooftop Solar Farm, Zero-Carbon Footprint, Natural Rainwater Filtration Wetlands, Smart HVAC Geothermal Cooling.', '/images/project-eco-campus.jpg')">
+                        <i class="fa-solid fa-circle-info"></i> View Project Dossier
+                    </button>
+                </div>
+            </article>
+
+            <!-- Project 5: Grand Horizon Waterfront Residences -->
+            <article class="project-card-luxury" data-category="commercial">
+                <div class="project-img-wrapper">
+                    <img src="/images/project-horizon-residences.jpg" alt="Grand Horizon Waterfront Residences" loading="lazy">
+                    <span class="project-category-tag">Luxury Residential</span>
+                    <span class="project-badge-completed"><i class="fa-solid fa-circle-check"></i> Completed 2025</span>
+                </div>
+                <div class="project-card-body">
+                    <h3>Grand Horizon Waterfront Residences</h3>
+                    <div class="project-location-sub">
+                        <i class="fa-solid fa-location-dot"></i> Marina Promenade, Colombo 01
+                    </div>
+                    <p class="project-desc">
+                        Twin 42-story waterfront residential towers engineered with aerodynamic curved glass facades, vertical sky gardens, a cantilevered rooftop infinity pool, and private marina docking.
+                    </p>
+                    <div class="project-spec-pills">
+                        <span class="spec-pill"><i class="fa-solid fa-dollar-sign"></i> Budget: <strong>$54.0M</strong></span>
+                        <span class="spec-pill"><i class="fa-solid fa-clock"></i> Duration: <strong>24 Months</strong></span>
+                        <span class="spec-pill"><i class="fa-solid fa-star" style="color:#fbbf24;"></i> Client: <strong>5.0 / 5.0</strong></span>
+                    </div>
+                    <button class="project-view-btn" onclick="openProjectModal('Grand Horizon Waterfront Residences', 'Marina Promenade, Colombo 01', 'Luxury High-Rise Residential', '$54.0 Million USD', '24 Months', 'Twin 42-Story Towers, 280 Premium Suites, Cantilevered Rooftop Pool, Private Marina Slipway, Post-Tensioned Concrete Engineering.', '/images/project-horizon-residences.jpg')">
+                        <i class="fa-solid fa-circle-info"></i> View Project Dossier
+                    </button>
+                </div>
+            </article>
+
+            <!-- Project 6: Metropolitan Central Transit & Rail Hub -->
+            <article class="project-card-luxury" data-category="infrastructure">
+                <div class="project-img-wrapper">
+                    <img src="/images/project-transit-hub.jpg" alt="Metropolitan Central Transit & Rail Hub" loading="lazy">
+                    <span class="project-category-tag">Civil Infrastructure</span>
+                    <span class="project-badge-completed"><i class="fa-solid fa-circle-check"></i> Completed 2024</span>
+                </div>
+                <div class="project-card-body">
+                    <h3>Metropolitan Central Transit & Rail Hub</h3>
+                    <div class="project-location-sub">
+                        <i class="fa-solid fa-location-dot"></i> Multi-Modal Transport Corridor, Kandy
+                    </div>
+                    <p class="project-desc">
+                        A world-class multimodal high-speed rail terminal featuring a sweeping parametric steel-and-glass canopy, automated passenger logistics, solar glazing, and seismic-damped structural arches.
+                    </p>
+                    <div class="project-spec-pills">
+                        <span class="spec-pill"><i class="fa-solid fa-dollar-sign"></i> Budget: <strong>$78.5M</strong></span>
+                        <span class="spec-pill"><i class="fa-solid fa-clock"></i> Duration: <strong>30 Months</strong></span>
+                        <span class="spec-pill"><i class="fa-solid fa-star" style="color:#fbbf24;"></i> Client: <strong>4.9 / 5.0</strong></span>
+                    </div>
+                    <button class="project-view-btn" onclick="openProjectModal('Metropolitan Central Transit & Rail Hub', 'Multi-Modal Transport Corridor, Kandy', 'Transportation & Civil Engineering', '$78.5 Million USD', '30 Months', 'High-Speed Rail Platforms, 45,000 m² Parametric Steel Canopy, Integrated Bus Rapid Transit Interchange, Geothermal Climate Control, 50,000 Daily Commuter Capacity.', '/images/project-transit-hub.jpg')">
+                        <i class="fa-solid fa-circle-info"></i> View Project Dossier
+                    </button>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- =====================================================
+         CORE PLATFORM MODULES & CAPABILITIES
+    ====================================================== -->
+    <section id="features" class="luxury-section">
+        <div class="section-head-center">
+            <span class="section-eyebrow">ENTERPRISE CAPABILITIES</span>
+            <h2 class="section-main-title">One Platform. <span>Every Workflow.</span></h2>
+            <p class="section-desc-text">
+                Designed to give managers complete oversight, field teams speed, and clients crystal-clear visibility into budgets and progress.
+            </p>
+        </div>
+
+        <div class="feature-grid">
+            <article class="feature-card large">
+                <span class="feature-icon" style="background:rgba(255,122,26,0.15); color:var(--lp-orange);">
+                    <i class="fa-solid fa-diagram-project"></i>
+                </span>
+                <h3>Project Lifecycle & Scheduling</h3>
+                <p>
+                    Manage complete project timelines, milestones, budgets, blueprints, and critical-path schedules with multi-tier role authorization.
+                </p>
+                <button onclick="openStaffLogin()" class="module-link">
+                    Explore Manager Console →
+                </button>
+            </article>
+
+            <article class="feature-card">
+                <span class="feature-icon" style="background:rgba(6,182,212,0.15); color:#22d3ee;">
+                    <i class="fa-solid fa-boxes-stacked"></i>
+                </span>
+                <h3>Materials & Inventory</h3>
+                <p>
+                    Live stock transaction tracking, safety threshold reorder alerts, and digital material requisitions.
+                </p>
+            </article>
+
+            <article class="feature-card">
+                <span class="feature-icon" style="background:rgba(139,92,246,0.15); color:#c084fc;">
+                    <i class="fa-solid fa-list-check"></i>
+                </span>
+                <h3>Task & Staff Dispatch</h3>
+                <p>
+                    Assign tasks to supervisors and engineers with deadlines, priorities, and real-time completion tracking.
+                </p>
+            </article>
+
+            <article class="feature-card">
+                <span class="feature-icon" style="background:rgba(16,185,129,0.15); color:#34d399;">
+                    <i class="fa-solid fa-chart-line"></i>
+                </span>
+                <h3>Progress Reports & Issues</h3>
+                <p>
+                    Daily field logs, percentage updates, and automated safety issue escalation in SQL Server.
+                </p>
+            </article>
+
+            <article class="feature-card">
+                <span class="feature-icon" style="background:rgba(244,63,94,0.15); color:#fb7185;">
+                    <i class="fa-solid fa-user-shield"></i>
+                </span>
+                <h3>Security & RBAC Management</h3>
+                <p>
+                    Granular permission matrices across 6 specialized organizational roles with JWT authentication.
+                </p>
+            </article>
+
+            <article class="feature-card">
+                <span class="feature-icon" style="background:rgba(245,158,11,0.15); color:#fbbf24;">
+                    <i class="fa-solid fa-handshake"></i>
+                </span>
+                <h3>Client Portal & Proposals</h3>
+                <p>
+                    Direct client proposal submissions, instant estimate calculation, and transparent project milestone views.
+                </p>
+                <button onclick="openClientLogin()" class="module-link">
+                    Open Client Portal →
+                </button>
+            </article>
+        </div>
+    </section>
+
+    <!-- =====================================================
+         ENGINEERING PROCESS / 4-STEP WORKFLOW
+    ====================================================== -->
+    <section id="workflow" class="luxury-section">
+        <div class="section-head-center">
+            <span class="section-eyebrow">OUR METHODOLOGY</span>
+            <h2 class="section-main-title">The 4-Step <span>Delivery Pipeline</span></h2>
+            <p class="section-desc-text">
+                How WBCMS transforms initial architectural concepts into commissioned, world-class physical structures.
+            </p>
+        </div>
+
+        <div class="process-grid-luxury">
+            <div class="process-step-card">
+                <div class="step-number-badge">01</div>
+                <h3>Architectural Planning</h3>
+                <p>Feasibility assessment, structural engineering schematics, and 3D digital blueprint verification.</p>
+            </div>
+
+            <div class="process-step-card">
+                <div class="step-number-badge">02</div>
+                <h3>Smart Sourcing</h3>
+                <p>Verified supplier contracts, automated material requisitions, and inventory safety threshold tracking.</p>
+            </div>
+
+            <div class="process-step-card">
+                <div class="step-number-badge">03</div>
+                <h3>Field Execution</h3>
+                <p>Daily task dispatching, on-site quality compliance inspection, and real-time progress reporting.</p>
+            </div>
+
+            <div class="process-step-card">
+                <div class="step-number-badge">04</div>
+                <h3>Final Commissioning</h3>
+                <p>Safety audits, environmental certifications, warranty handovers, and final client sign-off.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- =====================================================
+         GOOGLE MAP & HEADQUARTERS LOCATION
+    ====================================================== -->
+    <section id="location" class="luxury-section">
+        <div class="section-head-center">
+            <span class="section-eyebrow">GLOBAL HEADQUARTERS</span>
+            <h2 class="section-main-title">Visit Our <span>Offices & Hubs</span></h2>
+            <p class="section-desc-text">
+                Located in the heart of the commercial capital with direct coordination across our regional construction sites.
+            </p>
+        </div>
+
+        <div class="map-contact-container">
+            <!-- Contact Information Card -->
+            <div class="contact-info-panel">
+                <div>
+                    <span class="hq-badge-pill">
+                        <span class="pulse-dot-green"></span> Open Now • Mon - Sat 8:00 AM - 6:00 PM
+                    </span>
+
+                    <h3>WBCMS Engineering Headquarters</h3>
+                    <p class="subhead">
+                        Reach out directly to our engineering desk, schedule a project consultation, or visit our headquarters.
+                    </p>
+
+                    <div class="contact-details-list">
+                        <div class="contact-item-row">
+                            <div class="contact-icon-box">
+                                <i class="fa-solid fa-building"></i>
+                            </div>
+                            <div class="contact-text-meta">
+                                <strong>Headquarters Address</strong>
+                                <span>No. 420, Galle Road, Colombo 03, Western Province, Sri Lanka</span>
+                            </div>
+                        </div>
+
+                        <div class="contact-item-row">
+                            <div class="contact-icon-box">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                            <div class="contact-text-meta">
+                                <strong>Phone & Hotline</strong>
+                                <a href="tel:+94112345678">+94 11 234 5678 / +94 77 123 4567</a>
+                            </div>
+                        </div>
+
+                        <div class="contact-item-row">
+                            <div class="contact-icon-box">
+                                <i class="fa-solid fa-envelope"></i>
+                            </div>
+                            <div class="contact-text-meta">
+                                <strong>Direct Email</strong>
+                                <a href="mailto:contact@wbcms.com">contact@wbcms.com / info@wbcms.com</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:12px; flex-wrap:wrap; padding-top:20px; border-top:1px solid rgba(255,255,255,0.08);">
+                    <button class="btn btn-primary" onclick="openLoginChoice()">
+                        <i class="fa-solid fa-comments"></i> Inquire for Proposal
+                    </button>
+                    <a href="https://maps.google.com/?q=Colombo+03" target="_blank" class="btn btn-ghost">
+                        <i class="fa-solid fa-location-arrow"></i> Get Directions
+                    </a>
+                </div>
+            </div>
+
+            <!-- Responsive Embedded Google Map -->
+            <div class="map-embed-wrapper">
+                <iframe 
+                    title="WBCMS Headquarters Google Map"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63371.8153648589!2d79.82118635820312!3d6.921838641973656!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae253d10f7a7003%3A0x320b2e4d32d3838d!2sColombo%2C%20Sri%20Lanka!5e0!3m2!1sen!2slk!4v1700000000000!5m2!1sen!2slk" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- =====================================================
+         CLIENT REVIEWS & TESTIMONIALS
+    ====================================================== -->
+    <section id="reviews" class="luxury-section">
+        <div class="section-head-center">
+            <span class="section-eyebrow">TESTIMONIALS</span>
+            <h2 class="section-main-title">Trusted by <span>Industry Leaders</span></h2>
+        </div>
+
+        <div class="review-grid">
+            <blockquote>
+                “WBCMS unified our on-site supervisors, procurement officers, and engineering leads. Site delays have dropped by over 40% across all active builds.”
+                <footer>— Lead Project Manager, Apex Infrastructure</footer>
+            </blockquote>
+
+            <blockquote>
+                “The Client Portal allowed our executives to track budget utilization, view photo reports, and approve change requests without long email chains.”
+                <footer>— Chief Development Officer, Ocean Residences</footer>
+            </blockquote>
+
+            <blockquote>
+                “Material stock transactions and reorder alerts saved us countless hours of manual reconciliation. Everything is synchronized with SQL Server.”
+                <footer>— Senior Procurement Director</footer>
+            </blockquote>
+        </div>
+    </section>
+
+</main>
+
+<!-- =========================================================
+     MEGA FOOTER
+========================================================= -->
+<footer class="site-mega-footer">
+    <div class="footer-top-grid">
+        <!-- Col 1: Brand & Bio -->
+        <div class="footer-brand-col">
+            <a class="brand-logo-text" href="/index.html">
+                <span class="brand-mark">🏗️</span>
+                <span>WBCMS Platform</span>
+            </a>
+            <p>
+                Empowering construction professionals and clients with modern real-time data tracking, resource allocation, and collaborative site management.
+            </p>
+            <div class="footer-uptime-card">
+                <span class="pulse-dot-green"></span> Enterprise Systems Operational • 99.98% Uptime
+            </div>
+        </div>
+
+        <!-- Col 2: Navigation -->
+        <div>
+            <h4 class="footer-col-title">Platform Portals</h4>
+            <ul class="footer-links-list">
+                <li><a href="/client-login.html"><i class="fa-solid fa-chevron-right" style="font-size:10px;"></i> Client Portal</a></li>
+                <li><a href="/staff-login.html"><i class="fa-solid fa-chevron-right" style="font-size:10px;"></i> Staff & Admin Login</a></li>
+                <li><a href="#projects"><i class="fa-solid fa-chevron-right" style="font-size:10px;"></i> Projects Dashboard</a></li>
+                <li><a href="#features"><i class="fa-solid fa-chevron-right" style="font-size:10px;"></i> Task Tracking</a></li>
+                <li><a href="#features"><i class="fa-solid fa-chevron-right" style="font-size:10px;"></i> Materials & Inventory</a></li>
+            </ul>
+        </div>
+
+        <!-- Col 3: Administration & Governance -->
+        <div>
+            <h4 class="footer-col-title">Administration</h4>
+            <ul class="footer-links-list">
+                <li><a href="#features"><i class="fa-solid fa-chevron-right" style="font-size:10px;"></i> User Management</a></li>
+                <li><a href="#features"><i class="fa-solid fa-chevron-right" style="font-size:10px;"></i> Roles & Access (RBAC)</a></li>
+                <li><a href="#workflow"><i class="fa-solid fa-chevron-right" style="font-size:10px;"></i> Supplier Directory</a></li>
+                <li><a href="#workflow"><i class="fa-solid fa-chevron-right" style="font-size:10px;"></i> Document Archive</a></li>
+                <li><a href="#features"><i class="fa-solid fa-chevron-right" style="font-size:10px;"></i> Progress Analytics</a></li>
+            </ul>
+        </div>
+
+        <!-- Col 4: Newsletter & Social -->
+        <div>
+            <h4 class="footer-col-title">Stay Updated</h4>
+            <div class="newsletter-box-luxury">
+                <p>Subscribe for construction industry briefings, engineering updates, and platform features.</p>
+                <form onsubmit="handleNewsletterSubmit(event)" class="newsletter-form-row">
+                    <input type="email" id="newsletterEmailInput" placeholder="Enter your email" required>
+                    <button type="submit">Join</button>
+                </form>
+            </div>
+
+            <div class="footer-social-row">
+                <a href="#" class="social-icon-circle" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a href="#" class="social-icon-circle" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                <a href="#" class="social-icon-circle" title="Twitter / X"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="#" class="social-icon-circle" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" class="social-icon-circle" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-bottom-bar">
+        <span>© 2026 WBCMS Construction Management System. All rights reserved.</span>
+        <span>SLIIT Software Engineering Project | Spring Boot & SQL Server Architecture</span>
+    </div>
+</footer>
+
+<!-- =========================================================
+     PROJECT DETAILS MODAL
+========================================================= -->
+<div id="projectDetailModal" class="login-modal" role="dialog" aria-modal="true">
+    <div class="login-modal-card project-modal-dialog">
+        <button class="modal-close" onclick="closeProjectModal()" aria-label="Close" style="top:14px; right:14px; z-index:10; background:rgba(0,0,0,0.6); color:#fff;">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <img id="modalProjImg" src="/images/project-lumina-tower.jpg" alt="Project Cover" class="project-modal-img">
+        
+        <div class="project-modal-content-pad">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; gap:10px;">
+                <div>
+                    <h2 id="modalProjTitle" style="font-size:22px; font-weight:800; color:#ffffff; margin:0 0 4px; text-align:left;">Project Title</h2>
+                    <span id="modalProjCategory" style="color:var(--lp-orange); font-size:12px; font-weight:700; text-transform:uppercase;">Commercial</span>
+                </div>
+                <span style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); color:#34d399; font-size:11.5px; font-weight:700; padding:4px 10px; border-radius:8px;">
+                    <i class="fa-solid fa-circle-check"></i> Delivered
+                </span>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:14px; margin-bottom:16px;">
+                <div>
+                    <small style="color:var(--lp-text-muted); font-size:11px; display:block;">Location</small>
+                    <strong id="modalProjLocation" style="color:#ffffff; font-size:13px;">Colombo</strong>
+                </div>
+                <div>
+                    <small style="color:var(--lp-text-muted); font-size:11px; display:block;">Total Budget</small>
+                    <strong id="modalProjBudget" style="color:#38bdf8; font-size:13px;">$42.5M</strong>
+                </div>
+                <div>
+                    <small style="color:var(--lp-text-muted); font-size:11px; display:block;">Execution Duration</small>
+                    <strong id="modalProjDuration" style="color:#ffffff; font-size:13px;">26 Months</strong>
+                </div>
+                <div>
+                    <small style="color:var(--lp-text-muted); font-size:11px; display:block;">Engineering Highlights</small>
+                    <strong id="modalProjHighlights" style="color:#fcd34d; font-size:13px;">LEED Gold</strong>
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button type="button" class="btn btn-ghost" onclick="closeProjectModal()">Close</button>
+                <button type="button" class="btn btn-primary" onclick="openLoginChoice()">
+                    <i class="fa-solid fa-pen-to-square"></i> Inquire on Similar Build
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- =========================================================
+     LOGIN CHOICE MODAL (PRESERVED & ENHANCED)
+========================================================= -->
+<div id="loginModal" class="login-modal">
+    <div class="login-modal-card">
+        <button class="modal-close" onclick="closeLoginChoice()" aria-label="Close">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="modal-icon">
+            <i class="fa-solid fa-shield-halved"></i>
+        </div>
+
+        <h2 style="font-size:24px; font-weight:800; color:#142238;">Welcome to WBCMS</h2>
+        <p style="font-size:13.5px; color:#64748b; margin-bottom:24px;">
+            Choose your portal access level to continue to the construction management platform.
+        </p>
+
+        <div class="login-choice-grid">
+            <!-- CLIENT -->
+            <button class="login-choice client-choice" onclick="openClientLogin()">
+                <div class="choice-icon">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <strong>Client Portal</strong>
+            </button>
+
+            <!-- STAFF -->
+            <button class="login-choice staff-choice" onclick="openStaffLogin()">
+                <div class="choice-icon">
+                    <i class="fa-solid fa-users-gear"></i>
+                </div>
+                <strong>Staff & Admin Portal</strong>
+            </button>
+        </div>
+
+        <div class="modal-footer" style="margin-top:24px; padding-top:16px; font-size:11.5px;">
+            🔒 Secure role-based access control with BCrypt & JWT session protection.
+        </div>
+    </div>
+</div>
+
+<!-- FLOATING SECURITY BADGE -->
+<div class="security-badge">
+    <i class="fa-solid fa-shield-halved"></i>
+    <span>Enterprise WBCMS v2.4</span>
+</div>
+
+<!-- NEWSLETTER SUCCESS TOAST -->
+<div id="newsletterToast" class="newsletter-toast">
+    <i class="fa-solid fa-circle-check" style="color:#10b981; font-size:18px;"></i>
+    <span id="newsletterToastText">Thank you for subscribing to WBCMS updates!</span>
+</div>
+
+<!-- =========================================================
+     CLIENT PORTAL MODALS & DIALOGS (UNCHANGED INTEGRATION)
+========================================================= -->
+<div class="cp-modal-backdrop" id="projectRequestFormModal">
+    <div class="cp-modal-card">
+        <button type="button" class="cp-modal-close" onclick="window.ClientPortal.closeModal('projectRequestFormModal')" title="Close dialog">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="cp-modal-header">
+            <h2 id="reqModalTitle"><i class="fa-solid fa-plus-circle" style="color:#ff6a1a;"></i> Create New Project Request</h2>
+            <p>Fill out the details below to submit a construction proposal directly into the WBCMS database</p>
+        </div>
+
+        <form id="projectRequestForm">
+            <div class="cp-form-group">
+                <label for="reqProjectName">Project Name *</label>
+                <input type="text" id="reqProjectName" class="cp-input" placeholder="e.g. Modern Residential Villa or City Tower Build" required maxlength="150">
+            </div>
+
+            <div class="cp-form-row">
+                <div class="cp-form-group">
+                    <label for="reqProjectType">Project Type *</label>
+                    <select id="reqProjectType" class="cp-select" required>
+                        <option value="Residential Construction">Residential Construction</option>
+                        <option value="Commercial Development">Commercial Development</option>
+                        <option value="Industrial Construction">Industrial Construction</option>
+                        <option value="Renovation & Remodeling">Renovation & Remodeling</option>
+                        <option value="Infrastructure & Civil Works">Infrastructure & Civil Works</option>
+                    </select>
+                </div>
+
+                <div class="cp-form-group">
+                    <label for="reqLocation">Location / Site Address *</label>
+                    <input type="text" id="reqLocation" class="cp-input" placeholder="e.g. Colombo 07, Western Province" required maxlength="200">
+                </div>
+            </div>
+
+            <div class="cp-form-row">
+                <div class="cp-form-group">
+                    <label for="reqEstimatedBudget">Estimated Budget (LKR) *</label>
+                    <input type="number" id="reqEstimatedBudget" class="cp-input" placeholder="e.g. 5000000.00" required min="0.01" step="0.01">
+                </div>
+
+                <div class="cp-form-group">
+                    <label for="reqPreferredStartDate">Preferred Start Date *</label>
+                    <input type="date" id="reqPreferredStartDate" class="cp-input" required>
+                </div>
+            </div>
+
+            <div class="cp-form-group">
+                <label for="reqDescription">Project Scope & Description *</label>
+                <textarea id="reqDescription" class="cp-textarea" placeholder="Describe the architectural scope, materials preferences, floors, site requirements, and timeline expectations..." required maxlength="1000"></textarea>
+                <div style="font-size:11px; color:#64748b; margin-top:3px; text-align:right;">Max 1000 characters</div>
+            </div>
+
+            <div class="cp-modal-actions">
+                <button type="button" class="cp-btn-secondary" onclick="window.ClientPortal.closeModal('projectRequestFormModal')">
+                    Cancel
+                </button>
+                <button type="submit" id="saveRequestSubmitBtn" class="cp-btn-primary">
+                    <i class="fa-solid fa-paper-plane"></i> Submit Request to Database
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="cp-modal-backdrop" id="viewRequestModal">
+    <div class="cp-modal-card">
+        <button type="button" class="cp-modal-close" onclick="window.ClientPortal.closeModal('viewRequestModal')" title="Close dialog">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="cp-modal-header">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:6px;">
+                <h2 id="viewReqName" style="margin:0;">Project Inspection</h2>
+                <span id="viewReqStatus" class="badge-status PENDING">PENDING</span>
+            </div>
+            <p>Complete project request details from the WBCMS database</p>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px;">
+            <div class="db-detail-row">
+                <span class="db-detail-lbl">Project Category</span>
+                <span class="db-detail-val" id="viewReqType">--</span>
+            </div>
+            <div class="db-detail-row">
+                <span class="db-detail-lbl">Site Location</span>
+                <span class="db-detail-val" id="viewReqLocation">--</span>
+            </div>
+            <div class="db-detail-row">
+                <span class="db-detail-lbl">Estimated Budget</span>
+                <span class="db-detail-val" id="viewReqBudget" style="color:#60a5fa; font-weight:700;">--</span>
+            </div>
+            <div class="db-detail-row">
+                <span class="db-detail-lbl">Preferred Start Date</span>
+                <span class="db-detail-val" id="viewReqDate">--</span>
+            </div>
+            <div class="db-detail-row">
+                <span class="db-detail-lbl">Submitted On</span>
+                <span class="db-detail-val" id="viewReqCreated">--</span>
+            </div>
+            <div class="db-detail-row">
+                <span class="db-detail-lbl">Last System Update</span>
+                <span class="db-detail-val" id="viewReqUpdated">--</span>
+            </div>
+        </div>
+
+        <div class="cp-form-group">
+            <span class="db-detail-lbl">Scope & Requirements Description</span>
+            <div id="viewReqDesc" style="margin-top:6px; padding:12px 14px; background:rgba(8,14,26,0.8); border:1px solid var(--cp-border); border-radius:12px; font-size:13px; color:#e2e8f0; line-height:1.6; white-space:pre-wrap;">
+                --
+            </div>
+        </div>
+
+        <div class="cp-modal-actions">
+            <button type="button" id="viewModalEditBtn" class="cp-btn-primary" style="display:none;">
+                <i class="fa-solid fa-pen"></i> Edit Request
+            </button>
+            <button type="button" class="cp-btn-secondary" onclick="window.ClientPortal.closeModal('viewRequestModal')">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="cp-modal-backdrop" id="clientProfileModal">
+    <div class="cp-modal-card modal-lg">
+        <button type="button" class="cp-modal-close" onclick="window.ClientPortal.closeModal('clientProfileModal')" title="Close dialog">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div style="display:flex; align-items:center; gap:16px; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid rgba(255,255,255,0.08); flex-wrap:wrap;">
+            <div class="greeting-avatar" id="profileModalAvatar" style="width:54px; height:54px; font-size:20px;">C</div>
+            <div>
+                <h2 id="profileModalFullName" style="margin:0 0 4px 0; font-size:20px; color:#ffffff;">Client Profile</h2>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span id="profileModalUsername" style="font-size:12px; color:var(--cp-muted);">@client</span>
+                    <span class="client-brand-badge" style="margin:0;">Client Portal</span>
+                    <span class="client-profile-status"><span class="pulse-dot"></span> Active in Database</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-modal-grid">
+            <div class="profile-card-col">
+                <div class="profile-col-header">
+                    <h3><i class="fa-solid fa-database" style="color:#3b82f6;"></i> Database Information</h3>
+                    <span style="font-size:10.5px; color:#4ade80; font-weight:600;"><i class="fa-solid fa-circle-check"></i> Verified</span>
+                </div>
+
+                <div class="db-details-list">
+                    <div class="db-detail-row">
+                        <span class="db-detail-lbl">Client ID</span>
+                        <span class="db-detail-val" id="dbUserId">#--</span>
+                    </div>
+                    <div class="db-detail-row">
+                        <span class="db-detail-lbl">Full Legal Name</span>
+                        <span class="db-detail-val" id="dbFullName">--</span>
+                    </div>
+                    <div class="db-detail-row">
+                        <span class="db-detail-lbl">System Username</span>
+                        <span class="db-detail-val" id="dbUsername">--</span>
+                    </div>
+                    <div class="db-detail-row">
+                        <span class="db-detail-lbl">Primary Email</span>
+                        <span class="db-detail-val" id="dbEmail">--</span>
+                    </div>
+                    <div class="db-detail-row">
+                        <span class="db-detail-lbl">Phone Contact</span>
+                        <span class="db-detail-val" id="dbPhone">Not provided</span>
+                    </div>
+                    <div class="db-detail-row">
+                        <span class="db-detail-lbl">Assigned Role</span>
+                        <span class="db-detail-val" id="dbRole" style="color:#60a5fa;">CLIENT</span>
+                    </div>
+                    <div class="db-detail-row">
+                        <span class="db-detail-lbl">Account Member Since</span>
+                        <span class="db-detail-val" id="dbCreatedAt">--</span>
+                    </div>
+                    <div class="db-detail-row">
+                        <span class="db-detail-lbl">Last Profile Update</span>
+                        <span class="db-detail-val" id="dbUpdatedAt">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-card-col">
+                <div class="profile-col-header">
+                    <h3><i class="fa-solid fa-user-pen" style="color:#ff6a1a;"></i> Edit Profile Details</h3>
+                    <span style="font-size:10.5px; color:var(--cp-muted);">Database Sync</span>
+                </div>
+
+                <form id="clientProfileForm">
+                    <div class="cp-form-group">
+                        <label for="editFullName">Full Name *</label>
+                        <input type="text" id="editFullName" class="cp-input" required maxlength="120" placeholder="Enter legal full name">
+                    </div>
+
+                    <div class="cp-form-row">
+                        <div class="cp-form-group">
+                            <label for="editUsername">Username *</label>
+                            <input type="text" id="editUsername" class="cp-input" required maxlength="50" placeholder="Choose username">
+                        </div>
+                        <div class="cp-form-group">
+                            <label for="editEmail">Email Address *</label>
+                            <input type="email" id="editEmail" class="cp-input" required maxlength="120" placeholder="Enter email">
+                        </div>
+                    </div>
+
+                    <div class="cp-form-group">
+                        <label for="editPhone">Phone Number</label>
+                        <input type="tel" id="editPhone" class="cp-input" maxlength="30" placeholder="e.g. +94 77 123 4567 or 0771234567">
+                    </div>
+
+                    <div class="cp-form-group">
+                        <label for="editPassword">New Password (Optional)</label>
+                        <input type="password" id="editPassword" class="cp-input" placeholder="Leave blank to retain current password" minlength="8" maxlength="100">
+                        <div style="font-size:10.5px; color:#64748b; margin-top:2px;">Minimum 8 characters if changing password</div>
+                    </div>
+
+                    <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:14px;">
+                        <button type="submit" id="saveProfileBtn" class="cp-btn-primary">
+                            <i class="fa-solid fa-floppy-disk"></i> Save Profile to Database
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="danger-zone-box">
+            <div class="danger-zone-info">
+                <h4><i class="fa-solid fa-triangle-exclamation"></i> Danger Zone: Delete Profile</h4>
+                <p>Permanently delete your client account, profile details, and all submitted project requests from the database.</p>
+            </div>
+            <button type="button" class="cp-btn-danger" id="triggerDeleteProfileBtn">
+                <i class="fa-solid fa-trash-can"></i> Delete Profile
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="cp-modal-backdrop" id="deleteProfileConfirmModal" style="z-index: 10600;">
+    <div class="cp-modal-card modal-sm confirm-card">
+        <div class="confirm-icon-box">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+
+        <h2>Delete Client Profile?</h2>
+        <p>
+            Are you sure you want to delete your profile?
+            <br><br>
+            This will permanently remove your account, profile data, and all submitted project requests from the database.
+            <br>
+            <strong>This action cannot be undone.</strong>
+        </p>
+
+        <div class="confirm-actions-row">
+            <button type="button" class="cp-btn-secondary" onclick="window.ClientPortal.closeModal('deleteProfileConfirmModal')">
+                No, Keep My Profile
+            </button>
+            <button type="button" class="cp-btn-danger" id="confirmDeleteProfileBtn">
+                <i class="fa-solid fa-trash-can"></i> Yes, Delete My Profile
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="cp-modal-backdrop" id="deleteRequestConfirmModal" style="z-index: 10600;">
+    <div class="cp-modal-card modal-sm confirm-card">
+        <div class="confirm-icon-box">
+            <i class="fa-solid fa-trash-can"></i>
+        </div>
+
+        <h2>Delete Project Request?</h2>
+        <p>
+            Are you sure you want to delete <span id="deleteRequestProjectName" style="color:#ffffff; font-weight:600;">this request</span> from the database?
+            <br>
+            This action cannot be reversed.
+        </p>
+
+        <div class="confirm-actions-row">
+            <button type="button" class="cp-btn-secondary" onclick="window.ClientPortal.closeModal('deleteRequestConfirmModal')">
+                No, Cancel
+            </button>
+            <button type="button" class="cp-btn-danger" id="confirmDeleteRequestBtn">
+                <i class="fa-solid fa-trash-can"></i> Yes, Delete Request
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="cp-toast-container" id="cpToastContainer"></div>
+
+<!-- =========================================================
+     JAVASCRIPT LOGIC
+========================================================= -->
+<script>
+    // Login Modal Handlers
+    const loginModal = document.getElementById("loginModal");
+    function openLoginChoice() {
+        if (loginModal) {
+            loginModal.classList.add("show");
+            document.body.style.overflow = "hidden";
+        }
+    }
+
+    function closeLoginChoice() {
+        if (loginModal) {
+            loginModal.classList.remove("show");
+            document.body.style.overflow = "";
+        }
+    }
+
+    function openClientLogin() {
+        window.location.href = "/client-login.html";
+    }
+
+    function openStaffLogin() {
+        window.location.href = "/staff-login.html";
+    }
+
+    if (loginModal) {
+        loginModal.addEventListener("click", function(event) {
+            if (event.target === loginModal) {
+                closeLoginChoice();
+            }
+        });
+    }
+
+    // Finished Projects Filter
+    function filterProjects(category, btn) {
+        document.querySelectorAll(".filter-chip").forEach(c => c.classList.remove("active"));
+        if (btn) btn.classList.add("active");
+
+        const cards = document.querySelectorAll(".project-card-luxury");
+        cards.forEach(card => {
+            const cardCat = card.getAttribute("data-category");
+            if (category === "all" || cardCat === category) {
+                card.classList.remove("hide-project");
+            } else {
+                card.classList.add("hide-project");
+            }
+        });
+    }
+
+    // Project Detail Modal
+    const projModal = document.getElementById("projectDetailModal");
+    function openProjectModal(title, location, category, budget, duration, highlights, imgUrl) {
+        document.getElementById("modalProjTitle").textContent = title;
+        document.getElementById("modalProjLocation").textContent = location;
+        document.getElementById("modalProjCategory").textContent = category;
+        document.getElementById("modalProjBudget").textContent = budget;
+        document.getElementById("modalProjDuration").textContent = duration;
+        document.getElementById("modalProjHighlights").textContent = highlights;
+        document.getElementById("modalProjImg").src = imgUrl;
+
+        if (projModal) {
+            projModal.classList.add("show");
+            document.body.style.overflow = "hidden";
+        }
+    }
+
+    function closeProjectModal() {
+        if (projModal) {
+            projModal.classList.remove("show");
+            document.body.style.overflow = "";
+        }
+    }
+
+    if (projModal) {
+        projModal.addEventListener("click", function(event) {
+            if (event.target === projModal) {
+                closeProjectModal();
+            }
+        });
+    }
+
+    // Newsletter Submission Toast
+    function handleNewsletterSubmit(e) {
+        e.preventDefault();
+        const input = document.getElementById("newsletterEmailInput");
+        const email = input.value.trim();
+        if (!email) return;
+
+        input.value = "";
+        const toast = document.getElementById("newsletterToast");
+        const toastText = document.getElementById("newsletterToastText");
+        toastText.textContent = `Thank you! Updates will be sent to ${email}.`;
+        toast.classList.add("show");
+
+        setTimeout(() => {
+            toast.classList.remove("show");
+        }, 4000);
+    }
+
+    // Escape Key Modal Dismissal
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "Escape") {
+            closeLoginChoice();
+            closeProjectModal();
+            document.querySelectorAll(".cp-modal-backdrop.show").forEach(m => {
+                m.classList.remove("show");
+            });
+            document.body.style.overflow = "";
+        }
+    });
+</script>
+
+<!-- WBCMS Client Portal Integration Engine -->
+<script src="js/client-portal-integration.js"></script>
+
+</body>
+</html>
