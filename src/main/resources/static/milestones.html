@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WBCMS | Milestone Management</title>
+
+    <!-- Google Fonts: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap Icons & Font Awesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/css/premium-theme.css">
+    <link rel="stylesheet" href="/css/unified-pages.css">
+    <script src="/js/theme-init.js"></script>
+
+    <style>
+        /* Milestone-Specific Styling */
+        .status-badge.pending {
+            background: #f8fafc;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .status-badge.in_progress, .status-badge.in-progress {
+            background: #eff6ff;
+            color: #1a56db;
+            border: 1px solid #bfdbfe;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .status-badge.completed {
+            background: #ecfdf5;
+            color: #059669;
+            border: 1px solid #a7f3d0;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .status-badge.delayed {
+            background: #fffbeb;
+            color: #d97706;
+            border: 1px solid #fde68a;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .status-badge.cancelled {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .table-action-btn {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+            padding: 6px 9px;
+            border-radius: 8px;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            transition: all 0.2s ease;
+        }
+
+        .table-action-btn:hover {
+            color: #1a56db;
+            background: #eff6ff;
+            border-color: #bfdbfe;
+        }
+
+        .table-action-btn.delete:hover {
+            background: #fee2e2;
+            border-color: #fca5a5;
+            color: #dc2626;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Ambient Light Backdrop -->
+<div class="dashboard-backdrop">
+    <div class="dashboard-backdrop-img"></div>
+    <div class="dashboard-backdrop-overlay"></div>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-brand">
+        <div class="brand-logo">
+            <i class="bi bi-buildings-fill"></i>
+        </div>
+        <div>
+            <h2>WBCMS</h2>
+            <span>CONSTRUCTION</span>
+        </div>
+    </div>
+
+    <nav class="sidebar-navigation">
+        <p class="nav-title">MAIN MENU</p>
+
+        <a href="/dashboard.html" class="nav-item">
+            <i class="bi bi-grid-1x2-fill"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="/material-inventory.html" class="nav-item">
+            <i class="bi bi-box-seam-fill"></i>
+            <span>Material & Inventory</span>
+        </a>
+
+        <a href="/material-requests.html" class="nav-item">
+            <i class="bi bi-file-earmark-plus-fill"></i>
+            <span>Material Requests</span>
+        </a>
+
+        <a href="/projects.html" class="nav-item">
+            <i class="bi bi-building"></i>
+            <span>Projects</span>
+        </a>
+
+        <a href="/tasks.html" class="nav-item">
+            <i class="bi bi-clipboard-check"></i>
+            <span>Tasks</span>
+        </a>
+
+        <a href="/milestones.html" class="nav-item active">
+            <i class="bi bi-flag-fill"></i>
+            <span>Milestones</span>
+        </a>
+
+        <a href="/progress.html" class="nav-item">
+            <i class="bi bi-graph-up-arrow"></i>
+            <span>Progress Monitoring</span>
+        </a>
+
+        <a href="/documents.html" class="nav-item">
+            <i class="bi bi-file-earmark-text-fill"></i>
+            <span>Documents</span>
+        </a>
+
+        <p class="nav-title management-title">MANAGEMENT</p>
+
+        <a href="/reports.html" class="nav-item">
+            <i class="bi bi-bar-chart-line"></i>
+            <span>Reports</span>
+        </a>
+
+        <a href="/suppliers.html" class="nav-item">
+            <i class="bi bi-truck"></i>
+            <span>Suppliers</span>
+        </a>
+
+        <a href="/users.html" class="nav-item">
+            <i class="bi bi-people-fill"></i>
+            <span>Users</span>
+        </a>
+
+        <a href="/client-profile.html" class="nav-item">
+            <i class="bi bi-person-badge"></i>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+        <div class="sidebar-version">
+            WBCMS v1.0
+            <span>Construction Management</span>
+        </div>
+        <button class="logout-button" onclick="logout()">
+            <i class="bi bi-box-arrow-left"></i>
+            Logout
+        </button>
+    </div>
+
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+
+    <!-- TOP HEADER -->
+    <header class="top-header">
+
+        <div class="header-left">
+            <button class="mobile-menu" onclick="toggleSidebar()" aria-label="Toggle navigation">
+                <i class="bi bi-list"></i>
+            </button>
+
+            <div class="header-module-badge">
+                <div class="module-icon">
+                    <i class="bi bi-flag-fill"></i>
+                </div>
+                <div class="module-text">
+                    <span class="module-title">Milestones Console</span>
+                    <span class="module-sub"><span class="live-pulse-dot"></span> Live DB</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-center">
+            <div class="header-admin-nav">
+                <button class="hdr-btn primary" onclick="openMilestoneModal()" title="Add New Project Milestone">
+                    <i class="bi bi-plus-circle-fill"></i>
+                    <span>Add Milestone</span>
+                </button>
+                <a href="/projects.html" class="hdr-btn" title="View Projects">
+                    <i class="bi bi-building"></i>
+                    <span>Projects</span>
+                </a>
+                <a href="/tasks.html" class="hdr-btn" title="View Tasks">
+                    <i class="bi bi-clipboard-check"></i>
+                    <span>Tasks</span>
+                </a>
+                <a href="/progress.html" class="hdr-btn" title="Progress Tracking">
+                    <i class="bi bi-graph-up-arrow"></i>
+                    <span>Progress</span>
+                </a>
+                <a href="/reports.html" class="hdr-btn" title="View Reports">
+                    <i class="bi bi-file-earmark-bar-graph-fill"></i>
+                    <span>Reports</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <button class="notification-button" title="Notifications">
+                <i class="bi bi-bell"></i>
+                <span class="notification-badge">3</span>
+            </button>
+
+            <div class="header-separator"></div>
+
+            <div class="profile" onclick="this.classList.toggle('open')" id="profileCard">
+                <div class="profile-avatar">
+                    <i class="bi bi-person-fill"></i>
+                </div>
+                <div class="profile-details">
+                    <strong id="profileName">Staff User</strong>
+                    <span id="profileRole">Staff</span>
+                </div>
+                <i class="bi bi-chevron-down"></i>
+
+                <div class="profile-dropdown-menu">
+                    <div class="dropdown-user-header">
+                        <strong id="dropdownUserName">Staff User</strong>
+                        <span>Milestones Tracking</span>
+                    </div>
+                    <a href="/projects.html" class="dropdown-item">
+                        <i class="bi bi-building"></i>
+                        <span>Projects</span>
+                    </a>
+                    <a href="/progress.html" class="dropdown-item">
+                        <i class="bi bi-graph-up-arrow"></i>
+                        <span>Progress</span>
+                    </a>
+                    <a href="/reports.html" class="dropdown-item">
+                        <i class="bi bi-file-earmark-text"></i>
+                        <span>Reports</span>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item logout" onclick="logout()">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Sign Out</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+    <!-- PAGE CONTENT -->
+    <section class="page-content" style="padding: 24px 32px;">
+
+        <!-- HERO SECTION -->
+        <div class="hero-section">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <span class="hero-label">MAJOR CONTRACT PHASES & TARGET DATES</span>
+                <h1>Milestone Management Console</h1>
+                <p>Track critical construction project milestones, concrete curing windows, target handover dates, and delivery completion.</p>
+                <div class="hero-meta" style="display:flex; gap:16px; margin-top:14px; flex-wrap:wrap;">
+                    <span style="font-size:12px; color:#cbd5e1; display:inline-flex; align-items:center; gap:6px;">
+                        <i class="bi bi-flag" style="color:var(--orange);"></i> Phase Verification Gateways
+                    </span>
+                    <span style="font-size:12px; color:#cbd5e1; display:inline-flex; align-items:center; gap:6px;">
+                        <i class="bi bi-database-check" style="color:var(--blue);"></i> SQL Server Live Sync
+                    </span>
+                    <span style="font-size:12px; color:#cbd5e1; display:inline-flex; align-items:center; gap:6px;">
+                        <i class="bi bi-check-circle" style="color:var(--green);"></i> Deliverable Approvals
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- STATS GRID -->
+        <section class="stats-grid" style="margin-bottom: 24px;">
+
+            <!-- Total Milestones -->
+            <div class="stat-card">
+                <div class="stat-icon total">
+                    <i class="bi bi-flag-fill"></i>
+                </div>
+                <div>
+                    <span class="stat-title">Total Milestones</span>
+                    <h2 id="totalMilestones">0</h2>
+                </div>
+            </div>
+
+            <!-- In Progress -->
+            <div class="stat-card">
+                <div class="stat-icon in-stock">
+                    <i class="bi bi-arrow-repeat"></i>
+                </div>
+                <div>
+                    <span class="stat-title">In Progress</span>
+                    <h2 id="inProgressMilestones">0</h2>
+                </div>
+            </div>
+
+            <!-- Completed -->
+            <div class="stat-card">
+                <div class="stat-icon completed">
+                    <i class="bi bi-check-circle-fill"></i>
+                </div>
+                <div>
+                    <span class="stat-title">Completed</span>
+                    <h2 id="completedMilestones">0</h2>
+                </div>
+            </div>
+
+            <!-- Delayed -->
+            <div class="stat-card">
+                <div class="stat-icon low-stock">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                </div>
+                <div>
+                    <span class="stat-title">Delayed</span>
+                    <h2 id="delayedMilestones">0</h2>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- DIRECTORY CARD -->
+        <section class="inventory-card">
+
+            <div class="card-header" style="display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:18px;">
+                <div>
+                    <span class="section-label">PROJECT CHECKPOINTS OVERVIEW</span>
+                    <h2 style="font-size:20px; font-weight:800; color:#0f172a; margin:0 0 2px 0;">Project Milestones</h2>
+                    <p style="font-size:12.5px; color:#64748b; margin:0;">Major structural checkpoints, client sign-offs, and critical target dates</p>
+                </div>
+
+                <div class="table-filters" style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                    <div class="search-container" style="min-width:240px;">
+                        <i class="bi bi-search"></i>
+                        <input
+                                type="text"
+                                id="milestoneSearch"
+                                placeholder="Search milestones..."
+                                autocomplete="off"
+                        >
+                    </div>
+
+                    <select id="projectFilter">
+                        <option value="">All Projects</option>
+                    </select>
+
+                    <select id="statusFilter">
+                        <option value="">All Statuses</option>
+                        <option value="PENDING">Pending</option>
+                        <option value="IN_PROGRESS">In Progress</option>
+                        <option value="COMPLETED">Completed</option>
+                        <option value="DELAYED">Delayed</option>
+                        <option value="CANCELLED">Cancelled</option>
+                    </select>
+
+                    <button
+                            type="button"
+                            class="action-button primary"
+                            onclick="openMilestoneModal()"
+                    >
+                        <i class="bi bi-plus-circle-fill"></i>
+                        Add Milestone
+                    </button>
+                </div>
+            </div>
+
+            <!-- TABLE -->
+            <div class="table-container" style="overflow-x:auto;">
+                <table>
+                    <thead>
+                    <tr>
+                        <th style="width: 50px;">#</th>
+                        <th>Milestone</th>
+                        <th>Project</th>
+                        <th>Target Date</th>
+                        <th>Completed Date</th>
+                        <th>Status</th>
+                        <th style="width: 120px;">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="milestoneTableBody">
+                    <tr>
+                        <td colspan="7" style="text-align:center; padding:40px;">
+                            <i class="bi bi-arrow-repeat" style="font-size:24px; animation:spin 1s linear infinite; display:inline-block; color:var(--orange);"></i>
+                            <p style="margin-top:8px; color:#8a99ad;">Loading milestones from SQL Server...</p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- EMPTY STATE -->
+            <div id="emptyTable" class="empty-state" style="display:none; text-align:center; padding:40px;">
+                <i class="bi bi-flag" style="font-size:42px; color:#64748b;"></i>
+                <h4 style="margin-top:12px; color:#cbd5e1; font-size:16px;">No Milestones Found</h4>
+                <p style="color:#64748b; font-size:13px; max-width:400px; margin:6px auto 0;">No milestone records match the current search or status filter criteria.</p>
+            </div>
+
+        </section>
+
+    </section>
+
+</main>
+
+<!-- MODAL -->
+<div class="modal" id="milestoneModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <h2 id="modalTitle">Add New Milestone</h2>
+            <button type="button" class="close-button" onclick="closeMilestoneModal()" aria-label="Close">&times;</button>
+        </div>
+
+        <form id="milestoneForm" onsubmit="saveMilestone(event)">
+            <input type="hidden" id="milestoneId">
+
+            <div class="form-group">
+                <label for="milestoneName">Milestone Name *</label>
+                <input
+                        type="text"
+                        id="milestoneName"
+                        maxlength="150"
+                        placeholder="e.g. Substructure Foundation Completed"
+                        required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="milestoneProject">Project *</label>
+                <select id="milestoneProject" required>
+                    <option value="">Select Project</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="targetDate">Target Date *</label>
+                    <input
+                            type="date"
+                            id="targetDate"
+                            required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="completedDate">Completed Date</label>
+                    <input
+                            type="date"
+                            id="completedDate"
+                    >
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="milestoneStatus">Status *</label>
+                <select id="milestoneStatus" required>
+                    <option value="PENDING" selected>Pending</option>
+                    <option value="IN_PROGRESS">In Progress</option>
+                    <option value="COMPLETED">Completed</option>
+                    <option value="DELAYED">Delayed</option>
+                    <option value="CANCELLED">Cancelled</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="milestoneDescription">Description</label>
+                <textarea
+                        id="milestoneDescription"
+                        rows="3"
+                        maxlength="2000"
+                        placeholder="Describe key requirements, testing results, or completion deliverables..."
+                ></textarea>
+            </div>
+
+            <div class="modal-actions">
+                <button
+                        type="button"
+                        class="cancel-button"
+                        onclick="closeMilestoneModal()"
+                >
+                    Cancel
+                </button>
+                <button
+                        type="submit"
+                        class="save-button"
+                >
+                    <i class="bi bi-check-lg"></i>
+                    Save Milestone
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+    <i class="bi bi-check-circle-fill"></i>
+    <span id="toastMessage">Action successful.</span>
+</div>
+
+<!-- JAVASCRIPT -->
+<script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        if (sidebar) sidebar.classList.toggle("open");
+    }
+</script>
+<script src="/js/milestones.js"></script>
+<script src="/js/notifications.js"></script>
+
+</body>
+
+</html>
