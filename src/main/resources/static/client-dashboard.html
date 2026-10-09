@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>WBCMS | Client Dashboard</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Unified Premium Theme -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet"
+          href="/css/premium-theme.css">
+    <link rel="stylesheet"
+          href="/css/client-dashboard.css">
+    <script src="/js/theme-init.js"></script>
+
+</head>
+
+
+<body class="dashboard-body">
+
+
+<!-- =========================================================
+     SECURITY CHECK
+========================================================= -->
+
+<script>
+
+    /*
+     * This page is CLIENT ONLY.
+     * Staff must use the staff dashboard.
+     */
+
+    const token =
+        localStorage.getItem("wbcms_token");
+
+    const userType =
+        localStorage.getItem("wbcms_user_type");
+
+    const role =
+        localStorage.getItem("wbcms_role");
+
+
+    if (!token || userType !== "CLIENT" || role !== "CLIENT") {
+
+        window.location.replace("/client-login.html");
+
+    } else {
+
+        window.location.replace("/client-project-requests.html");
+
+    }
+
+</script>
+
+
+<div class="dashboard-layout">
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="dashboard-sidebar">
+
+
+        <!-- Logo -->
+
+        <div class="dashboard-logo">
+
+            <div class="dashboard-logo-icon">
+                <i class="fa-solid fa-building"></i>
+            </div>
+
+            <div class="dashboard-logo-text">
+
+                <strong>
+                    WBCMS
+                </strong>
+
+                <span>
+                    CLIENT PORTAL
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- Navigation -->
+
+        <nav class="sidebar-nav">
+
+            <div class="sidebar-section-title">
+                MAIN MENU
+            </div>
+
+
+            <a href="/client-dashboard.html"
+               class="sidebar-link active">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>
+                    Dashboard
+                </span>
+            </a>
+
+
+            <a href="/client-profile.html"
+               class="sidebar-link">
+                <i class="fa-solid fa-user"></i>
+                <span>
+                    My Profile
+                </span>
+            </a>
+
+
+            <a href="/client-project-requests.html"
+               class="sidebar-link">
+                <i class="fa-solid fa-folder-open"></i>
+                <span>
+                    Project Requests
+                </span>
+            </a>
+
+
+            <div class="sidebar-section-title">
+                ACCOUNT
+            </div>
+
+
+            <a href="#"
+               class="sidebar-link"
+               id="sidebarLogoutBtn">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>
+                    Logout
+                </span>
+            </a>
+
+        </nav>
+
+
+        <!-- User Card in Sidebar -->
+
+        <div class="sidebar-user-card"
+             onclick="window.location.href='/client-profile.html'"
+             style="cursor:pointer;"
+             title="Open My Profile">
+
+            <div class="sidebar-user-avatar"
+                 id="sidebarAvatar">
+                C
+            </div>
+
+            <div class="sidebar-user-info">
+
+                <strong id="sidebarUsername">
+                    Client
+                </strong>
+
+                <span id="sidebarRole" style="display:inline-flex; align-items:center; gap:4px; color:#22c55e; font-size:10px;">
+                    <i class="fa-solid fa-circle" style="font-size:6px;"></i> Active Client
+                </span>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
+    <main class="dashboard-main">
+
+
+        <!-- TOP BAR -->
+
+        <header class="dashboard-topbar">
+
+            <div class="topbar-left">
+
+                <h2 id="greetingText">
+                    Welcome back
+                </h2>
+
+                <p id="todayDate">
+                </p>
+
+            </div>
+
+
+            <div class="topbar-right">
+
+                <!-- Notification Bell -->
+                <button class="topbar-icon-btn"
+                        title="Notifications">
+                    <i class="fa-solid fa-bell"></i>
+                </button>
+
+
+                <!-- Profile Dropdown -->
+                <div class="profile-dropdown">
+
+                    <button class="profile-trigger"
+                            id="profileTrigger">
+
+                        <div class="profile-avatar"
+                             id="topAvatar">
+                            C
+                        </div>
+
+                        <div class="profile-info">
+
+                            <strong id="topUser">
+                                Client
+                            </strong>
+
+                            <span id="topRole" style="display:inline-flex; align-items:center; gap:4px; color:#22c55e; font-size:10px; font-weight:600;">
+                                <i class="fa-solid fa-circle" style="font-size:6px;"></i> Active Client
+                            </span>
+
+                        </div>
+
+                        <i class="fa-solid fa-chevron-down"></i>
+
+                    </button>
+
+
+                    <div class="dropdown-menu"
+                         id="profileDropdown">
+
+                        <a href="/client-profile.html"
+                           class="dropdown-item">
+                            <i class="fa-solid fa-user"></i>
+                            My Profile
+                        </a>
+
+                        <a href="/client-project-requests.html"
+                           class="dropdown-item">
+                            <i class="fa-solid fa-folder-open"></i>
+                            Project Requests
+                        </a>
+
+                        <a href="#"
+                           class="dropdown-item"
+                           id="btnOpenClientPwdModal">
+                            <i class="fa-solid fa-key"></i>
+                            Change Password
+                        </a>
+
+                        <div class="dropdown-divider"></div>
+
+                        <a href="#"
+                           class="dropdown-item danger"
+                           id="dropdownLogoutBtn">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            Logout
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- DASHBOARD CONTENT -->
+
+        <div class="dashboard-content">
+
+
+            <!-- Welcome Banner -->
+
+            <section class="welcome-banner">
+
+                <div class="welcome-text">
+
+                    <span class="welcome-badge">
+                        <i class="fa-solid fa-user"></i>
+                        CLIENT PORTAL
+                    </span>
+
+                    <h1 id="welcomeHeading">
+                        Welcome to WBCMS
+                    </h1>
+
+                    <p>
+                        Manage your construction projects, track requests,
+                        and stay updated on your project progress.
+                    </p>
+
+                </div>
+
+                <div class="welcome-icon">
+                    <i class="fa-solid fa-building"></i>
+                </div>
+
+            </section>
+
+
+            <!-- Stats Cards -->
+
+            <section class="stats-row">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon blue">
+                        <i class="fa-solid fa-folder-open"></i>
+                    </div>
+
+                    <div class="stat-info">
+
+                        <span>
+                            Total Requests
+                        </span>
+
+                        <strong id="totalRequests">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon amber">
+                        <i class="fa-solid fa-clock"></i>
+                    </div>
+
+                    <div class="stat-info">
+
+                        <span>
+                            Pending
+                        </span>
+
+                        <strong id="pendingRequests">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon green">
+                        <i class="fa-solid fa-check-circle"></i>
+                    </div>
+
+                    <div class="stat-info">
+
+                        <span>
+                            Approved
+                        </span>
+
+                        <strong id="approvedRequests">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon red">
+                        <i class="fa-solid fa-times-circle"></i>
+                    </div>
+
+                    <div class="stat-info">
+
+                        <span>
+                            Rejected
+                        </span>
+
+                        <strong id="rejectedRequests">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- Quick Actions -->
+
+            <section class="quick-actions">
+
+                <h2>
+                    Quick Actions
+                </h2>
+
+                <div class="actions-grid">
+
+                    <a href="/client-project-requests.html"
+                       class="action-card">
+
+                        <div class="action-icon orange">
+                            <i class="fa-solid fa-plus"></i>
+                        </div>
+
+                        <div>
+                            <strong>New Project Request</strong>
+                            <p>Submit a new construction project request</p>
+                        </div>
+
+                    </a>
+
+
+                    <a href="/client-portal-profile.html"
+                       class="action-card">
+
+                        <div class="action-icon blue">
+                            <i class="fa-solid fa-user-pen"></i>
+                        </div>
+
+                        <div>
+                            <strong>My Profile</strong>
+                            <p>View and manage your personal information</p>
+                        </div>
+
+                    </a>
+
+
+                    <a href="/client-project-requests.html"
+                       class="action-card">
+
+                        <div class="action-icon green">
+                            <i class="fa-solid fa-list-check"></i>
+                        </div>
+
+                        <div>
+                            <strong>View Requests</strong>
+                            <p>Track all your submitted project requests</p>
+                        </div>
+
+                    </a>
+
+                </div>
+
+            </section>
+
+
+            <!-- Recent Requests -->
+
+            <section class="recent-section">
+
+                <div class="section-header">
+
+                    <h2>
+                        Recent Project Requests
+                    </h2>
+
+                    <a href="/client-project-requests.html"
+                       class="view-all-link">
+                        View All
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+
+                </div>
+
+
+                <div class="recent-list"
+                     id="recentRequestsList">
+
+                    <div class="loading-state">
+                        <i class="fa-solid fa-spinner fa-spin"></i>
+                        Loading your requests...
+                    </div>
+
+                </div>
+
+            </section>
+
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script>
+
+    /* =========================================================
+       AUTHENTICATION
+    ========================================================= */
+
+    function getToken() {
+        return localStorage.getItem("wbcms_token");
+    }
+
+    function getHeaders() {
+        return {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + getToken()
+        };
+    }
+
+
+    /* =========================================================
+       PAGE INITIALIZATION
+    ========================================================= */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        async function () {
+
+
+            /* ===========================
+               LOAD USER PROFILE
+            ============================ */
+
+            try {
+
+                const profileResponse =
+                    await fetch("/api/client/profile", {
+                        headers: getHeaders()
+                    });
+
+
+                if (
+                    profileResponse.status === 401 ||
+                    profileResponse.status === 403
+                ) {
+                    clientLogout();
+                    return;
+                }
+
+
+                if (profileResponse.ok) {
+
+                    const profile =
+                        await profileResponse.json();
+
+
+                    const displayName =
+                        profile.fullName ||
+                        profile.username ||
+                        "Client";
+
+
+                    const initial =
+                        displayName.charAt(0).toUpperCase();
+
+
+                    // Top bar
+                    document.getElementById("topUser")
+                        .textContent = displayName;
+
+                    document.getElementById("topAvatar")
+                        .textContent = initial;
+
+
+                    // Sidebar
+                    document.getElementById("sidebarUsername")
+                        .textContent = displayName;
+
+                    document.getElementById("sidebarAvatar")
+                        .textContent = initial;
+
+
+                    // Welcome
+                    document.getElementById("welcomeHeading")
+                        .textContent =
+                        "Welcome, " + profile.fullName;
+
+                    document.getElementById("greetingText")
+                        .textContent =
+                        "Welcome back, " +
+                        (profile.fullName || profile.username);
+
+                }
+
+            } catch (error) {
+                console.error("Profile fetch error:", error);
+            }
+
+
+            /* ===========================
+               TODAY DATE
+            ============================ */
+
+            document.getElementById("todayDate")
+                .textContent =
+                new Date().toLocaleDateString(
+                    "en-GB",
+                    {
+                        weekday: "long",
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric"
+                    }
+                );
+
+
+            /* ===========================
+               LOAD REQUESTS STATS
+            ============================ */
+
+            try {
+
+                const requestsResponse =
+                    await fetch(
+                        "/api/client/project-requests",
+                        {
+                            headers: getHeaders()
+                        }
+                    );
+
+
+                if (requestsResponse.ok) {
+
+                    const requests =
+                        await requestsResponse.json();
+
+                    const total = requests.length;
+
+                    const pending = requests.filter(
+                        r => r.status === "PENDING"
+                    ).length;
+
+                    const approved = requests.filter(
+                        r => r.status === "APPROVED"
+                    ).length;
+
+                    const rejected = requests.filter(
+                        r => r.status === "REJECTED"
+                    ).length;
+
+
+                    document.getElementById(
+                        "totalRequests"
+                    ).textContent = total;
+
+                    document.getElementById(
+                        "pendingRequests"
+                    ).textContent = pending;
+
+                    document.getElementById(
+                        "approvedRequests"
+                    ).textContent = approved;
+
+                    document.getElementById(
+                        "rejectedRequests"
+                    ).textContent = rejected;
+
+
+                    /* Render recent requests */
+
+                    renderRecentRequests(
+                        requests.slice(0, 5)
+                    );
+
+                }
+
+            } catch (error) {
+                console.error("Requests fetch error:", error);
+                document.getElementById("recentRequestsList")
+                    .innerHTML =
+                    '<div class="empty-recent">Could not load requests.</div>';
+            }
+
+
+            /* ===========================
+               LOGOUT BUTTONS
+            ============================ */
+
+            document.getElementById("sidebarLogoutBtn")
+                .addEventListener("click", function (e) {
+                    e.preventDefault();
+                    clientLogout();
+                });
+
+            document.getElementById("dropdownLogoutBtn")
+                .addEventListener("click", function (e) {
+                    e.preventDefault();
+                    clientLogout();
+                });
+
+
+            /* ===========================
+               PROFILE DROPDOWN
+            ============================ */
+
+            setupProfileDropdown();
+
+        }
+    );
+
+
+    /* =========================================================
+       RENDER RECENT REQUESTS
+    ========================================================= */
+
+    function renderRecentRequests(requests) {
+
+        const container =
+            document.getElementById("recentRequestsList");
+
+
+        if (!requests || requests.length === 0) {
+
+            container.innerHTML = `
+
+                <div class="empty-recent">
+
+                    <i class="fa-solid fa-folder-open"></i>
+
+                    <p>
+                        You haven't submitted any project requests yet.
+                    </p>
+
+                    <a href="/client-project-requests.html"
+                       class="create-first-btn">
+
+                        <i class="fa-solid fa-plus"></i>
+                        Create Your First Request
+
+                    </a>
+
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        container.innerHTML = requests.map(
+            function (request) {
+
+                return `
+
+                    <div class="recent-request-item">
+
+                        <div class="recent-request-info">
+
+                            <strong>
+                                ${escapeHtml(request.projectName)}
+                            </strong>
+
+                            <span>
+                                ${escapeHtml(request.projectType)}
+                                ·
+                                ${escapeHtml(request.location)}
+                            </span>
+
+                        </div>
+
+                        <div class="recent-request-meta">
+
+                            <span class="status-badge status-${request.status}">
+                                ${request.status}
+                            </span>
+
+                            <span class="request-date">
+                                ${formatDate(request.createdAt)}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                `;
+            }
+
+        ).join("");
+
+    }
+
+
+    /* =========================================================
+       PROFILE DROPDOWN TOGGLE
+    ========================================================= */
+
+    function setupProfileDropdown() {
+
+        const trigger =
+            document.getElementById("profileTrigger");
+
+        const dropdown =
+            document.getElementById("profileDropdown");
+
+
+        trigger.addEventListener(
+            "click",
+            function (e) {
+                e.stopPropagation();
+                dropdown.classList.toggle("show");
+            }
+        );
+
+
+        document.addEventListener(
+            "click",
+            function () {
+                dropdown.classList.remove("show");
+            }
+        );
+
+    }
+
+
+    /* =========================================================
+       HELPERS
+    ========================================================= */
+
+    function formatDate(value) {
+
+        if (!value) return "-";
+
+        const date = new Date(value);
+
+        return date.toLocaleDateString(
+            "en-LK",
+            {
+                year: "numeric",
+                month: "short",
+                day: "numeric"
+            }
+        );
+    }
+
+
+    function escapeHtml(value) {
+
+        if (value === null || value === undefined) {
+            return "";
+        }
+
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+
+    /* =========================================================
+       CLIENT LOGOUT
+    ========================================================= */
+
+    function clientLogout(skipPrompt = false) {
+        if (!skipPrompt && !confirm("Are you sure you want to log out?")) {
+            return;
+        }
+
+        const token = localStorage.getItem("wbcms_token");
+        if (token) {
+            fetch('/api/auth/logout', {
+                method: 'POST',
+                headers: { 'Authorization': 'Bearer ' + token }
+            }).catch(() => {});
+        }
+
+        localStorage.removeItem("wbcms_token");
+        localStorage.removeItem("wbcms_user_id");
+        localStorage.removeItem("wbcms_username");
+        localStorage.removeItem("wbcms_role");
+        localStorage.removeItem("wbcms_user_type");
+        localStorage.removeItem("wbcms_user");
+
+        window.location.replace("/client-login.html");
+    }
+
+    /* =========================================================
+       CHANGE PASSWORD MODAL (CLIENT)
+    ========================================================= */
+    const clientPwdModal = document.getElementById("clientPwdModal");
+    const openClientPwdBtn = document.getElementById("btnOpenClientPwdModal");
+    const closeClientPwdBtn = document.getElementById("closeClientPwdModalBtn");
+    const cancelClientPwdBtn = document.getElementById("cancelClientPwdBtn");
+    const clientPwdForm = document.getElementById("clientPwdModalForm");
+    const clientPwdAlert = document.getElementById("clientPwdAlert");
+
+    function openClientPasswordModal(e) {
+        if (e) e.preventDefault();
+        if (clientPwdModal) {
+            clientPwdModal.style.display = "flex";
+            if (clientPwdAlert) clientPwdAlert.style.display = "none";
+            document.getElementById("clientCurPwd").value = "";
+            document.getElementById("clientNewPwd").value = "";
+            document.getElementById("clientConfirmPwd").value = "";
+            document.getElementById("clientCurPwd").focus();
+        }
+    }
+
+    function closeClientPasswordModal() {
+        if (clientPwdModal) clientPwdModal.style.display = "none";
+    }
+
+    if (openClientPwdBtn) openClientPwdBtn.addEventListener("click", openClientPasswordModal);
+    if (closeClientPwdBtn) closeClientPwdBtn.addEventListener("click", closeClientPasswordModal);
+    if (cancelClientPwdBtn) cancelClientPwdBtn.addEventListener("click", closeClientPasswordModal);
+
+    function toggleClientPwdField(inputId, btn) {
+        const input = document.getElementById(inputId);
+        if (!input) return;
+        const icon = btn.querySelector("i");
+        if (input.type === "password") {
+            input.type = "text";
+            if (icon) icon.className = "fa-solid fa-eye-slash";
+        } else {
+            input.type = "password";
+            if (icon) icon.className = "fa-solid fa-eye";
+        }
+    }
+
+    if (clientPwdForm) {
+        clientPwdForm.addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const cur = document.getElementById("clientCurPwd").value;
+            const newP = document.getElementById("clientNewPwd").value;
+            const conf = document.getElementById("clientConfirmPwd").value;
+            const submitBtn = document.getElementById("submitClientPwdBtn");
+
+            function showModalMsg(msg, isError) {
+                if (!clientPwdAlert) return;
+                clientPwdAlert.style.display = "block";
+                clientPwdAlert.style.background = isError ? "rgba(239, 68, 68, 0.15)" : "rgba(34, 197, 94, 0.15)";
+                clientPwdAlert.style.border = isError ? "1px solid rgba(239, 68, 68, 0.3)" : "1px solid rgba(34, 197, 94, 0.3)";
+                clientPwdAlert.style.color = isError ? "#fca5a5" : "#86efac";
+                clientPwdAlert.textContent = msg;
+            }
+
+            if (!cur) {
+                showModalMsg("Please enter your current password.", true);
+                return;
+            }
+            if (!newP || newP.length < 8) {
+                showModalMsg("New password must be at least 8 characters.", true);
+                return;
+            }
+            if (newP !== conf) {
+                showModalMsg("New password and confirmation do not match.", true);
+                return;
+            }
+
+            const token = localStorage.getItem("wbcms_token");
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Updating...';
+
+            try {
+                const resp = await fetch("/api/auth/change-password", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + token
+                    },
+                    body: JSON.stringify({
+                        currentPassword: cur,
+                        newPassword: newP,
+                        confirmNewPassword: conf
+                    })
+                });
+
+                const data = await resp.json().catch(() => null);
+
+                if (!resp.ok) {
+                    const err = (data && (data.message || data.error))
+                        ? (data.message || data.error)
+                        : "Failed to update password.";
+                    showModalMsg(err, true);
+                    return;
+                }
+
+                showModalMsg("Password changed successfully!", false);
+                setTimeout(closeClientPasswordModal, 1500);
+            } catch (err) {
+                showModalMsg("Server connection error. Please try again.", true);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa-solid fa-lock"></i> Update Password';
+            }
+        });
+    }
+
+</script>
+
+<!-- CLIENT CHANGE PASSWORD MODAL -->
+<div id="clientPwdModal" style="display:none; position:fixed; inset:0; background:rgba(6,10,18,0.8); backdrop-filter:blur(6px); z-index:99999; align-items:center; justify-content:center; padding:20px;">
+    <div style="background:#111c2e; border:1px solid #23344d; border-radius:14px; max-width:420px; width:100%; box-shadow:0 20px 40px rgba(0,0,0,0.5); overflow:hidden;">
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:18px 22px; border-bottom:1px solid #1f2f45; background:#142238;">
+            <div style="display:flex; align-items:center; gap:10px; color:#f1f5f9; font-weight:700; font-size:15px;">
+                <i class="fa-solid fa-key" style="color:#62a4ff;"></i>
+                <span>Change Your Password</span>
+            </div>
+            <button type="button" id="closeClientPwdModalBtn" style="background:none; border:none; color:#859bb5; cursor:pointer; font-size:20px;">&times;</button>
+        </div>
+        <form id="clientPwdModalForm" style="padding:22px;">
+            <div id="clientPwdAlert" style="display:none; padding:10px 14px; border-radius:8px; margin-bottom:16px; font-size:12px;"></div>
+
+            <div style="margin-bottom:15px;">
+                <label style="display:block; font-size:12px; font-weight:600; color:#cfd9e8; margin-bottom:6px;">Current Password</label>
+                <div style="position:relative;">
+                    <input type="password" id="clientCurPwd" required placeholder="Enter current password" style="width:100%; padding:10px 38px 10px 12px; background:#0a121e; border:1px solid #2b3b53; border-radius:8px; color:#fff; font-size:13px; outline:none; box-sizing:border-box;">
+                    <button type="button" onclick="toggleClientPwdField('clientCurPwd', this)" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; color:#859bb5; cursor:pointer;"><i class="fa-solid fa-eye"></i></button>
+                </div>
+            </div>
+
+            <div style="margin-bottom:15px;">
+                <label style="display:block; font-size:12px; font-weight:600; color:#cfd9e8; margin-bottom:6px;">New Password</label>
+                <div style="position:relative;">
+                    <input type="password" id="clientNewPwd" required placeholder="Minimum 8 characters" style="width:100%; padding:10px 38px 10px 12px; background:#0a121e; border:1px solid #2b3b53; border-radius:8px; color:#fff; font-size:13px; outline:none; box-sizing:border-box;">
+                    <button type="button" onclick="toggleClientPwdField('clientNewPwd', this)" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; color:#859bb5; cursor:pointer;"><i class="fa-solid fa-eye"></i></button>
+                </div>
+            </div>
+
+            <div style="margin-bottom:18px;">
+                <label style="display:block; font-size:12px; font-weight:600; color:#cfd9e8; margin-bottom:6px;">Confirm New Password</label>
+                <div style="position:relative;">
+                    <input type="password" id="clientConfirmPwd" required placeholder="Re-enter new password" style="width:100%; padding:10px 38px 10px 12px; background:#0a121e; border:1px solid #2b3b53; border-radius:8px; color:#fff; font-size:13px; outline:none; box-sizing:border-box;">
+                    <button type="button" onclick="toggleClientPwdField('clientConfirmPwd', this)" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; color:#859bb5; cursor:pointer;"><i class="fa-solid fa-eye"></i></button>
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button type="button" id="cancelClientPwdBtn" style="padding:9px 16px; border-radius:8px; background:rgba(255,255,255,0.06); border:1px solid #2b3b53; color:#cbd5e1; cursor:pointer; font-size:13px; font-weight:600;">Cancel</button>
+                <button type="submit" id="submitClientPwdBtn" style="padding:9px 18px; border-radius:8px; background:#438cff; border:none; color:#fff; cursor:pointer; font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-lock"></i> Update Password
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</script>
+
+
+</body>
+
+</html>

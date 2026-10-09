@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>WBCMS | Client Portal</title>
+
+    <link rel="stylesheet"
+          href="/css/style.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+
+        .client-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+
+            margin-bottom: 15px;
+            padding: 7px 11px;
+
+            color: #62a4ff;
+
+            background: rgba(67,140,255,0.10);
+
+            border: 1px solid rgba(67,140,255,0.20);
+
+            border-radius: 20px;
+
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .client-badge i {
+            font-size: 10px;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper input {
+            padding-right: 45px;
+        }
+
+        .toggle-password {
+            position: absolute;
+
+            right: 12px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            border: none;
+            background: transparent;
+
+            color: #8294aa;
+
+            font-size: 14px;
+        }
+
+        .toggle-password:hover {
+            color: white;
+        }
+
+        .back-home {
+            display: inline-flex;
+
+            align-items: center;
+            gap: 7px;
+
+            margin-bottom: 25px;
+
+            color: #91a2ba;
+
+            font-size: 11px;
+        }
+
+        .back-home:hover {
+            color: var(--blue);
+        }
+
+        .form-message.success {
+            color: var(--green);
+        }
+
+        .form-message.error {
+            color: var(--red);
+        }
+
+        .register-fields {
+            display: none;
+        }
+
+        .register-fields.show {
+            display: block;
+        }
+
+        .login-switch {
+            margin-top: 22px;
+
+            color: #7f91a8;
+
+            font-size: 11px;
+
+            text-align: center;
+        }
+
+        .login-switch button {
+            border: none;
+            background: transparent;
+
+            color: #62a4ff;
+
+            font-weight: 700;
+        }
+
+        .login-switch button:hover {
+            color: white;
+        }
+
+        .password-rule {
+            margin-top: -8px;
+            margin-bottom: 17px;
+
+            color: #65788f;
+
+            font-size: 10px;
+        }
+
+        .client-benefits {
+            margin-top: 25px;
+        }
+
+        .client-benefits div {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            margin-bottom: 12px;
+
+            color: #cbd6e3;
+
+            font-size: 11px;
+        }
+
+        .client-benefits i {
+            width: 24px;
+            height: 24px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 7px;
+
+            color: #62a4ff;
+            background: rgba(67,140,255,0.10);
+        }
+
+    </style>
+
+</head>
+
+
+<body class="login-page">
+
+
+<div class="login-shell">
+
+
+    <div class="login-panel">
+
+
+        <!-- ==========================================
+             FORM SIDE
+        =========================================== -->
+
+        <div class="login-form-area">
+
+
+            <a href="/index.html"
+               class="back-home">
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+                Back to WBCMS
+
+            </a>
+
+
+            <div class="client-badge">
+
+                <i class="fa-solid fa-user"></i>
+
+                CLIENT PORTAL
+
+            </div>
+
+
+            <div class="login-heading">
+
+                <h1 id="pageTitle">
+                    Client Sign In
+                </h1>
+
+                <p id="pageDescription">
+                    Access your construction projects and updates.
+                </p>
+
+            </div>
+
+
+            <!-- ======================================
+                 LOGIN FORM
+            ======================================= -->
+
+            <form id="clientLoginForm">
+
+
+                <label>
+
+                    Username or Email
+
+                    <input
+                            type="text"
+                            id="loginUsername"
+                            placeholder="Enter your username or email"
+                            autocomplete="username"
+                            required
+                    >
+
+                </label>
+
+
+                <label>
+
+                    Password
+
+                    <div class="password-wrapper">
+
+                        <input
+                                type="password"
+                                id="loginPassword"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                required
+                        >
+
+                        <button
+                                type="button"
+                                class="toggle-password"
+                                id="loginPasswordToggle">
+
+                            <i class="fa-solid fa-eye"></i>
+
+                        </button>
+
+                    </div>
+
+                </label>
+
+
+                <!-- REMEMBER ME -->
+
+                <div class="remember-row" style="display: flex; align-items: center; justify-content: space-between; margin-top: -6px; margin-bottom: 16px;">
+                    <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 0; color: #a9bad1; font-size: 12px; font-weight: 500;">
+                        <input type="checkbox" id="clientRememberMe" style="width: 15px; height: 15px; accent-color: #62a4ff; cursor: pointer;">
+                        <span>Remember Me</span>
+                    </label>
+                </div>
+
+
+                <div id="loginMessage"
+                     class="form-message">
+
+                </div>
+
+
+                <button
+                        type="submit"
+                        id="loginButton"
+                        class="btn btn-primary btn-full">
+
+                    <i class="fa-solid fa-right-to-bracket"></i>
+
+                    Sign In
+                </button>
+
+
+            </form>
+
+
+            <!-- ======================================
+                 REGISTER FORM
+            ======================================= -->
+
+            <form id="registerForm"
+                  style="display:none;">
+
+
+                <label>
+
+                    Full Name
+
+                    <input
+                            type="text"
+                            id="fullName"
+                            placeholder="Enter your full name"
+                            required
+                    >
+
+                </label>
+
+
+                <label>
+
+                    Username
+
+                    <input
+                            type="text"
+                            id="registerUsername"
+                            placeholder="Choose a username"
+                            required
+                    >
+
+                </label>
+
+
+                <label>
+
+                    Email
+
+                    <input
+                            type="email"
+                            id="registerEmail"
+                            placeholder="Enter your email"
+                            required
+                    >
+
+                </label>
+
+
+                <label>
+
+                    Phone Number
+
+                    <input
+                            type="tel"
+                            id="phoneNumber"
+                            placeholder="Enter your phone number"
+                    >
+
+                </label>
+
+
+                <label>
+
+                    Password
+
+                    <div class="password-wrapper">
+
+                        <input
+                                type="password"
+                                id="registerPassword"
+                                placeholder="Create a password"
+                                required
+                        >
+
+                        <button
+                                type="button"
+                                class="toggle-password"
+                                id="registerPasswordToggle">
+
+                            <i class="fa-solid fa-eye"></i>
+
+                        </button>
+
+                    </div>
+
+                </label>
+
+
+                <div class="password-rule">
+
+                    Minimum 8 characters · uppercase · lowercase · number
+
+                </div>
+
+
+                <label>
+
+                    Confirm Password
+
+                    <input
+                            type="password"
+                            id="confirmPassword"
+                            placeholder="Confirm your password"
+                            required
+                    >
+
+                </label>
+
+
+                <div id="registerMessage"
+                     class="form-message">
+
+                </div>
+
+
+                <button
+                        type="submit"
+                        id="registerButton"
+                        class="btn btn-primary btn-full">
+
+                    <i class="fa-solid fa-user-plus"></i>
+
+                    Create Client Profile
+
+                </button>
+
+
+            </form>
+
+
+            <div class="login-switch">
+
+                <span id="switchText">
+                    Don't have an account?
+                </span>
+
+                <button
+                        type="button"
+                        id="switchButton">
+
+                    Create Client Account
+
+                </button>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ==========================================
+             IMAGE SIDE
+        =========================================== -->
+
+        <div class="login-image">
+
+            <div class="image-dark"></div>
+
+
+            <div class="login-quote">
+
+
+                <h2>
+
+                    Stay connected
+
+                    <br>
+
+                    to your project.
+
+                </h2>
+
+
+                <div class="client-benefits">
+
+                    <div>
+
+                        <i class="fa-solid fa-chart-line"></i>
+
+                        View project progress
+
+                    </div>
+
+
+                    <div>
+
+                        <i class="fa-solid fa-file-lines"></i>
+
+                        Access project documents
+
+                    </div>
+
+
+                    <div>
+
+                        <i class="fa-solid fa-bell"></i>
+
+                        Receive important updates
+
+                    </div>
+
+
+                    <div>
+
+                        <i class="fa-solid fa-user-gear"></i>
+
+                        Manage your client profile
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<script>
+
+    const loginForm =
+        document.getElementById("clientLoginForm");
+
+    const registerForm =
+        document.getElementById("registerForm");
+
+    const pageTitle =
+        document.getElementById("pageTitle");
+
+    const pageDescription =
+        document.getElementById("pageDescription");
+
+    const switchText =
+        document.getElementById("switchText");
+
+    const switchButton =
+        document.getElementById("switchButton");
+
+
+    let registerMode = false;
+
+
+    /* ==========================================
+       PASSWORD TOGGLE
+    =========================================== */
+
+    function setupPasswordToggle(
+        inputId,
+        buttonId
+    ) {
+
+        const input =
+            document.getElementById(inputId);
+
+        const button =
+            document.getElementById(buttonId);
+
+        button.addEventListener(
+            "click",
+            function () {
+
+                if (input.type === "password") {
+
+                    input.type = "text";
+
+                    button.innerHTML =
+                        '<i class="fa-solid fa-eye-slash"></i>';
+
+                } else {
+
+                    input.type = "password";
+
+                    button.innerHTML =
+                        '<i class="fa-solid fa-eye"></i>';
+
+                }
+
+            }
+        );
+
+    }
+
+
+    setupPasswordToggle(
+        "loginPassword",
+        "loginPasswordToggle"
+    );
+
+    setupPasswordToggle(
+        "registerPassword",
+        "registerPasswordToggle"
+    );
+
+
+    /* ==========================================
+       SWITCH LOGIN / REGISTER
+    =========================================== */
+
+    switchButton.addEventListener(
+        "click",
+        function () {
+
+            registerMode = !registerMode;
+
+            if (registerMode) {
+
+                loginForm.style.display = "none";
+
+                registerForm.style.display = "block";
+
+                pageTitle.textContent =
+                    "Create Client Profile";
+
+                pageDescription.textContent =
+                    "Create your customer account to access WBCMS.";
+
+                switchText.textContent =
+                    "Already have an account?";
+
+                switchButton.textContent =
+                    "Sign In";
+
+            } else {
+
+                loginForm.style.display = "block";
+
+                registerForm.style.display = "none";
+
+                pageTitle.textContent =
+                    "Client Sign In";
+
+                pageDescription.textContent =
+                    "Access your construction projects and updates.";
+
+                switchText.textContent =
+                    "Don't have an account?";
+
+                switchButton.textContent =
+                    "Create Client Account";
+
+            }
+
+        }
+    );
+
+
+    /* ==========================================
+       CLIENT REMEMBER ME PRE-FILL
+    =========================================== */
+    const clientRememberMe =
+        document.getElementById("clientRememberMe");
+
+    const rememberedClient =
+        localStorage.getItem("wbcms_remember_client_username");
+
+    if (rememberedClient) {
+        document.getElementById("loginUsername").value = rememberedClient;
+        if (clientRememberMe) {
+            clientRememberMe.checked = true;
+        }
+        document.getElementById("loginPassword").focus();
+    }
+
+
+    /* ==========================================
+       CLIENT LOGIN
+    =========================================== */
+
+    loginForm.addEventListener(
+        "submit",
+        async function (event) {
+
+            event.preventDefault();
+
+
+            const username =
+                document.getElementById(
+                    "loginUsername"
+                ).value.trim();
+
+            const password =
+                document.getElementById(
+                    "loginPassword"
+                ).value;
+
+            const message =
+                document.getElementById(
+                    "loginMessage"
+                );
+
+            const button =
+                document.getElementById(
+                    "loginButton"
+                );
+
+            const rememberMe =
+                clientRememberMe ? clientRememberMe.checked : false;
+
+
+            message.textContent = "";
+
+            message.className =
+                "form-message";
+
+
+            if (!username || !password) {
+
+                showMessage(
+                    message,
+                    "Please enter your username/email and password.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            button.disabled = true;
+
+            button.innerHTML =
+                '<i class="fa-solid fa-spinner fa-spin"></i> Signing in...';
+
+
+            try {
+
+                const response =
+                    await fetch("/api/auth/login", {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+
+                            username: username,
+
+                            password: password,
+
+                            portalType: "CLIENT",
+
+                            rememberMe: rememberMe
+
+                        })
+
+                    });
+
+
+                const data =
+                    await response.json()
+                        .catch(() => null);
+
+
+                if (!response.ok) {
+
+                    const errorMsg =
+                        (data && (data.message || data.error))
+                            ? (data.message || data.error)
+                            : "Invalid username/email or password.";
+
+                    showMessage(
+                        message,
+                        errorMsg,
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (!data || !data.token) {
+
+                    showMessage(
+                        message,
+                        "Login failed. No authentication token received.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                const returnedRole =
+                    String(
+                        data.role || ""
+                    ).toUpperCase();
+
+
+                if (returnedRole !== "CLIENT") {
+
+                    showMessage(
+                        message,
+                        "This account belongs to staff. Please use the Staff Portal.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                /* ==================================
+                   SAVE CLIENT SESSION
+                =================================== */
+
+                if (rememberMe) {
+                    localStorage.setItem("wbcms_remember_client_username", username);
+                } else {
+                    localStorage.removeItem("wbcms_remember_client_username");
+                }
+
+                localStorage.setItem(
+                    "wbcms_token",
+                    data.token
+                );
+
+                localStorage.setItem(
+                    "wbcms_user_id",
+                    data.userId
+                );
+
+                localStorage.setItem(
+                    "wbcms_username",
+                    data.username || username
+                );
+
+                localStorage.setItem(
+                    "wbcms_role",
+                    "CLIENT"
+                );
+
+                localStorage.setItem(
+                    "wbcms_user_type",
+                    "CLIENT"
+                );
+
+                if (data.fullName) {
+                    localStorage.setItem(
+                        "wbcms_full_name",
+                        data.fullName
+                    );
+                }
+
+
+                showMessage(
+                    message,
+                    "Login successful. Opening WBCMS...",
+                    "success"
+                );
+
+
+                setTimeout(
+                    function () {
+
+                        window.location.replace(
+                            "/index.html"
+                        );
+
+                    },
+                    500
+                );
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                showMessage(
+                    message,
+                    "Cannot connect to the server.",
+                    "error"
+                );
+
+            } finally {
+
+                button.disabled = false;
+
+                button.innerHTML =
+                    '<i class="fa-solid fa-right-to-bracket"></i> Sign In';
+
+            }
+
+        }
+    );
+
+
+    /* ==========================================
+       CLIENT REGISTRATION
+    =========================================== */
+
+    registerForm.addEventListener(
+        "submit",
+        async function (event) {
+
+            event.preventDefault();
+
+
+            const fullName =
+                document.getElementById(
+                    "fullName"
+                ).value.trim();
+
+            const username =
+                document.getElementById(
+                    "registerUsername"
+                ).value.trim();
+
+            const email =
+                document.getElementById(
+                    "registerEmail"
+                ).value.trim();
+
+            const phoneNumber =
+                document.getElementById(
+                    "phoneNumber"
+                ).value.trim();
+
+            const password =
+                document.getElementById(
+                    "registerPassword"
+                ).value;
+
+            const confirmPassword =
+                document.getElementById(
+                    "confirmPassword"
+                ).value;
+
+
+            const message =
+                document.getElementById(
+                    "registerMessage"
+                );
+
+            const button =
+                document.getElementById(
+                    "registerButton"
+                );
+
+
+            message.textContent = "";
+
+            message.className =
+                "form-message";
+
+
+            /* ==================================
+               VALIDATION
+            =================================== */
+
+            if (!fullName) {
+
+                showMessage(
+                    message,
+                    "Please enter your full name.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            if (!username) {
+
+                showMessage(
+                    message,
+                    "Please choose a username.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            if (!email) {
+
+                showMessage(
+                    message,
+                    "Please enter your email.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            const passwordValid =
+                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/
+                    .test(password);
+
+
+            if (!passwordValid) {
+
+                showMessage(
+                    message,
+                    "Password must contain 8+ characters, uppercase, lowercase and a number.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            if (password !== confirmPassword) {
+
+                showMessage(
+                    message,
+                    "Passwords do not match.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            button.disabled = true;
+
+            button.innerHTML =
+                '<i class="fa-solid fa-spinner fa-spin"></i> Creating Profile...';
+
+
+            try {
+
+                /* ==================================
+                   CREATE CLIENT
+                =================================== */
+
+                const response =
+                    await fetch(
+                        "/api/auth/register",
+                        {
+
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+
+                                fullName:
+                                fullName,
+
+                                username:
+                                username,
+
+                                email:
+                                email,
+
+                                phoneNumber:
+                                phoneNumber,
+
+                                password:
+                                password,
+
+                                role:
+                                    "CLIENT"
+
+                            })
+
+                        }
+                    );
+
+
+                const data =
+                    await response.json()
+                        .catch(() => null);
+
+
+                if (!response.ok) {
+
+                    showMessage(
+                        message,
+                        data?.message ||
+                        "Unable to create your client profile.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                /* ==================================
+                   AUTOMATIC LOGIN AFTER REGISTER
+                =================================== */
+
+                const loginResponse =
+                    await fetch(
+                        "/api/auth/login",
+                        {
+
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+
+                                username:
+                                username,
+
+                                password:
+                                password
+
+                            })
+
+                        }
+                    );
+
+
+                const loginData =
+                    await loginResponse.json()
+                        .catch(() => null);
+
+
+                if (
+                    !loginResponse.ok ||
+                    !loginData ||
+                    !loginData.token
+                ) {
+
+                    showMessage(
+                        message,
+                        "Profile created successfully! Please sign in with your username or email.",
+                        "success"
+                    );
+
+                    setTimeout(
+                        function () {
+
+                            registerMode = false;
+
+                            switchButton.click();
+
+                            document.getElementById("loginUsername").value = username;
+
+                            document.getElementById("loginPassword").value = "";
+
+                            document.getElementById("loginPassword").focus();
+
+                        },
+                        1200
+                    );
+
+                    return;
+
+                }
+
+
+                localStorage.setItem(
+                    "wbcms_token",
+                    loginData.token
+                );
+
+                localStorage.setItem(
+                    "wbcms_user_id",
+                    loginData.userId
+                );
+
+                localStorage.setItem(
+                    "wbcms_username",
+                    loginData.username || username
+                );
+
+                localStorage.setItem(
+                    "wbcms_role",
+                    "CLIENT"
+                );
+
+                localStorage.setItem(
+                    "wbcms_user_type",
+                    "CLIENT"
+                );
+
+                if (loginData.fullName) {
+                    localStorage.setItem(
+                        "wbcms_full_name",
+                        loginData.fullName
+                    );
+                }
+
+
+                showMessage(
+                    message,
+                    "Profile created successfully! Redirecting to WBCMS...",
+                    "success"
+                );
+
+
+                /* ==================================
+                   REDIRECT TO MAIN SYSTEM INTERFACE
+                =================================== */
+
+                setTimeout(
+                    function () {
+
+                        window.location.replace(
+                            "/index.html"
+                        );
+
+                    },
+                    700
+                );
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                showMessage(
+                    message,
+                    "Cannot connect to the server. Please make sure Spring Boot is running.",
+                    "error"
+                );
+
+            } finally {
+
+                button.disabled = false;
+
+                button.innerHTML =
+                    '<i class="fa-solid fa-user-plus"></i> Create Client Profile';
+
+            }
+
+        }
+    );
+
+
+    /* ==========================================
+       MESSAGE
+    =========================================== */
+
+    function showMessage(
+        element,
+        text,
+        type
+    ) {
+
+        element.textContent = text;
+
+        element.className =
+            "form-message " + type;
+
+    }
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WBCMS | Create Customer Profile</title>
+    <!-- Fonts & Icons matching Google Stitch UI -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="/css/style.css">
+
+    <style>
+        :root {
+            --bg: #0b111d;
+            --surface-card: #172235;
+            --surface-elevated: #1c293c;
+            --border-subtle: #26364c;
+            --border-standard: #2b3b53;
+            --primary: #ff7600;
+            --primary-hover: #ff9a3d;
+            --text-primary: #f3f6fb;
+            --text-body: #dce4ef;
+            --text-muted: #7f91aa;
+            --text-subtle: #60738d;
+            --danger: #ff5c67;
+            --success: #29d47f;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: radial-gradient(circle at 50% 10%, rgba(255, 118, 0, 0.08), transparent 45%),
+            radial-gradient(circle at 85% 85%, rgba(67, 140, 255, 0.05), transparent 40%),
+            var(--bg);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--text-body);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Simple Navigation */
+        .register-header {
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            border-bottom: 1px solid var(--border-subtle);
+            background: rgba(13, 19, 31, 0.7);
+            backdrop-filter: blur(12px);
+        }
+
+        .brand-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .brand-logo-box {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #ff7200, #ff9f27);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            box-shadow: 0 6px 20px rgba(255, 114, 0, 0.35);
+        }
+
+        .header-help {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .header-help a {
+            color: var(--primary);
+            font-weight: 600;
+            margin-left: 6px;
+            text-decoration: none;
+        }
+
+        .header-help a:hover {
+            text-decoration: underline;
+        }
+
+        /* Main Container */
+        .register-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .register-card {
+            width: 100%;
+            max-width: 580px;
+            background: var(--surface-card);
+            border: 1px solid var(--border-standard);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.35s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: rgba(255, 118, 0, 0.12);
+            border: 1px solid rgba(255, 118, 0, 0.3);
+            color: var(--primary);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .card-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 8px 0;
+            letter-spacing: -0.02em;
+        }
+
+        .card-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin: 0 0 28px 0;
+            line-height: 1.5;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .form-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-body);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            color: var(--text-subtle);
+            font-size: 15px;
+            pointer-events: none;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 46px;
+            padding: 0 14px 0 42px;
+            background: #0e1726;
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 118, 0, 0.2);
+            background: #111c2e;
+        }
+
+        .form-input::placeholder {
+            color: var(--text-subtle);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 14px;
+            background: none;
+            border: none;
+            color: var(--text-subtle);
+            cursor: pointer;
+            font-size: 14px;
+            padding: 4px;
+        }
+
+        .password-toggle:hover {
+            color: var(--text-primary);
+        }
+
+        .role-notice {
+            background: rgba(41, 212, 127, 0.08);
+            border: 1px solid rgba(41, 212, 127, 0.25);
+            border-radius: 10px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 12px;
+            color: #a3e6be;
+            margin-top: 6px;
+        }
+
+        .role-notice i {
+            color: var(--success);
+            font-size: 16px;
+        }
+
+        .error-banner {
+            display: none;
+            background: rgba(255, 92, 103, 0.12);
+            border: 1px solid rgba(255, 92, 103, 0.3);
+            color: #ff8e95;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .error-banner.show {
+            display: flex;
+        }
+
+        .submit-btn {
+            width: 100%;
+            height: 48px;
+            margin-top: 24px;
+            background: linear-gradient(135deg, #ff7200, #ff9f27);
+            border: none;
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(255, 114, 0, 0.35);
+            transition: transform 0.2s, filter 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.08);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .success-overlay {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .success-overlay.show {
+            display: flex;
+        }
+
+        .success-icon-circle {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: rgba(41, 212, 127, 0.15);
+            border: 2px solid var(--success);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--success);
+            font-size: 32px;
+            margin-bottom: 20px;
+            animation: pulseSuccess 2s infinite;
+        }
+
+        @keyframes pulseSuccess {
+            0% { box-shadow: 0 0 0 0 rgba(41, 212, 127, 0.4); }
+            70% { box-shadow: 0 0 0 16px rgba(41, 212, 127, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(41, 212, 127, 0); }
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background: #0e1726;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 24px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #ff7200, var(--success));
+            border-radius: 3px;
+            transition: width 1.8s ease-in-out;
+        }
+
+        @media (max-width: 640px) {
+            .register-header {
+                padding: 0 20px;
+            }
+            .register-card {
+                padding: 28px 20px;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="register-header">
+    <a href="/index.html" class="brand-link">
+        <div class="brand-logo-box">
+            <i class="fa-solid fa-person-digging"></i>
+        </div>
+        <span>WBCMS</span>
+    </a>
+    <div class="header-help">
+        Already have an account? <a href="/login.html">Sign In</a>
+    </div>
+</header>
+
+<!-- Content -->
+<main class="register-container">
+    <div class="register-card" id="registerCard">
+
+        <!-- Card Header Badge -->
+        <div class="card-header-badge">
+            <span class="material-symbols-outlined" style="font-size: 14px;">verified_user</span>
+            Client Onboarding
+        </div>
+
+        <!-- Title & Subtitle -->
+        <h1 class="card-title">Create Customer Profile</h1>
+        <p class="card-subtitle">
+            Set up your property client account to track construction milestones, daily progress logs, and structural blueprints in real-time.
+        </p>
+
+        <!-- Error Banner -->
+        <div class="error-banner" id="errorBanner">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span id="errorMessage">Please check your inputs and try again.</span>
+        </div>
+
+        <!-- Registration Form -->
+        <form id="customerProfileForm">
+            <div class="form-grid">
+
+                <!-- Full Name -->
+                <div class="form-group full-width">
+                    <label class="form-label" for="fullName">
+                        <span>Full Legal Name</span>
+                        <span style="color: var(--text-subtle);">Required</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <i class="fa-regular fa-user input-icon"></i>
+                        <input type="text" id="fullName" class="form-input" placeholder="e.g. Ruwan Samantha Perera" required maxlength="120">
+                    </div>
+                </div>
+
+                <!-- Username -->
+                <div class="form-group">
+                    <label class="form-label" for="username">
+                        <span>Username</span>
+                        <span style="color: var(--text-subtle);">Unique ID</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-at input-icon"></i>
+                        <input type="text" id="username" class="form-input" placeholder="e.g. ruwan_p" required maxlength="50">
+                    </div>
+                </div>
+
+                <!-- Phone Number -->
+                <div class="form-group">
+                    <label class="form-label" for="phoneNumber">
+                        <span>Mobile Phone</span>
+                        <span style="color: var(--text-subtle);">SMS Updates</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-phone input-icon"></i>
+                        <input type="tel" id="phoneNumber" class="form-input" placeholder="e.g. +94 77 123 4567" maxlength="30">
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="form-group full-width">
+                    <label class="form-label" for="email">
+                        <span>Email Address</span>
+                        <span style="color: var(--text-subtle);">Official Contact</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <i class="fa-regular fa-envelope input-icon"></i>
+                        <input type="email" id="email" class="form-input" placeholder="e.g. ruwan@example.com" required maxlength="120">
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label class="form-label" for="password">
+                        <span>Password</span>
+                        <span style="color: var(--text-subtle);">Min 8 chars</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock input-icon"></i>
+                        <input type="password" id="password" class="form-input" placeholder="••••••••" required minlength="8" maxlength="100">
+                        <button type="button" class="password-toggle" onclick="togglePasswordVisibility('password', this)">
+                            <i class="fa-regular fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="form-group">
+                    <label class="form-label" for="confirmPassword">
+                        <span>Confirm Password</span>
+                        <span style="color: var(--text-subtle);">Match</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-shield-check input-icon"></i>
+                        <input type="password" id="confirmPassword" class="form-input" placeholder="••••••••" required minlength="8" maxlength="100">
+                        <button type="button" class="password-toggle" onclick="togglePasswordVisibility('confirmPassword', this)">
+                            <i class="fa-regular fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Role Notice -->
+            <div class="role-notice">
+                <i class="fa-solid fa-circle-check"></i>
+                <span>Your account is automatically provisioned with <strong>CLIENT</strong> verified access to your property sites.</span>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" id="submitBtn" class="submit-btn">
+                <span>Create Profile & Access Workspace</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </form>
+
+        <!-- Success State (Hidden by default) -->
+        <div class="success-overlay" id="successOverlay">
+            <div class="success-icon-circle">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h2 style="font-size: 24px; color: var(--text-primary); margin: 0 0 8px 0;">Customer Profile Created!</h2>
+            <p style="color: var(--text-muted); font-size: 14px; margin: 0; line-height: 1.6;">
+                Welcome to WBCMS, <strong id="successName" style="color: var(--text-primary);"></strong>.<br>
+                Your profile has been saved to the database. Redirecting to your main workspace...
+            </p>
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progressBarFill"></div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<script>
+    function togglePasswordVisibility(fieldId, btn) {
+        const input = document.getElementById(fieldId);
+        const icon = btn.querySelector('i');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+
+    const form = document.getElementById('customerProfileForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const errorBanner = document.getElementById('errorBanner');
+    const errorMessage = document.getElementById('errorMessage');
+    const successOverlay = document.getElementById('successOverlay');
+    const successName = document.getElementById('successName');
+    const progressBarFill = document.getElementById('progressBarFill');
+
+    function showError(msg) {
+        errorMessage.textContent = msg;
+        errorBanner.classList.add('show');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span>Create Profile & Access Workspace</span> <i class="fa-solid fa-arrow-right"></i>';
+    }
+
+    function hideError() {
+        errorBanner.classList.remove('show');
+    }
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hideError();
+
+        const fullName = document.getElementById('fullName').value.trim();
+        const username = document.getElementById('username').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const phoneNumber = document.getElementById('phoneNumber').value.trim();
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        if (password !== confirmPassword) {
+            showError("Passwords do not match. Please re-enter.");
+            return;
+        }
+
+        if (password.length < 8) {
+            showError("Password must be at least 8 characters long.");
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Creating Customer Profile...</span>';
+
+        try {
+            const response = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    fullName: fullName,
+                    username: username,
+                    email: email,
+                    phoneNumber: phoneNumber,
+                    password: password
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || data.error || "Failed to create profile. Username or email may already be registered.");
+            }
+
+            // Auto authenticate user
+            const loginResp = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: username,
+                    password: password,
+                    portalType: 'CLIENT'
+                })
+            });
+
+            const loginData = await loginResp.json().catch(() => null);
+
+            if (loginResp.ok && loginData && loginData.token) {
+                localStorage.setItem('wbcms_token', loginData.token);
+                localStorage.setItem('wbcms_user_id', loginData.userId);
+                localStorage.setItem('wbcms_username', loginData.username || username);
+                localStorage.setItem('wbcms_role', 'CLIENT');
+                localStorage.setItem('wbcms_user_type', 'CLIENT');
+                localStorage.setItem('wbcms_full_name', loginData.fullName || fullName);
+            }
+
+            // Transition to success screen
+            form.style.display = 'none';
+            successName.textContent = fullName;
+            successOverlay.classList.add('show');
+
+            // Animate progress bar and auto redirect
+            setTimeout(() => {
+                progressBarFill.style.width = '100%';
+            }, 100);
+
+            setTimeout(() => {
+                window.location.href = '/index.html';
+            }, 1800);
+
+        } catch (err) {
+            showError(err.message || "An unexpected error occurred. Please try again.");
+        }
+    });
+</script>
+</body>
+</html>

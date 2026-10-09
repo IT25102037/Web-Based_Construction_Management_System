@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WBCMS | My Profile</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome & Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Unified Theme -->
+    <link rel="stylesheet" href="/css/premium-theme.css">
+    <script src="/js/theme-init.js"></script>
+
+    <style>
+        :root {
+            --bg-deep: #080e18;
+            --panel-bg: #101a2b;
+            --panel-hover: #16233b;
+            --panel-card: #132035;
+            --border-color: #20314a;
+            --border-light: #2c4263;
+            --text-main: #f1f5f9;
+            --text-muted: #8fa2bd;
+            --primary-blue: #3b82f6;
+            --primary-blue-hover: #2563eb;
+            --accent-green: #22c55e;
+            --danger-red: #ef4444;
+            --danger-hover: #dc2626;
+        }
+
+        [data-theme="light"] {
+            --bg-deep: #f8fafc;
+            --panel-bg: #ffffff;
+            --panel-hover: #f1f5f9;
+            --panel-card: #ffffff;
+            --border-color: #e2e8f0;
+            --border-light: #cbd5e1;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+        }
+
+        [data-theme="light"] .profile-hero {
+            background: #ffffff !important;
+            border-color: #e2e8f0 !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06) !important;
+        }
+
+        [data-theme="light"] .hero-details h1 {
+            color: #0f172a !important;
+        }
+
+        [data-theme="light"] .glass-card {
+            background: #ffffff !important;
+            border-color: #e2e8f0 !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06) !important;
+        }
+
+        [data-theme="light"] .card-title-group h2 {
+            color: #0f172a !important;
+        }
+
+        [data-theme="light"] .detail-item {
+            background: #f8fafc !important;
+            border-color: #e2e8f0 !important;
+        }
+
+        [data-theme="light"] .detail-value {
+            color: #0f172a !important;
+        }
+
+        [data-theme="light"] .form-group label {
+            color: #334155 !important;
+        }
+
+        [data-theme="light"] .form-control-styled {
+            background: #ffffff !important;
+            border-color: #cbd5e1 !important;
+            color: #0f172a !important;
+        }
+
+        [data-theme="light"] .form-control-styled:focus {
+            background: #ffffff !important;
+            border-color: #2563eb !important;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .profile-container {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 24px 20px 60px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Hero Card */
+        .profile-hero {
+            background: linear-gradient(135deg, rgba(22, 35, 59, 0.85), rgba(16, 26, 43, 0.95));
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 28px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(12px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 320px;
+            height: 100%;
+            background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.12), transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-left {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+        }
+
+        .hero-avatar {
+            width: 82px;
+            height: 82px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: #ffffff;
+            font-size: 32px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.35);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            flex-shrink: 0;
+        }
+
+        .hero-details h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 0 6px 0;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .username-badge {
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .badge-client {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 20px;
+            padding: 3px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .badge-active {
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 20px;
+            padding: 3px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .badge-active::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #22c55e;
+            box-shadow: 0 0 8px #22c55e;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1;
+        }
+
+        /* Profile Layout Grid */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.35fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 920px) {
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+            .profile-hero {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        /* Cards */
+        .glass-card {
+            background: var(--panel-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 26px 28px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+        }
+
+        .card-header-styled {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+        }
+
+        .card-title-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title-group i {
+            color: #3b82f6;
+            font-size: 17px;
+        }
+
+        .card-title-group h2 {
+            font-size: 17px;
+            font-weight: 700;
+            margin: 0;
+            color: #ffffff;
+        }
+
+        /* Database Details List */
+        .details-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            background: rgba(10, 16, 27, 0.5);
+            border: 1px solid rgba(32, 49, 74, 0.7);
+            border-radius: 10px;
+            padding: 12px 16px;
+            transition: border-color 0.2s;
+        }
+
+        .detail-item:hover {
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+
+        .detail-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+            word-break: break-all;
+        }
+
+        /* Form Styling */
+        .profile-form {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #cbd5e1;
+        }
+
+        .input-box {
+            position: relative;
+        }
+
+        .input-box i.input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .form-control-styled {
+            width: 100%;
+            background: #0b1320;
+            border: 1px solid var(--border-color);
+            border-radius: 9px;
+            padding: 11px 14px 11px 40px;
+            color: #ffffff;
+            font-size: 13.5px;
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-control-styled:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        .pwd-toggle-btn {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 4px;
+        }
+
+        .pwd-toggle-btn:hover {
+            color: #cbd5e1;
+        }
+
+        .input-hint {
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 3px;
+        }
+
+        .btn-submit-profile {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: #ffffff;
+            border: none;
+            border-radius: 9px;
+            padding: 12px 22px;
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
+            transition: all 0.2s;
+        }
+
+        .btn-submit-profile:hover {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            transform: translateY(-1px);
+        }
+
+        .btn-reset-profile {
+            background: rgba(255, 255, 255, 0.05);
+            color: #94a3b8;
+            border: 1px solid var(--border-color);
+            border-radius: 9px;
+            padding: 12px 18px;
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-reset-profile:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+        }
+
+        /* Danger Zone Card */
+        .danger-card {
+            background: linear-gradient(135deg, rgba(35, 15, 20, 0.6), rgba(20, 10, 15, 0.8));
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 16px;
+            padding: 24px 28px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+            margin-top: 24px;
+        }
+
+        .danger-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .danger-info h3 {
+            margin: 0 0 6px 0;
+            color: #f87171;
+            font-size: 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .danger-info p {
+            margin: 0;
+            font-size: 12.5px;
+            color: #94a3b8;
+            line-height: 1.5;
+            max-width: 650px;
+        }
+
+        .btn-delete-profile {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #f87171;
+            padding: 11px 20px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .btn-delete-profile:hover {
+            background: #ef4444;
+            color: #ffffff;
+            border-color: #ef4444;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.35);
+        }
+
+        /* Message / Alert banner */
+        .profile-alert {
+            display: none;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 18px;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile-alert.show {
+            display: flex;
+        }
+
+        .profile-alert.success {
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #86efac;
+        }
+
+        .profile-alert.error {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
+
+        /* Confirmation Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(4, 7, 13, 0.82);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-box {
+            background: #111a29;
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            border-radius: 18px;
+            max-width: 480px;
+            width: 100%;
+            padding: 30px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+            text-align: center;
+            animation: scaleIn 0.2s ease-out;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-icon-danger {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: rgba(239, 68, 68, 0.15);
+            border: 2px solid rgba(239, 68, 68, 0.35);
+            color: #ef4444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            margin: 0 auto 18px;
+        }
+
+        .modal-box h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 0 0 10px 0;
+        }
+
+        .modal-box p {
+            font-size: 13.5px;
+            color: var(--text-muted);
+            line-height: 1.55;
+            margin: 0 0 26px 0;
+        }
+
+        .modal-actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .btn-modal-cancel {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-color);
+            color: #cbd5e1;
+            padding: 11px 24px;
+            border-radius: 9px;
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            flex: 1;
+            transition: all 0.2s;
+        }
+
+        .btn-modal-cancel:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+        }
+
+        .btn-modal-confirm {
+            background: #ef4444;
+            border: 1px solid #ef4444;
+            color: #ffffff;
+            padding: 11px 24px;
+            border-radius: 9px;
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            flex: 1;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-modal-confirm:hover {
+            background: #dc2626;
+            border-color: #dc2626;
+        }
+    </style>
+</head>
+
+<body class="dashboard-body">
+
+<!-- =========================================================
+     SECURITY CHECK
+========================================================== -->
+<script>
+    const clientToken = localStorage.getItem("wbcms_token");
+    const clientRole = localStorage.getItem("wbcms_role");
+    const clientUserType = localStorage.getItem("wbcms_user_type");
+
+    if (!clientToken || clientRole !== "CLIENT" || clientUserType !== "CLIENT") {
+        window.location.replace("/client-login.html");
+    }
+</script>
+
+<div class="dashboard-layout">
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+    <aside class="dashboard-sidebar">
+        <div class="dashboard-logo">
+            <div class="dashboard-logo-icon">
+                <i class="fa-solid fa-building"></i>
+            </div>
+            <div class="dashboard-logo-text">
+                <strong>WBCMS</strong>
+                <span>CLIENT PORTAL</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="sidebar-section-title">MAIN MENU</div>
+
+            <a href="/client-dashboard.html" class="sidebar-link">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="/client-profile.html" class="sidebar-link active">
+                <i class="fa-solid fa-user"></i>
+                <span>My Profile</span>
+            </a>
+
+            <a href="/client-project-requests.html" class="sidebar-link">
+                <i class="fa-solid fa-folder-open"></i>
+                <span>Project Requests</span>
+            </a>
+
+            <div class="sidebar-section-title">ACCOUNT</div>
+
+            <a href="#" class="sidebar-link" id="sidebarLogoutBtn">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+        </nav>
+
+        <!-- User Card in Sidebar -->
+        <div class="sidebar-user-card" onclick="window.location.href='/client-profile.html'" style="cursor:pointer;" title="My Profile">
+            <div class="sidebar-user-avatar" id="sidebarAvatar">C</div>
+            <div class="sidebar-user-info">
+                <strong id="sidebarUsername">Client</strong>
+                <span id="sidebarRole" style="display:inline-flex; align-items:center; gap:4px; color:#22c55e; font-size:10px;">
+                        <i class="fa-solid fa-circle" style="font-size:6px;"></i> Active Client
+                    </span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+    <main class="dashboard-main">
+
+        <!-- TOP BAR -->
+        <header class="dashboard-topbar">
+            <div class="topbar-left">
+                <h2>My Profile</h2>
+                <p>View, update, or manage your client account details</p>
+            </div>
+
+            <div class="topbar-right">
+                <!-- Quick Back to Dashboard -->
+                <a href="/client-dashboard.html" class="topbar-icon-btn" title="Back to Dashboard" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; color:#cbd5e1; padding:7px 14px; width:auto; border-radius:8px;">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <!-- Profile Dropdown (Top-Right Client Name & Profile Status) -->
+                <div class="profile-dropdown">
+                    <button class="profile-trigger" id="profileTrigger">
+                        <div class="profile-avatar" id="topAvatar">C</div>
+                        <div class="profile-info">
+                            <strong id="topUser">Client</strong>
+                            <span id="topRole" style="display:inline-flex; align-items:center; gap:4px; color:#22c55e; font-size:10px; font-weight:600;">
+                                    <i class="fa-solid fa-circle" style="font-size:6px;"></i> Active Client
+                                </span>
+                        </div>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+
+                    <div class="dropdown-menu" id="profileDropdown">
+                        <a href="/client-dashboard.html" class="dropdown-item">
+                            <i class="fa-solid fa-chart-pie"></i>
+                            Dashboard
+                        </a>
+                        <a href="/client-profile.html" class="dropdown-item active">
+                            <i class="fa-solid fa-user"></i>
+                            My Profile
+                        </a>
+                        <a href="/client-project-requests.html" class="dropdown-item">
+                            <i class="fa-solid fa-folder-open"></i>
+                            Project Requests
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item danger" id="dropdownLogoutBtn">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- PROFILE CONTAINER -->
+        <div class="profile-container">
+
+            <!-- Alert Message -->
+            <div id="profileAlert" class="profile-alert">
+                <i id="alertIcon" class="fa-solid fa-circle-check"></i>
+                <span id="alertText"></span>
+            </div>
+
+            <!-- HERO BANNER -->
+            <section class="profile-hero">
+                <div class="hero-left">
+                    <div class="hero-avatar" id="heroAvatar">C</div>
+                    <div class="hero-details">
+                        <h1 id="heroFullName">Client Name</h1>
+                        <div class="hero-meta-row">
+                            <span class="username-badge" id="heroUsername">@client</span>
+                            <span class="badge-client"><i class="fa-solid fa-shield-halved"></i> CLIENT</span>
+                            <span class="badge-active">Active Account</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-actions">
+                    <a href="/client-project-requests.html" class="btn btn-secondary" style="font-size:12px; font-weight:600; padding:9px 16px; border-radius:8px; display:inline-flex; align-items:center; gap:6px;">
+                        <i class="fa-solid fa-folder-open"></i>
+                        <span>My Requests</span>
+                    </a>
+                    <button type="button" onclick="document.getElementById('editFullName').focus()" class="btn btn-primary" style="font-size:12px; font-weight:600; padding:9px 16px; border-radius:8px; display:inline-flex; align-items:center; gap:6px;">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                        <span>Edit Details</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- GRID: DETAILS + EDIT FORM -->
+            <div class="profile-grid">
+
+                <!-- COLUMN 1: DATABASE DETAILS OVERVIEW -->
+                <div class="glass-card">
+                    <div class="card-header-styled">
+                        <div class="card-title-group">
+                            <i class="fa-solid fa-database"></i>
+                            <h2>Database Profile Details</h2>
+                        </div>
+                        <span style="font-size:11px; color:#60a5fa; font-weight:600;">Verified Record</span>
+                    </div>
+
+                    <div class="details-list">
+                        <div class="detail-item">
+                            <span class="detail-label">Client User ID</span>
+                            <span class="detail-value" id="dbId">-</span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label">Full Legal Name</span>
+                            <span class="detail-value" id="dbFullName">-</span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label">Username</span>
+                            <span class="detail-value" id="dbUsername">-</span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label">Primary Email Address</span>
+                            <span class="detail-value" id="dbEmail">-</span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label">Contact Phone</span>
+                            <span class="detail-value" id="dbPhone">Not Provided</span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label">Assigned System Role</span>
+                            <span class="detail-value" id="dbRole" style="color:#60a5fa;">CLIENT (Client Portal)</span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label">Member Since</span>
+                            <span class="detail-value" id="dbCreatedAt">-</span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label">Last Database Update</span>
+                            <span class="detail-value" id="dbUpdatedAt">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COLUMN 2: EDIT / UPDATE PROFILE FORM -->
+                <div class="glass-card">
+                    <div class="card-header-styled">
+                        <div class="card-title-group">
+                            <i class="fa-solid fa-user-pen"></i>
+                            <h2>Edit Client Profile</h2>
+                        </div>
+                        <span style="font-size:11px; color:#94a3b8;">Real-Time Sync</span>
+                    </div>
+
+                    <form id="editProfileForm" class="profile-form">
+
+                        <div class="form-group">
+                            <label for="editFullName">Full Name *</label>
+                            <div class="input-box">
+                                <i class="fa-solid fa-id-card input-icon"></i>
+                                <input type="text" id="editFullName" class="form-control-styled" required maxlength="120" placeholder="e.g. Apex Towers Client">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="editUsername">Username *</label>
+                                <div class="input-box">
+                                    <i class="fa-solid fa-at input-icon"></i>
+                                    <input type="text" id="editUsername" class="form-control-styled" required maxlength="50" placeholder="e.g. client">
+                                </div>
+                                <span class="input-hint">Used for sign in</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="editEmail">Email Address *</label>
+                                <div class="input-box">
+                                    <i class="fa-solid fa-envelope input-icon"></i>
+                                    <input type="email" id="editEmail" class="form-control-styled" required maxlength="120" placeholder="e.g. client@wbcms.com">
+                                </div>
+                                <span class="input-hint">Used for sign in & alerts</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="editPhone">Phone Number</label>
+                            <div class="input-box">
+                                <i class="fa-solid fa-phone input-icon"></i>
+                                <input type="tel" id="editPhone" class="form-control-styled" maxlength="30" placeholder="e.g. +94 11 234 5678 or 0771234567">
+                            </div>
+                            <span class="input-hint">Optional contact number</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="editPassword">New Password</label>
+                            <div class="input-box">
+                                <i class="fa-solid fa-lock input-icon"></i>
+                                <input type="password" id="editPassword" class="form-control-styled" placeholder="Leave blank to keep existing password" minlength="8" maxlength="100">
+                                <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('editPassword', this)">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                            </div>
+                            <span class="input-hint">Minimum 8 characters (only fill if changing password)</span>
+                        </div>
+
+                        <div style="display:flex; align-items:center; justify-content:space-between; margin-top:8px; padding-top:14px; border-top:1px solid var(--border-color);">
+                            <button type="button" id="resetProfileBtn" class="btn-reset-profile">
+                                <i class="fa-solid fa-rotate-left"></i> Discard
+                            </button>
+
+                            <button type="submit" id="saveProfileBtn" class="btn-submit-profile">
+                                <i class="fa-solid fa-floppy-disk"></i>
+                                <span>Save Changes to Database</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+            <!-- DANGER ZONE: DELETE PROFILE -->
+            <section class="danger-card">
+                <div class="danger-header">
+                    <div class="danger-info">
+                        <h3><i class="fa-solid fa-triangle-exclamation"></i> Danger Zone: Delete Client Profile</h3>
+                        <p>
+                            Permanently remove your client account, profile details, and submitted project requests from the WBCMS database.
+                            Once deleted, your account cannot be recovered and you will be immediately logged out.
+                        </p>
+                    </div>
+
+                    <button type="button" id="openDeleteModalBtn" class="btn-delete-profile">
+                        <i class="fa-solid fa-trash-can"></i>
+                        <span>Delete Profile</span>
+                    </button>
+                </div>
+            </section>
+
+        </div>
+
+    </main>
+
+</div>
+
+<!-- =========================================================
+     DELETE CONFIRMATION MODAL (Yes / No)
+========================================================== -->
+<div id="deleteModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalHeading">
+    <div class="modal-box">
+        <div class="modal-icon-danger">
+            <i class="fa-solid fa-trash-can"></i>
+        </div>
+
+        <h2 id="modalHeading">Are you sure you want to delete your profile?</h2>
+
+        <p>
+            This action is permanent and cannot be undone. All your profile information and project records will be wiped from the database, and you will be signed out immediately.
+        </p>
+
+        <div class="modal-actions">
+            <button type="button" id="cancelDeleteBtn" class="btn-modal-cancel">
+                <i class="fa-solid fa-xmark"></i> No, Keep My Profile
+            </button>
+            <button type="button" id="confirmDeleteBtn" class="btn-modal-confirm">
+                <i class="fa-solid fa-trash-can"></i> Yes, Delete Profile
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- =========================================================
+     PAGE SCRIPT
+========================================================== -->
+<script>
+    // Global in-memory cache of current profile
+    let currentProfileData = null;
+
+    function getAuthToken() {
+        return localStorage.getItem("wbcms_token");
+    }
+
+    function getAuthHeaders() {
+        return {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + getAuthToken()
+        };
+    }
+
+    function showNotification(msg, isError) {
+        const alertBox = document.getElementById("profileAlert");
+        const alertText = document.getElementById("alertText");
+        const alertIcon = document.getElementById("alertIcon");
+
+        alertText.textContent = msg;
+        alertBox.className = "profile-alert show " + (isError ? "error" : "success");
+        alertIcon.className = isError ? "fa-solid fa-triangle-exclamation" : "fa-solid fa-circle-check";
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        if (!isError) {
+            setTimeout(() => {
+                alertBox.classList.remove("show");
+            }, 4000);
+        }
+    }
+
+    function formatDateTime(isoString) {
+        if (!isoString) return "-";
+        const date = new Date(isoString);
+        return date.toLocaleString("en-GB", {
+            year: "numeric",
+            month: "short",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit"
+        });
+    }
+
+    function togglePasswordVisibility(fieldId, btn) {
+        const input = document.getElementById(fieldId);
+        const icon = btn.querySelector("i");
+        if (input.type === "password") {
+            input.type = "text";
+            icon.className = "fa-solid fa-eye-slash";
+        } else {
+            input.type = "password";
+            icon.className = "fa-solid fa-eye";
+        }
+    }
+
+    // ==========================================
+    // 1. LOAD CLIENT PROFILE FROM DATABASE
+    // ==========================================
+    async function loadProfile() {
+        try {
+            const response = await fetch("/api/client/profile", {
+                method: "GET",
+                headers: getAuthHeaders()
+            });
+
+            if (response.status === 401 || response.status === 403) {
+                clientLogout();
+                return;
+            }
+
+            if (!response.ok) {
+                throw new Error("Unable to fetch your profile from the database.");
+            }
+
+            const data = await response.json();
+            currentProfileData = data;
+
+            // Sync topbar & sidebar (Show username only in topUser as requested)
+            document.getElementById("topUser").textContent = data.username || "Client";
+            document.getElementById("topAvatar").textContent = initial;
+            document.getElementById("sidebarUsername").textContent = displayName;
+            document.getElementById("sidebarAvatar").textContent = initial;
+
+            // Sync Hero
+            document.getElementById("heroFullName").textContent = data.fullName || data.username;
+            document.getElementById("heroUsername").textContent = "@" + (data.username || "client");
+            document.getElementById("heroAvatar").textContent = initial;
+
+            // Sync Database Overview
+            document.getElementById("dbId").textContent = "#" + data.id;
+            document.getElementById("dbFullName").textContent = data.fullName || "-";
+            document.getElementById("dbUsername").textContent = data.username || "-";
+            document.getElementById("dbEmail").textContent = data.email || "-";
+            document.getElementById("dbPhone").textContent = data.phoneNumber || "Not Provided";
+            document.getElementById("dbRole").textContent = (data.role || "CLIENT") + " (Client Portal)";
+            document.getElementById("dbCreatedAt").textContent = formatDateTime(data.createdAt);
+            document.getElementById("dbUpdatedAt").textContent = formatDateTime(data.updatedAt);
+
+            // Populate Form Fields
+            populateForm(data);
+
+        } catch (err) {
+            console.error("Load Profile Error:", err);
+            showNotification(err.message || "Failed to load database details.", true);
+        }
+    }
+
+    function populateForm(data) {
+        document.getElementById("editFullName").value = data.fullName || "";
+        document.getElementById("editUsername").value = data.username || "";
+        document.getElementById("editEmail").value = data.email || "";
+        document.getElementById("editPhone").value = data.phoneNumber || "";
+        document.getElementById("editPassword").value = "";
+    }
+
+    // ==========================================
+    // 2. SAVE / UPDATE CLIENT PROFILE
+    // ==========================================
+    document.getElementById("editProfileForm").addEventListener("submit", async function(e) {
+        e.preventDefault();
+
+        const fullName = document.getElementById("editFullName").value.trim();
+        const username = document.getElementById("editUsername").value.trim();
+        const email = document.getElementById("editEmail").value.trim();
+        const phoneNumber = document.getElementById("editPhone").value.trim();
+        const password = document.getElementById("editPassword").value;
+
+        if (!fullName || !username || !email) {
+            showNotification("Full name, username, and email are required fields.", true);
+            return;
+        }
+
+        if (password && password.length < 8) {
+            showNotification("New password must contain at least 8 characters.", true);
+            return;
+        }
+
+        const saveBtn = document.getElementById("saveProfileBtn");
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Saving to Database...</span>';
+
+        try {
+            const response = await fetch("/api/client/profile", {
+                method: "PUT",
+                headers: getAuthHeaders(),
+                body: JSON.stringify({
+                    fullName: fullName,
+                    username: username,
+                    email: email,
+                    phoneNumber: phoneNumber,
+                    password: password || ""
+                })
+            });
+
+            const data = await response.json().catch(() => null);
+
+            if (!response.ok) {
+                const errorMsg = (data && (data.message || data.error))
+                    ? (data.message || data.error)
+                    : "Failed to update profile.";
+                throw new Error(errorMsg);
+            }
+
+            // If a new JWT token is returned (e.g. username changed), update localStorage
+            if (data.token) {
+                localStorage.setItem("wbcms_token", data.token);
+            }
+
+            const updatedProfile = data.profile || data;
+            localStorage.setItem("wbcms_username", updatedProfile.username);
+            localStorage.setItem("wbcms_full_name", updatedProfile.fullName);
+
+            showNotification("Profile details saved successfully to the database!", false);
+
+            // Reload fresh profile data
+            await loadProfile();
+
+        } catch (err) {
+            console.error("Update Profile Error:", err);
+            showNotification(err.message || "Failed to update profile.", true);
+        } finally {
+            saveBtn.disabled = false;
+            saveBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span>Save Changes to Database</span>';
+        }
+    });
+
+    // Reset button
+    document.getElementById("resetProfileBtn").addEventListener("click", function() {
+        if (currentProfileData) {
+            populateForm(currentProfileData);
+            showNotification("Form reset to currently saved database details.", false);
+        }
+    });
+
+    // ==========================================
+    // 3. DELETE CLIENT PROFILE MODAL (Yes / No)
+    // ==========================================
+    const deleteModal = document.getElementById("deleteModal");
+    const openDeleteModalBtn = document.getElementById("openDeleteModalBtn");
+    const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
+    const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+
+    // Open Modal
+    openDeleteModalBtn.addEventListener("click", function() {
+        deleteModal.classList.add("show");
+    });
+
+    // No / Cancel Modal
+    cancelDeleteBtn.addEventListener("click", function() {
+        deleteModal.classList.remove("show");
+    });
+
+    // Close when clicking backdrop
+    deleteModal.addEventListener("click", function(e) {
+        if (e.target === deleteModal) {
+            deleteModal.classList.remove("show");
+        }
+    });
+
+    // Yes / Confirm Deletion
+    confirmDeleteBtn.addEventListener("click", async function() {
+        confirmDeleteBtn.disabled = true;
+        cancelDeleteBtn.disabled = true;
+        confirmDeleteBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Deleting Profile...';
+
+        try {
+            const response = await fetch("/api/client/profile", {
+                method: "DELETE",
+                headers: getAuthHeaders()
+            });
+
+            if (!response.ok && response.status !== 204) {
+                const data = await response.json().catch(() => null);
+                throw new Error((data && (data.message || data.error)) || "Failed to delete profile.");
+            }
+
+            // Deletion successful: close modal & clear local session
+            deleteModal.classList.remove("show");
+            showNotification("Your profile has been deleted from the database. Signing you out...", false);
+
+            localStorage.removeItem("wbcms_token");
+            localStorage.removeItem("wbcms_user_id");
+            localStorage.removeItem("wbcms_username");
+            localStorage.removeItem("wbcms_role");
+            localStorage.removeItem("wbcms_user_type");
+            localStorage.removeItem("wbcms_full_name");
+            localStorage.removeItem("wbcms_user");
+
+            setTimeout(() => {
+                window.location.replace("/client-login.html");
+            }, 1200);
+
+        } catch (err) {
+            console.error("Delete Profile Error:", err);
+            confirmDeleteBtn.disabled = false;
+            cancelDeleteBtn.disabled = false;
+            confirmDeleteBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i> Yes, Delete Profile';
+            deleteModal.classList.remove("show");
+            showNotification(err.message || "Failed to delete profile. Please try again.", true);
+        }
+    });
+
+    // ==========================================
+    // 4. LOGOUT
+    // ==========================================
+    function clientLogout(skipPrompt = false) {
+        if (!skipPrompt && !confirm("Are you sure you want to log out?")) {
+            return;
+        }
+        const token = getAuthToken();
+        if (token) {
+            fetch("/api/auth/logout", {
+                method: "POST",
+                headers: { "Authorization": "Bearer " + token }
+            }).catch(() => {});
+        }
+
+        localStorage.removeItem("wbcms_token");
+        localStorage.removeItem("wbcms_user_id");
+        localStorage.removeItem("wbcms_username");
+        localStorage.removeItem("wbcms_role");
+        localStorage.removeItem("wbcms_user_type");
+        localStorage.removeItem("wbcms_full_name");
+        localStorage.removeItem("wbcms_user");
+
+        window.location.replace("/client-login.html");
+    }
+
+    document.getElementById("sidebarLogoutBtn").addEventListener("click", function(e) {
+        e.preventDefault();
+        clientLogout();
+    });
+
+    document.getElementById("dropdownLogoutBtn").addEventListener("click", function(e) {
+        e.preventDefault();
+        clientLogout();
+    });
+
+    // ==========================================
+    // 5. PROFILE DROPDOWN TOGGLE
+    // ==========================================
+    const trigger = document.getElementById("profileTrigger");
+    const dropdown = document.getElementById("profileDropdown");
+
+    trigger.addEventListener("click", function(e) {
+        e.stopPropagation();
+        dropdown.classList.toggle("show");
+    });
+
+    document.addEventListener("click", function() {
+        dropdown.classList.remove("show");
+    });
+
+    // Esc key closes modal & dropdown
+    document.addEventListener("keydown", function(e) {
+        if (e.key === "Escape") {
+            deleteModal.classList.remove("show");
+            dropdown.classList.remove("show");
+        }
+    });
+
+    // Load on startup
+    document.addEventListener("DOMContentLoaded", loadProfile);
+</script>
+</body>
+</html>
