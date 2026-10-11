@@ -1,0 +1,4 @@
+package sliit.construction.construction.entity;
+public enum Role {
+    PROJECT_MANAGER, SITE_ENGINEER, CONSTRUCTION_SUPERVISOR, CLIENT, PROCUREMENT_OFFICER, SYSTEM_ADMINISTRATOR
+}
