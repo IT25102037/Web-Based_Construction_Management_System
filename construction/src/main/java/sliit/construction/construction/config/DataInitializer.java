@@ -66,7 +66,7 @@ public class DataInitializer {
                     BEGIN CATCH
                     END CATCH
                 """);
-            } catch (Exception ignored) {
+            } catch (Throwable ignored) {
             }
 
             // ==========================================

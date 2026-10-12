@@ -279,11 +279,6 @@ function renderRequests() {
                     <i class="bi bi-calendar3" style="margin-right:4px; color:#64748b;"></i>${request.requiredDate || "-"}
                 </span>
             </td>
-            <td>
-                <span class="status ${getStatusClass(request.status)}">
-                    ${formatStatus(request.status)}
-                </span>
-            </td>
             <td class="actions">
                 <button type="button" class="view-btn" onclick="viewRequest(${request.id})" title="View Details">
                     <i class="bi bi-eye"></i> View
@@ -354,7 +349,10 @@ function openCreateModal() {
     if (titleEl) titleEl.textContent = "New Material Request";
     if (subEl) subEl.textContent = "Fill in the requisition details and procurement parameters below.";
     if (idEl) idEl.value = "";
-    if (statusEl) statusEl.value = "PENDING";
+    if (statusEl) {
+        statusEl.innerHTML = '<option value="PENDING" selected>Pending</option>';
+        statusEl.value = "PENDING";
+    }
 
     const reqCodeInput = document.getElementById("requestCode");
     if (reqCodeInput) {
@@ -593,7 +591,21 @@ async function editRequest(id) {
         document.getElementById("requestedBy").value = request.requestedBy || "";
         document.getElementById("requiredDate").value = request.requiredDate || "";
         document.getElementById("reason").value = request.reason || "";
-        document.getElementById("status").value = request.status || "PENDING";
+        const statusEl = document.getElementById("status");
+        if (statusEl) {
+            const rawStatus = (request.status || "PENDING").toUpperCase();
+            const isAccepted = rawStatus === "ACCEPTED" || rawStatus === "APPROVED";
+            const isDeclined = rawStatus === "DECLINED" || rawStatus === "REJECTED";
+            const isFulfilled = rawStatus === "FULFILLED";
+
+            statusEl.innerHTML = `
+                <option value="PENDING" ${!isAccepted && !isDeclined && !isFulfilled ? 'selected' : ''}>Pending</option>
+                <option value="ACCEPTED" ${isAccepted ? 'selected' : ''}>Accepted by Supplier</option>
+                <option value="DECLINED" ${isDeclined ? 'selected' : ''}>Declined by Supplier</option>
+                ${isFulfilled ? '<option value="FULFILLED" selected>Fulfilled</option>' : ''}
+            `;
+            statusEl.value = isAccepted ? 'ACCEPTED' : (isDeclined ? 'DECLINED' : (isFulfilled ? 'FULFILLED' : 'PENDING'));
+        }
         const supplierInput = document.getElementById("supplierName");
         if (supplierInput) supplierInput.value = request.supplierName || "";
 
@@ -780,7 +792,7 @@ function formatStatus(status) {
     const s = String(status || "").toUpperCase();
     switch (s) {
         case "PENDING":
-            return "Pending Review";
+            return "Pending";
         case "ACCEPTED":
         case "APPROVED":
             return "Accepted by Supplier";
@@ -790,7 +802,7 @@ function formatStatus(status) {
         case "FULFILLED":
             return "Fulfilled";
         default:
-            return s || "Pending Review";
+            return s || "Pending";
     }
 }
 

@@ -22,10 +22,11 @@ public enum MaterialRequestStatus {
                 return status;
             }
         }
-        if ("ACCEPT".equals(upper)) return ACCEPTED;
-        if ("DECLINE".equals(upper)) return DECLINED;
-        if ("APPROVE".equals(upper)) return APPROVED;
-        if ("REJECT".equals(upper)) return REJECTED;
+        if (upper.contains("ACCEPT")) return ACCEPTED;
+        if (upper.contains("DECLINE")) return DECLINED;
+        if (upper.contains("APPROV")) return APPROVED;
+        if (upper.contains("REJECT")) return REJECTED;
+        if (upper.contains("FULFILL")) return FULFILLED;
         return PENDING;
     }
 }

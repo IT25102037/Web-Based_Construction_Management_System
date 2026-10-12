@@ -795,13 +795,12 @@
                         <th>Requested By</th>
                         <th>Assigned Supplier</th>
                         <th>Required Date</th>
-                        <th>Status</th>
                         <th style="width: 140px;">Actions</th>
                     </tr>
                     </thead>
                     <tbody id="requestTableBody">
                     <tr>
-                        <td colspan="9" style="text-align:center; padding: 40px;">
+                        <td colspan="8" style="text-align:center; padding: 40px;">
                             <i class="bi bi-arrow-repeat" style="font-size: 24px; animation: spin 1s linear infinite; display: inline-block; color:var(--orange);"></i>
                             <p style="margin-top: 8px; color: #8a99ad;">Loading material requests from SQL Server...</p>
                         </td>
@@ -934,12 +933,7 @@
                     <div class="form-group">
                         <label for="status">Requisition Status <span>*</span></label>
                         <select id="status" required>
-                            <option value="PENDING" selected>Pending Review</option>
-                            <option value="ACCEPTED">Accepted by Supplier</option>
-                            <option value="DECLINED">Declined by Supplier</option>
-                            <option value="APPROVED">Approved</option>
-                            <option value="REJECTED">Rejected</option>
-                            <option value="FULFILLED">Fulfilled</option>
+                            <option value="PENDING" selected>Pending</option>
                         </select>
                     </div>
                 </div>

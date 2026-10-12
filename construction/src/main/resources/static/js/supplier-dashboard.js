@@ -293,18 +293,9 @@ function renderRequests() {
                 </div>
             </td>
             <td class="actions">
-                ${isPending ? `
-                    <button type="button" class="accept-btn" onclick="openDecisionModal(${request.id}, 'ACCEPTED')" title="Accept this Material Requisition">
-                        <i class="bi bi-check-lg"></i> Accept
-                    </button>
-                    <button type="button" class="decline-btn" onclick="openDecisionModal(${request.id}, 'DECLINED')" title="Decline this Material Requisition">
-                        <i class="bi bi-x-lg"></i> Decline
-                    </button>
-                ` : `
-                    <button type="button" class="action-button" style="padding:4px 8px; font-size:11.5px;" onclick="openDecisionModal(${request.id}, '${request.status || 'PENDING'}')" title="Change Decision">
-                        <i class="bi bi-arrow-repeat"></i> Modify
-                    </button>
-                `}
+                <button type="button" class="action-button primary" style="padding:6px 14px; font-size:12px; font-weight:700; display:inline-flex; align-items:center; gap:6px; border-radius:6px; cursor:pointer;" onclick="openDecisionModal(${request.id}, '${isDeclined ? 'DECLINED' : 'ACCEPTED'}')" title="Modify Decision">
+                    <i class="bi bi-pencil-square"></i> Modify
+                </button>
                 <button type="button" class="view-btn" onclick="viewRequest(${request.id})" title="View Details">
                     <i class="bi bi-eye"></i> View
                 </button>
@@ -386,11 +377,12 @@ function openDecisionModal(id, targetStatus = "ACCEPTED") {
         return;
     }
 
+    const initialDecision = (targetStatus === "DECLINED" || targetStatus === "REJECTED") ? "DECLINED" : "ACCEPTED";
     activeDecisionRequestId = id;
-    activeTargetStatus = targetStatus;
+    activeTargetStatus = initialDecision;
 
     document.getElementById("decisionReqId").value = id;
-    document.getElementById("decisionTargetStatus").value = targetStatus;
+    document.getElementById("decisionTargetStatus").value = initialDecision;
 
     // Summary Card
     const codeEl = document.getElementById("summaryReqCode");
@@ -423,31 +415,30 @@ function openDecisionModal(id, targetStatus = "ACCEPTED") {
     if (remarksInput) {
         if (request.decisionRemarks) {
             remarksInput.value = request.decisionRemarks;
-        } else if (targetStatus === "ACCEPTED") {
+        } else if (initialDecision === "ACCEPTED") {
             remarksInput.value = `Order accepted for delivery by ${request.requiredDate || 'site schedule'}. Batch confirmed.`;
-        } else if (targetStatus === "DECLINED") {
-            remarksInput.value = "Unable to fulfill requisition on the requested timeline due to supply constraints.";
         } else {
-            remarksInput.value = "Requisition placed under pending review for schedule and capacity assessment.";
+            remarksInput.value = "Unable to fulfill requisition on the requested timeline due to supply constraints.";
         }
     }
 
-    selectDecision(targetStatus);
+    selectDecision(initialDecision);
 
     const modal = document.getElementById("decisionModal");
     if (modal) modal.classList.add("show");
 }
 
 function selectDecision(status) {
-    activeTargetStatus = status;
-    document.getElementById("decisionTargetStatus").value = status;
+    const norm = (status === "DECLINED" || status === "REJECTED") ? "DECLINED" : "ACCEPTED";
+    activeTargetStatus = norm;
+    const targetInput = document.getElementById("decisionTargetStatus");
+    if (targetInput) targetInput.value = norm;
 
     const btnAccept = document.getElementById("btnSelectAccept");
     const btnDecline = document.getElementById("btnSelectDecline");
-    const btnPending = document.getElementById("btnSelectPending");
     const subBtn = document.getElementById("submitDecisionBtn");
 
-    // Reset all selection buttons
+    // Reset selection buttons
     if (btnAccept) {
         btnAccept.style.border = "2px solid #e2e8f0";
         btnAccept.style.background = "#f8fafc";
@@ -458,13 +449,8 @@ function selectDecision(status) {
         btnDecline.style.background = "#f8fafc";
         btnDecline.style.color = "#64748b";
     }
-    if (btnPending) {
-        btnPending.style.border = "2px solid #e2e8f0";
-        btnPending.style.background = "#f8fafc";
-        btnPending.style.color = "#64748b";
-    }
 
-    if (status === "ACCEPTED") {
+    if (norm === "ACCEPTED") {
         if (btnAccept) {
             btnAccept.style.border = "2px solid #10b981";
             btnAccept.style.background = "#ecfdf5";
@@ -475,7 +461,7 @@ function selectDecision(status) {
             subBtn.style.borderColor = "#059669";
             subBtn.innerHTML = '<i class="bi bi-check-circle-fill"></i> <span>Confirm Acceptance</span>';
         }
-    } else if (status === "DECLINED") {
+    } else {
         if (btnDecline) {
             btnDecline.style.border = "2px solid #ef4444";
             btnDecline.style.background = "#fef2f2";
@@ -485,17 +471,6 @@ function selectDecision(status) {
             subBtn.style.background = "#dc2626";
             subBtn.style.borderColor = "#dc2626";
             subBtn.innerHTML = '<i class="bi bi-x-circle-fill"></i> <span>Confirm Decline</span>';
-        }
-    } else { // PENDING
-        if (btnPending) {
-            btnPending.style.border = "2px solid #f59e0b";
-            btnPending.style.background = "#fffbeb";
-            btnPending.style.color = "#b45309";
-        }
-        if (subBtn) {
-            subBtn.style.background = "#d97706";
-            subBtn.style.borderColor = "#d97706";
-            subBtn.innerHTML = '<i class="bi bi-clock-history"></i> <span>Mark as Pending</span>';
         }
     }
 }
@@ -513,11 +488,9 @@ async function submitDecision(event) {
 
     const id = activeDecisionRequestId;
     const targetStatus = activeTargetStatus || "ACCEPTED";
-    const backendStatus = (targetStatus === "ACCEPTED" || targetStatus === "APPROVED")
-        ? "APPROVED"
-        : (targetStatus === "DECLINED" || targetStatus === "REJECTED")
-            ? "REJECTED"
-            : "PENDING";
+    const backendStatus = (targetStatus === "DECLINED" || targetStatus === "REJECTED")
+        ? "DECLINED"
+        : "ACCEPTED";
 
     const remarks = document.getElementById("decisionRemarks").value.trim();
     const supplierName = document.getElementById("decisionSupplierName").value.trim();
@@ -634,11 +607,9 @@ async function submitDecision(event) {
         renderRequests();
         closeDecisionModal();
 
-        const actionText = targetStatus === "ACCEPTED" 
-            ? "ACCEPTED" 
-            : targetStatus === "DECLINED" 
-                ? "DECLINED" 
-                : "PENDING REVIEW";
+        const actionText = (targetStatus === "ACCEPTED" || targetStatus === "APPROVED")
+            ? "Accepted by Supplier" 
+            : "Declined by Supplier";
         showToast(`Material request #${updated.requestCode || id} marked as ${actionText}! SQL Server updated successfully.`, "success");
 
         // Verify and refresh from server in background
@@ -759,17 +730,17 @@ function formatStatus(status) {
     const s = String(status || "").toUpperCase();
     switch (s) {
         case "PENDING":
-            return "Pending Review";
+            return "Pending";
         case "ACCEPTED":
         case "APPROVED":
-            return "Accepted";
+            return "Accepted by Supplier";
         case "DECLINED":
         case "REJECTED":
-            return "Declined";
+            return "Declined by Supplier";
         case "FULFILLED":
             return "Fulfilled";
         default:
-            return s || "Pending Review";
+            return s || "Pending";
     }
 }
 
