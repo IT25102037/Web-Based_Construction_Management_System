@@ -1,0 +1,1855 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WBCMS | My Profile</title>
+
+    <!-- Google Fonts: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome & Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Unified Theme -->
+    <link rel="stylesheet" href="/css/premium-theme.css">
+    <link rel="stylesheet" href="/css/unified-pages.css">
+    <script src="/js/theme-init.js"></script>
+
+    <style>
+        /* =====================================================
+           STAFF DASHBOARD THEME APPLIED TO CUSTOMER PROFILE
+           Clean light construction theme with soft blurred backdrop
+        ====================================================== */
+        :root {
+            --bg-page: #edf3f8;
+            --sidebar-bg: #15429d;
+            --sidebar-active-bg: #ffffff;
+            --sidebar-active-text: #14429e;
+            --card-bg: rgba(255, 255, 255, 0.94);
+            --card-border: rgba(230, 237, 245, 0.85);
+            --card-shadow: 0 4px 20px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.02);
+            --card-radius: 18px;
+            
+            --text-title: #0f172a;
+            --text-body: #334155;
+            --text-muted: #64748b;
+            --text-light: #94a3b8;
+            
+            --blue-primary: #1a56db;
+            --blue-soft: #eff6ff;
+            --blue-badge: #e0edff;
+            --orange-primary: #ea580c;
+            --orange-soft: #fff7ed;
+            --green-primary: #10b981;
+            --green-soft: #ecfdf5;
+            --amber-primary: #f59e0b;
+            --amber-soft: #fffbeb;
+            --red-primary: #ef4444;
+            --red-soft: #fef2f2;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body.dashboard-body {
+            background-color: #edf3f8 !important;
+            background: #edf3f8 !important;
+            color: var(--text-title);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbars */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(148, 163, 184, 0.55) rgba(0, 0, 0, 0.04);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.04);
+            border-radius: 8px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.5);
+            border-radius: 8px;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            transition: background 0.2s ease;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ea580c;
+        }
+
+        /* Fixed Construction Backdrop */
+        .dashboard-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .dashboard-backdrop-img {
+            position: absolute;
+            inset: -20px;
+            background-image: 
+                radial-gradient(circle at 18% 12%, rgba(255, 107, 22, 0.08) 0%, transparent 45%),
+                radial-gradient(circle at 82% 18%, rgba(26, 86, 219, 0.10) 0%, transparent 50%),
+                radial-gradient(circle at 50% 90%, rgba(16, 185, 129, 0.06) 0%, transparent 40%),
+                url('/images/staff-dashboard-bg.jpg'),
+                url('/images/construction-bg.jpg'),
+                url('/images/main-bg-blur.jpg');
+            background-size: cover;
+            background-position: center 25%;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            filter: blur(2.5px) brightness(1.03) saturate(1.08) contrast(1.02);
+            transform: scale(1.03);
+            opacity: 0.95;
+        }
+
+        .dashboard-backdrop-overlay {
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 85% 15%, rgba(240, 246, 255, 0.72) 0%, rgba(234, 243, 253, 0.82) 55%, rgba(225, 237, 249, 0.90) 100%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(225, 238, 252, 0.70) 100%);
+        }
+
+        /* Layout Container */
+        .dashboard-layout {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* =====================================================
+           SIDEBAR: SOLID ROYAL BLUE WITH WHITE ACTIVE PILL
+        ====================================================== */
+        aside.dashboard-sidebar, .dashboard-sidebar {
+            width: 250px;
+            background: #15429d !important;
+            border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.08) !important;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 14px 16px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 4px 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .dashboard-logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #ff6b16;
+            display: grid;
+            place-items: center;
+            color: #ffffff;
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(255, 107, 22, 0.35);
+            flex-shrink: 0;
+        }
+
+        .dashboard-logo-text strong {
+            font-family: 'Outfit', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            color: #ffffff !important;
+            margin: 0;
+            line-height: 1.1;
+            letter-spacing: 0.5px;
+            display: block;
+        }
+
+        .dashboard-logo-text span {
+            font-size: 9.5px;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            color: #ff9944;
+            text-transform: uppercase;
+            display: block;
+            margin-top: 1px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 14px 2px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-section-title {
+            font-size: 9.5px;
+            font-weight: 800;
+            letter-spacing: 1.2px;
+            color: #8da9e6 !important;
+            text-transform: uppercase;
+            padding: 12px 14px 4px;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 24px;
+            color: #c5d7f7 !important;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-link i {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+            color: inherit;
+        }
+
+        .sidebar-link:hover {
+            color: #ffffff !important;
+            background: rgba(255, 255, 255, 0.12) !important;
+            transform: translateX(3px);
+        }
+
+        .sidebar-link.active {
+            background: #ffffff !important;
+            color: #14429e !important;
+            font-weight: 700 !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15) !important;
+            border-radius: 24px !important;
+            transform: none !important;
+        }
+
+        .sidebar-link.active i {
+            color: #14429e !important;
+        }
+
+        .sidebar-user-card {
+            padding: 10px 12px;
+            border-radius: 14px;
+            background: rgba(10, 25, 60, 0.35) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: auto;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-user-card:hover {
+            background: rgba(10, 25, 60, 0.5) !important;
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .sidebar-user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #ff6b16;
+            display: grid;
+            place-items: center;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 13px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(255, 107, 22, 0.3);
+        }
+
+        .sidebar-user-info strong {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: #ffffff !important;
+            line-height: 1.2;
+        }
+
+        /* =====================================================
+           MAIN WRAPPER & TOP BAR (STAFF DASHBOARD STYLE)
+        ====================================================== */
+        .dashboard-main {
+            margin-left: 250px;
+            flex: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 1;
+        }
+
+        .dashboard-topbar {
+            padding: 16px 32px !important;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.90) !important;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            position: sticky;
+            top: 0;
+            z-index: 90;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.9);
+            box-shadow: 0 2px 14px rgba(15, 23, 42, 0.03);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .topbar-left h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 22px;
+            font-weight: 800;
+            color: #0f172a !important;
+            margin: 0;
+            line-height: 1.15;
+            letter-spacing: -0.2px;
+        }
+
+        .topbar-left p {
+            font-size: 13px;
+            color: #64748b !important;
+            margin: 3px 0 0;
+            font-weight: 500;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .topbar-icon-btn {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            color: #334155 !important;
+            border-radius: 10px;
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+            transition: all 0.2s ease;
+        }
+
+        .topbar-icon-btn:hover {
+            border-color: #1a56db;
+            color: #1a56db !important;
+            background: #eff6ff;
+            transform: translateY(-1px);
+        }
+
+        /* Profile Dropdown */
+        .profile-dropdown {
+            position: relative;
+        }
+
+        .profile-trigger {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 6px 14px 6px 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+            transition: all 0.2s ease;
+        }
+
+        .profile-trigger:hover {
+            border-color: #1a56db;
+            box-shadow: 0 3px 10px rgba(26, 86, 219, 0.12);
+        }
+
+        .profile-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #1a56db, #14429e);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 13px;
+            display: grid;
+            place-items: center;
+            box-shadow: 0 2px 6px rgba(26, 86, 219, 0.25);
+        }
+
+        .profile-info strong {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: #0f172a;
+            line-height: 1.2;
+            text-align: left;
+        }
+
+        .profile-trigger i.fa-chevron-down {
+            color: #64748b;
+            font-size: 11px;
+            transition: transform 0.2s ease;
+        }
+
+        .profile-dropdown .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: calc(100% + 8px);
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            box-shadow: 0 12px 35px rgba(15, 23, 42, 0.12);
+            width: 210px;
+            padding: 6px;
+            z-index: 100;
+            animation: fadeIn 0.15s ease-out;
+        }
+
+        .profile-dropdown .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 12px;
+            border-radius: 8px;
+            color: #334155;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+
+        .dropdown-item i {
+            font-size: 14px;
+            width: 18px;
+            color: #64748b;
+        }
+
+        .dropdown-item:hover {
+            background: #f1f5f9;
+            color: #1a56db;
+        }
+
+        .dropdown-item:hover i {
+            color: #1a56db;
+        }
+
+        .dropdown-item.active {
+            background: #eff6ff;
+            color: #1a56db;
+            font-weight: 700;
+        }
+
+        .dropdown-item.active i {
+            color: #1a56db;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: #f1f5f9;
+            margin: 4px 0;
+        }
+
+        .dropdown-item.danger {
+            color: #ef4444;
+        }
+
+        .dropdown-item.danger i {
+            color: #ef4444;
+        }
+
+        .dropdown-item.danger:hover {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        /* =====================================================
+           PROFILE CONTAINER & MAIN CONTENT
+        ====================================================== */
+        .profile-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 28px 32px 60px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Alert Message Banner */
+        .profile-alert {
+            display: none;
+            padding: 13px 20px;
+            border-radius: 12px;
+            font-size: 13.5px;
+            font-weight: 600;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .profile-alert.show {
+            display: flex;
+        }
+
+        .profile-alert.success {
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            color: #065f46;
+        }
+
+        .profile-alert.success i {
+            color: #10b981;
+            font-size: 16px;
+        }
+
+        .profile-alert.error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+        }
+
+        .profile-alert.error i {
+            color: #ef4444;
+            font-size: 16px;
+        }
+
+        /* Hero Banner */
+        .profile-hero {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(240, 246, 255, 0.94));
+            border: 1px solid rgba(219, 234, 254, 0.95);
+            border-radius: 20px;
+            padding: 28px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            box-shadow: 0 4px 20px rgba(26, 86, 219, 0.05), 0 1px 3px rgba(15, 23, 42, 0.02);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .hero-avatar {
+            width: 82px;
+            height: 82px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #1a56db, #14429e);
+            color: #ffffff;
+            font-size: 32px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(26, 86, 219, 0.28);
+            border: 3px solid #ffffff;
+            flex-shrink: 0;
+        }
+
+        .hero-details h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 26px;
+            font-weight: 800;
+            margin: 0 0 6px 0;
+            color: #0f172a;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .username-badge {
+            color: #64748b;
+            font-size: 13.5px;
+            font-weight: 600;
+        }
+
+        .badge-client {
+            background: #eff6ff;
+            color: #1a56db;
+            border: 1px solid #bfdbfe;
+            border-radius: 20px;
+            padding: 3px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .badge-active {
+            background: #ecfdf5;
+            color: #059669;
+            border: 1px solid #a7f3d0;
+            border-radius: 20px;
+            padding: 3px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .badge-active::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 8px #10b981;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .hero-btn-secondary {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            color: #334155;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 10px 18px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+            transition: all 0.2s ease;
+        }
+
+        .hero-btn-secondary:hover {
+            background: #eff6ff;
+            color: #1a56db;
+            border-color: #1a56db;
+            transform: translateY(-1px);
+        }
+
+        .hero-btn-primary {
+            background: linear-gradient(135deg, #ea580c, #c2410c);
+            color: #ffffff;
+            border: none;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 10px 20px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(234, 88, 12, 0.30);
+            transition: all 0.2s ease;
+        }
+
+        .hero-btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(234, 88, 12, 0.40);
+        }
+
+        /* Profile Layout Grid */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.35fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 960px) {
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+            .profile-hero {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            aside.dashboard-sidebar, .dashboard-sidebar {
+                width: 72px;
+                padding: 16px 8px;
+            }
+            .dashboard-logo-text, .sidebar-section-title, .sidebar-link span, .sidebar-user-info {
+                display: none;
+            }
+            .dashboard-main {
+                margin-left: 72px;
+            }
+        }
+
+        /* Glass Cards (Database Details & Edit Form) */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(230, 237, 245, 0.9);
+            border-radius: 18px;
+            padding: 28px;
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.02);
+        }
+
+        .card-header-styled {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #edf2f7;
+            padding-bottom: 16px;
+            margin-bottom: 22px;
+        }
+
+        .card-title-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-title-badge-orange {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: #fff7ed;
+            border: 1px solid #ffedd5;
+            color: #ea580c;
+            display: grid;
+            place-items: center;
+            font-size: 16px;
+        }
+
+        .card-title-badge-blue {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: #eff6ff;
+            border: 1px solid #dbeafe;
+            color: #1a56db;
+            display: grid;
+            place-items: center;
+            font-size: 16px;
+        }
+
+        .card-title-group h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0;
+            color: #0f172a;
+        }
+
+        .header-pill-verified {
+            background: #ecfdf5;
+            color: #059669;
+            border: 1px solid #a7f3d0;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .header-pill-sync {
+            background: #eff6ff;
+            color: #1a56db;
+            border: 1px solid #bfdbfe;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        /* Database Details List */
+        .details-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 13px 16px;
+            transition: all 0.2s ease;
+        }
+
+        .detail-item:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+            transform: translateX(2px);
+        }
+
+        .detail-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            font-weight: 700;
+            color: #0f172a;
+            word-break: break-all;
+        }
+
+        /* Form Styling */
+        .profile-form {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .input-box {
+            position: relative;
+        }
+
+        .input-box i.input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .form-control-styled {
+            width: 100%;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 11px 14px 11px 40px;
+            color: #0f172a;
+            font-size: 13.5px;
+            font-weight: 500;
+            outline: none;
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+        }
+
+        .form-control-styled:focus {
+            border-color: #1a56db;
+            box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.15);
+            background: #ffffff;
+        }
+
+        .pwd-toggle-btn {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 4px;
+            transition: color 0.2s;
+        }
+
+        .pwd-toggle-btn:hover {
+            color: #334155;
+        }
+
+        .input-hint {
+            font-size: 11.5px;
+            color: #64748b;
+            margin-top: 3px;
+        }
+
+        .btn-submit-profile {
+            background: linear-gradient(135deg, #ea580c, #c2410c);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 24px;
+            font-size: 13.5px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 14px rgba(234, 88, 12, 0.35);
+            transition: all 0.2s ease;
+        }
+
+        .btn-submit-profile:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(234, 88, 12, 0.45);
+        }
+
+        .btn-reset-profile {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 12px 20px;
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-reset-profile:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        /* Danger Zone Card (Staff Dashboard Light Warning Style) */
+        .danger-card {
+            background: #fff5f5;
+            border: 1px solid #fecaca;
+            border-radius: 18px;
+            padding: 24px 28px;
+            box-shadow: 0 4px 20px rgba(239, 68, 68, 0.04);
+            margin-top: 10px;
+        }
+
+        .danger-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .danger-info h3 {
+            margin: 0 0 6px 0;
+            color: #dc2626;
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .danger-info p {
+            margin: 0;
+            font-size: 13px;
+            color: #64748b;
+            line-height: 1.55;
+            max-width: 680px;
+        }
+
+        .btn-delete-profile {
+            background: #fee2e2;
+            border: 1px solid #fca5a5;
+            color: #dc2626;
+            padding: 11px 22px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .btn-delete-profile:hover {
+            background: #ef4444;
+            color: #ffffff;
+            border-color: #ef4444;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.35);
+        }
+
+        /* Confirmation Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-box {
+            background: #ffffff;
+            border: 1px solid #fecaca;
+            border-radius: 20px;
+            max-width: 480px;
+            width: 100%;
+            padding: 32px;
+            box-shadow: 0 25px 60px rgba(15, 23, 42, 0.25);
+            text-align: center;
+            animation: scaleIn 0.2s ease-out;
+        }
+
+        .modal-icon-danger {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: #fee2e2;
+            border: 2px solid #fca5a5;
+            color: #dc2626;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 0 auto 18px;
+        }
+
+        .modal-box h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0 0 10px 0;
+        }
+
+        .modal-box p {
+            font-size: 13.5px;
+            color: #64748b;
+            line-height: 1.55;
+            margin: 0 0 26px 0;
+        }
+
+        .modal-actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .btn-modal-cancel {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            color: #334155;
+            padding: 11px 24px;
+            border-radius: 10px;
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            flex: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-modal-cancel:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        .btn-modal-confirm {
+            background: #dc2626;
+            border: 1px solid #dc2626;
+            color: #ffffff;
+            padding: 11px 24px;
+            border-radius: 10px;
+            font-size: 13.5px;
+            font-weight: 700;
+            cursor: pointer;
+            flex: 1;
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.35);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-modal-confirm:hover {
+            background: #b91c1c;
+            border-color: #b91c1c;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+
+<body class="dashboard-body">
+
+    <!-- =========================================================
+         SOFT CONSTRUCTION BACKDROP (STAFF DASHBOARD THEME)
+    ========================================================== -->
+    <div class="dashboard-backdrop">
+        <div class="dashboard-backdrop-img"></div>
+        <div class="dashboard-backdrop-overlay"></div>
+    </div>
+
+    <!-- =========================================================
+         SECURITY CHECK
+    ========================================================== -->
+    <script>
+        const clientToken = localStorage.getItem("wbcms_token");
+        const clientRole = localStorage.getItem("wbcms_role");
+        const clientUserType = localStorage.getItem("wbcms_user_type");
+
+        if (!clientToken) {
+            window.location.replace("/client-login.html");
+        } else if (clientRole !== "CLIENT" || clientUserType !== "CLIENT") {
+            window.location.replace("/dashboard.html?tab=profile");
+        }
+    </script>
+
+    <div class="dashboard-layout">
+
+        <!-- =====================================================
+             SIDEBAR (ROYAL BLUE WITH WHITE ACTIVE PILL)
+        ====================================================== -->
+        <aside class="dashboard-sidebar">
+            <div class="dashboard-logo">
+                <div class="dashboard-logo-icon">
+                    <i class="fa-solid fa-building"></i>
+                </div>
+                <div class="dashboard-logo-text">
+                    <strong>WBCMS</strong>
+                    <span>CLIENT PORTAL</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="sidebar-section-title">MAIN MENU</div>
+
+                <a href="/client-dashboard.html" class="sidebar-link">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="/client-profile.html" class="sidebar-link active">
+                    <i class="fa-solid fa-user"></i>
+                    <span>My Profile</span>
+                </a>
+
+                <a href="/client-project-requests.html" class="sidebar-link" id="navProjectRequests">
+                    <i class="fa-solid fa-folder-open"></i>
+                    <span>My Project Requests</span>
+                </a>
+
+                <div class="sidebar-section-title">ACCOUNT</div>
+
+                <a href="#" class="sidebar-link" id="sidebarLogoutBtn">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Logout</span>
+                </a>
+            </nav>
+
+            <!-- User Card in Sidebar -->
+            <div class="sidebar-user-card" onclick="window.location.href='/client-profile.html'" style="cursor:pointer;" title="My Profile">
+                <div class="sidebar-user-avatar" id="sidebarAvatar">C</div>
+                <div class="sidebar-user-info">
+                    <strong id="sidebarUsername">Client</strong>
+                    <span id="sidebarRole" style="display:inline-flex; align-items:center; gap:4px; color:#4ade80; font-size:10.5px; font-weight:600;">
+                        <i class="fa-solid fa-circle" style="font-size:6px;"></i> Active Client
+                    </span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- =====================================================
+             MAIN CONTENT
+        ====================================================== -->
+        <main class="dashboard-main">
+
+            <!-- TOP BAR (CLEAN GLASSMORPHIC HEADER) -->
+            <header class="dashboard-topbar">
+                <div class="topbar-left">
+                    <h2>My Profile</h2>
+                    <p>View, update, or manage your client account details</p>
+                </div>
+
+                <div class="topbar-right">
+                    <!-- Notification Bell -->
+                    <button type="button" class="topbar-icon-btn notification-button" id="clientNotifBell" title="Notifications">
+                        <i class="fa-solid fa-bell"></i>
+                    </button>
+
+                    <!-- Quick Back to Project Requests -->
+                    <a href="/client-project-requests.html" class="topbar-icon-btn" title="Back to Project Requests">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <span>Requests</span>
+                    </a>
+
+                    <!-- Profile Dropdown (Top-Right Client Name & Profile Status) -->
+                    <div class="profile-dropdown">
+                        <button class="profile-trigger" id="profileTrigger" type="button">
+                            <div class="profile-avatar" id="topAvatar">C</div>
+                            <div class="profile-info">
+                                <strong id="topUser">Client</strong>
+                                <span id="topRole" style="display:inline-flex; align-items:center; gap:4px; color:#10b981; font-size:10.5px; font-weight:600;">
+                                    <i class="fa-solid fa-circle" style="font-size:6px;"></i> Active Client
+                                </span>
+                            </div>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+
+                        <div class="dropdown-menu" id="profileDropdown">
+                            <a href="/client-dashboard.html" class="dropdown-item">
+                                <i class="fa-solid fa-chart-pie"></i>
+                                Dashboard
+                            </a>
+                            <a href="/client-profile.html" class="dropdown-item active">
+                                <i class="fa-solid fa-user"></i>
+                                My Profile
+                            </a>
+                            <a href="/client-project-requests.html" class="dropdown-item">
+                                <i class="fa-solid fa-folder-open"></i>
+                                My Project Requests
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item danger" id="dropdownLogoutBtn">
+                                <i class="fa-solid fa-right-from-bracket"></i>
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- PROFILE CONTAINER -->
+            <div class="profile-container">
+
+                <!-- Alert Message Banner -->
+                <div id="profileAlert" class="profile-alert">
+                    <i id="alertIcon" class="fa-solid fa-circle-check"></i>
+                    <span id="alertText"></span>
+                </div>
+
+                <!-- HERO BANNER -->
+                <section class="profile-hero">
+                    <div class="hero-left">
+                        <div class="hero-avatar" id="heroAvatar">C</div>
+                        <div class="hero-details">
+                            <h1 id="heroFullName">Client Name</h1>
+                            <div class="hero-meta-row">
+                                <span class="username-badge" id="heroUsername">@client</span>
+                                <span class="badge-client"><i class="fa-solid fa-shield-halved"></i> CLIENT</span>
+                                <span class="badge-active">Active Account</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hero-actions">
+                        <a href="/client-project-requests.html" class="hero-btn-secondary">
+                            <i class="fa-solid fa-folder-open"></i>
+                            <span>My Project Requests</span>
+                        </a>
+                        <button type="button" onclick="document.getElementById('editFullName').focus()" class="hero-btn-primary">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                            <span>Edit Details</span>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- GRID: DETAILS + EDIT FORM -->
+                <div class="profile-grid">
+
+                    <!-- COLUMN 1: DATABASE DETAILS OVERVIEW -->
+                    <div class="glass-card">
+                        <div class="card-header-styled">
+                            <div class="card-title-group">
+                                <div class="card-title-badge-orange">
+                                    <i class="fa-solid fa-database"></i>
+                                </div>
+                                <h2>Database Profile Details</h2>
+                            </div>
+                            <span class="header-pill-verified">Verified Record</span>
+                        </div>
+
+                        <div class="details-list">
+                            <div class="detail-item">
+                                <span class="detail-label">Client User ID</span>
+                                <span class="detail-value" id="dbId">-</span>
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-label">Full Legal Name</span>
+                                <span class="detail-value" id="dbFullName">-</span>
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-label">Username</span>
+                                <span class="detail-value" id="dbUsername">-</span>
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-label">Primary Email Address</span>
+                                <span class="detail-value" id="dbEmail">-</span>
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-label">Contact Phone</span>
+                                <span class="detail-value" id="dbPhone">Not Provided</span>
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-label">Assigned System Role</span>
+                                <span class="detail-value" id="dbRole" style="color:#1a56db;">CLIENT (Client Portal)</span>
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-label">Member Since</span>
+                                <span class="detail-value" id="dbCreatedAt">-</span>
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-label">Last Database Update</span>
+                                <span class="detail-value" id="dbUpdatedAt">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- COLUMN 2: EDIT / UPDATE PROFILE FORM -->
+                    <div class="glass-card">
+                        <div class="card-header-styled">
+                            <div class="card-title-group">
+                                <div class="card-title-badge-blue">
+                                    <i class="fa-solid fa-user-pen"></i>
+                                </div>
+                                <h2>Edit Client Profile</h2>
+                            </div>
+                            <span class="header-pill-sync">Real-Time Sync</span>
+                        </div>
+
+                        <form id="editProfileForm" class="profile-form">
+
+                            <div class="form-group">
+                                <label for="editFullName">Full Name *</label>
+                                <div class="input-box">
+                                    <i class="fa-solid fa-id-card input-icon"></i>
+                                    <input type="text" id="editFullName" class="form-control-styled" required maxlength="120" placeholder="e.g. Apex Towers Client">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="editUsername">Username *</label>
+                                    <div class="input-box">
+                                        <i class="fa-solid fa-at input-icon"></i>
+                                        <input type="text" id="editUsername" class="form-control-styled" required maxlength="50" placeholder="e.g. client">
+                                    </div>
+                                    <span class="input-hint">Used for sign in</span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="editEmail">Email Address *</label>
+                                    <div class="input-box">
+                                        <i class="fa-solid fa-envelope input-icon"></i>
+                                        <input type="email" id="editEmail" class="form-control-styled" required maxlength="120" placeholder="e.g. client@wbcms.com">
+                                    </div>
+                                    <span class="input-hint">Used for sign in & alerts</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="editPhone">Phone Number</label>
+                                <div class="input-box">
+                                    <i class="fa-solid fa-phone input-icon"></i>
+                                    <input type="tel" id="editPhone" class="form-control-styled" maxlength="30" placeholder="e.g. +94 11 234 5678 or 0771234567">
+                                </div>
+                                <span class="input-hint">Optional contact number</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="editPassword">New Password</label>
+                                <div class="input-box">
+                                    <i class="fa-solid fa-lock input-icon"></i>
+                                    <input type="password" id="editPassword" class="form-control-styled" placeholder="Leave blank to keep existing password" minlength="8" maxlength="100">
+                                    <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('editPassword', this)">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </div>
+                                <span class="input-hint">Minimum 8 characters (only fill if changing password)</span>
+                            </div>
+
+                            <div style="display:flex; align-items:center; justify-content:space-between; margin-top:8px; padding-top:16px; border-top:1px solid #edf2f7;">
+                                <button type="button" id="resetProfileBtn" class="btn-reset-profile">
+                                    <i class="fa-solid fa-rotate-left"></i> Discard
+                                </button>
+
+                                <button type="submit" id="saveProfileBtn" class="btn-submit-profile">
+                                    <i class="fa-solid fa-floppy-disk"></i>
+                                    <span>Save Changes to Database</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+
+                <!-- DANGER ZONE: DELETE PROFILE -->
+                <section class="danger-card">
+                    <div class="danger-header">
+                        <div class="danger-info">
+                            <h3><i class="fa-solid fa-triangle-exclamation"></i> Danger Zone: Delete Client Profile</h3>
+                            <p>
+                                Permanently remove your client account, profile details, and submitted project requests from the WBCMS database.
+                                Once deleted, your account cannot be recovered and you will be immediately logged out.
+                            </p>
+                        </div>
+
+                        <button type="button" id="openDeleteModalBtn" class="btn-delete-profile">
+                            <i class="fa-solid fa-trash-can"></i>
+                            <span>Delete Profile</span>
+                        </button>
+                    </div>
+                </section>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- =========================================================
+         DELETE CONFIRMATION MODAL (Yes / No)
+    ========================================================== -->
+    <div id="deleteModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalHeading">
+        <div class="modal-box">
+            <div class="modal-icon-danger">
+                <i class="fa-solid fa-trash-can"></i>
+            </div>
+
+            <h2 id="modalHeading">Are you sure you want to delete your profile?</h2>
+
+            <p>
+                This action is permanent and cannot be undone. All your profile information and project records will be wiped from the database, and you will be signed out immediately.
+            </p>
+
+            <div class="modal-actions">
+                <button type="button" id="cancelDeleteBtn" class="btn-modal-cancel">
+                    <i class="fa-solid fa-xmark"></i> No, Keep My Profile
+                </button>
+                <button type="button" id="confirmDeleteBtn" class="btn-modal-confirm">
+                    <i class="fa-solid fa-trash-can"></i> Yes, Delete Profile
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         PAGE SCRIPT
+    ========================================================== -->
+    <script>
+        // Global in-memory cache of current profile
+        let currentProfileData = null;
+
+        function getAuthToken() {
+            return localStorage.getItem("wbcms_token");
+        }
+
+        function getAuthHeaders() {
+            return {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + getAuthToken()
+            };
+        }
+
+        function showNotification(msg, isError) {
+            const alertBox = document.getElementById("profileAlert");
+            const alertText = document.getElementById("alertText");
+            const alertIcon = document.getElementById("alertIcon");
+
+            alertText.textContent = msg;
+            alertBox.className = "profile-alert show " + (isError ? "error" : "success");
+            alertIcon.className = isError ? "fa-solid fa-triangle-exclamation" : "fa-solid fa-circle-check";
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (!isError) {
+                setTimeout(() => {
+                    alertBox.classList.remove("show");
+                }, 4000);
+            }
+        }
+
+        function formatDateTime(isoString) {
+            if (!isoString) return "-";
+            const date = new Date(isoString);
+            return date.toLocaleString("en-GB", {
+                year: "numeric",
+                month: "short",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit"
+            });
+        }
+
+        function togglePasswordVisibility(fieldId, btn) {
+            const input = document.getElementById(fieldId);
+            const icon = btn.querySelector("i");
+            if (input.type === "password") {
+                input.type = "text";
+                icon.className = "fa-solid fa-eye-slash";
+            } else {
+                input.type = "password";
+                icon.className = "fa-solid fa-eye";
+            }
+        }
+
+        // ==========================================
+        // 1. LOAD CLIENT PROFILE FROM DATABASE
+        // ==========================================
+        async function loadProfile() {
+            try {
+                const response = await fetch("/api/client/profile", {
+                    method: "GET",
+                    headers: getAuthHeaders()
+                });
+
+                if (response.status === 401 || response.status === 403) {
+                    clientLogout();
+                    return;
+                }
+
+                if (!response.ok) {
+                    throw new Error("Unable to fetch your profile from the database.");
+                }
+
+                const data = await response.json();
+                currentProfileData = data;
+
+                const displayName = data.fullName || data.username || "Client";
+                const initial = (displayName.charAt(0) || "C").toUpperCase();
+
+                // Sync topbar & sidebar (Show username only in topUser as requested)
+                document.getElementById("topUser").textContent = data.username || "Client";
+                document.getElementById("topAvatar").textContent = initial;
+                document.getElementById("sidebarUsername").textContent = displayName;
+                document.getElementById("sidebarAvatar").textContent = initial;
+
+                // Sync Hero
+                document.getElementById("heroFullName").textContent = data.fullName || data.username;
+                document.getElementById("heroUsername").textContent = "@" + (data.username || "client");
+                document.getElementById("heroAvatar").textContent = initial;
+
+                // Sync Database Overview
+                document.getElementById("dbId").textContent = "#" + data.id;
+                document.getElementById("dbFullName").textContent = data.fullName || "-";
+                document.getElementById("dbUsername").textContent = data.username || "-";
+                document.getElementById("dbEmail").textContent = data.email || "-";
+                document.getElementById("dbPhone").textContent = data.phoneNumber || "Not Provided";
+                document.getElementById("dbRole").textContent = (data.role || "CLIENT") + " (Client Portal)";
+                document.getElementById("dbCreatedAt").textContent = formatDateTime(data.createdAt);
+                document.getElementById("dbUpdatedAt").textContent = formatDateTime(data.updatedAt);
+
+                // Populate Form Fields
+                populateForm(data);
+
+            } catch (err) {
+                console.error("Load Profile Error:", err);
+                showNotification(err.message || "Failed to load database details.", true);
+            }
+        }
+
+        function populateForm(data) {
+            document.getElementById("editFullName").value = data.fullName || "";
+            document.getElementById("editUsername").value = data.username || "";
+            document.getElementById("editEmail").value = data.email || "";
+            document.getElementById("editPhone").value = data.phoneNumber || "";
+            document.getElementById("editPassword").value = "";
+        }
+
+        // ==========================================
+        // 2. SAVE / UPDATE CLIENT PROFILE
+        // ==========================================
+        document.getElementById("editProfileForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+
+            const fullName = document.getElementById("editFullName").value.trim();
+            const username = document.getElementById("editUsername").value.trim();
+            const email = document.getElementById("editEmail").value.trim();
+            const phoneNumber = document.getElementById("editPhone").value.trim();
+            const password = document.getElementById("editPassword").value;
+
+            if (!fullName || !username || !email) {
+                showNotification("Full name, username, and email are required fields.", true);
+                return;
+            }
+
+            if (password && password.length < 8) {
+                showNotification("New password must contain at least 8 characters.", true);
+                return;
+            }
+
+            const saveBtn = document.getElementById("saveProfileBtn");
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Saving to Database...</span>';
+
+            try {
+                const response = await fetch("/api/client/profile", {
+                    method: "PUT",
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify({
+                        fullName: fullName,
+                        username: username,
+                        email: email,
+                        phoneNumber: phoneNumber,
+                        password: password || ""
+                    })
+                });
+
+                const data = await response.json().catch(() => null);
+
+                if (!response.ok) {
+                    const errorMsg = (data && (data.message || data.error))
+                        ? (data.message || data.error)
+                        : "Failed to update profile.";
+                    throw new Error(errorMsg);
+                }
+
+                // If a new JWT token is returned (e.g. username changed), update localStorage
+                if (data.token) {
+                    localStorage.setItem("wbcms_token", data.token);
+                }
+
+                const updatedProfile = data.profile || data;
+                localStorage.setItem("wbcms_username", updatedProfile.username);
+                localStorage.setItem("wbcms_full_name", updatedProfile.fullName);
+
+                showNotification("Profile details saved successfully to the database!", false);
+
+                // Reload fresh profile data
+                await loadProfile();
+
+            } catch (err) {
+                console.error("Update Profile Error:", err);
+                showNotification(err.message || "Failed to update profile.", true);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span>Save Changes to Database</span>';
+            }
+        });
+
+        // Reset button
+        document.getElementById("resetProfileBtn").addEventListener("click", function() {
+            if (currentProfileData) {
+                populateForm(currentProfileData);
+                showNotification("Form reset to currently saved database details.", false);
+            }
+        });
+
+        // ==========================================
+        // 3. DELETE CLIENT PROFILE MODAL (Yes / No)
+        // ==========================================
+        const deleteModal = document.getElementById("deleteModal");
+        const openDeleteModalBtn = document.getElementById("openDeleteModalBtn");
+        const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
+        const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+
+        // Open Modal
+        openDeleteModalBtn.addEventListener("click", function() {
+            deleteModal.classList.add("show");
+        });
+
+        // No / Cancel Modal
+        cancelDeleteBtn.addEventListener("click", function() {
+            deleteModal.classList.remove("show");
+        });
+
+        // Close when clicking backdrop
+        deleteModal.addEventListener("click", function(e) {
+            if (e.target === deleteModal) {
+                deleteModal.classList.remove("show");
+            }
+        });
+
+        // Yes / Confirm Deletion
+        confirmDeleteBtn.addEventListener("click", async function() {
+            confirmDeleteBtn.disabled = true;
+            cancelDeleteBtn.disabled = true;
+            confirmDeleteBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Deleting Profile...';
+
+            try {
+                const response = await fetch("/api/client/profile", {
+                    method: "DELETE",
+                    headers: getAuthHeaders()
+                });
+
+                if (!response.ok && response.status !== 204) {
+                    const data = await response.json().catch(() => null);
+                    throw new Error((data && (data.message || data.error)) || "Failed to delete profile.");
+                }
+
+                // Deletion successful: close modal & clear local session
+                deleteModal.classList.remove("show");
+                showNotification("Your profile has been deleted from the database. Signing you out...", false);
+
+                localStorage.removeItem("wbcms_token");
+                localStorage.removeItem("wbcms_user_id");
+                localStorage.removeItem("wbcms_username");
+                localStorage.removeItem("wbcms_role");
+                localStorage.removeItem("wbcms_user_type");
+                localStorage.removeItem("wbcms_full_name");
+                localStorage.removeItem("wbcms_user");
+
+                setTimeout(() => {
+                    window.location.replace("/client-login.html");
+                }, 1200);
+
+            } catch (err) {
+                console.error("Delete Profile Error:", err);
+                confirmDeleteBtn.disabled = false;
+                cancelDeleteBtn.disabled = false;
+                confirmDeleteBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i> Yes, Delete Profile';
+                deleteModal.classList.remove("show");
+                showNotification(err.message || "Failed to delete profile. Please try again.", true);
+            }
+        });
+
+        // ==========================================
+        // 4. LOGOUT
+        // ==========================================
+        function clientLogout(skipPrompt = false) {
+            if (!skipPrompt && !confirm("Are you sure you want to log out?")) {
+                return;
+            }
+            const token = getAuthToken();
+            if (token) {
+                fetch("/api/auth/logout", {
+                    method: "POST",
+                    headers: { "Authorization": "Bearer " + token }
+                }).catch(() => {});
+            }
+
+            localStorage.removeItem("wbcms_token");
+            localStorage.removeItem("wbcms_user_id");
+            localStorage.removeItem("wbcms_username");
+            localStorage.removeItem("wbcms_role");
+            localStorage.removeItem("wbcms_user_type");
+            localStorage.removeItem("wbcms_full_name");
+            localStorage.removeItem("wbcms_user");
+
+            window.location.replace("/client-login.html");
+        }
+
+        document.getElementById("sidebarLogoutBtn").addEventListener("click", function(e) {
+            e.preventDefault();
+            clientLogout();
+        });
+
+        document.getElementById("dropdownLogoutBtn").addEventListener("click", function(e) {
+            e.preventDefault();
+            clientLogout();
+        });
+
+        // ==========================================
+        // 5. PROFILE DROPDOWN TOGGLE
+        // ==========================================
+        const trigger = document.getElementById("profileTrigger");
+        const dropdown = document.getElementById("profileDropdown");
+
+        trigger.addEventListener("click", function(e) {
+            e.stopPropagation();
+            dropdown.classList.toggle("show");
+        });
+
+        document.addEventListener("click", function() {
+            dropdown.classList.remove("show");
+        });
+
+        // Esc key closes modal & dropdown
+        document.addEventListener("keydown", function(e) {
+            if (e.key === "Escape") {
+                deleteModal.classList.remove("show");
+                dropdown.classList.remove("show");
+            }
+        });
+
+        // Load on startup
+        document.addEventListener("DOMContentLoaded", loadProfile);
+    </script>
+    <script src="/js/notifications.js"></script>
+</body>
+</html>

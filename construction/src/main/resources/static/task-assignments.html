@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WBCMS | Task Assignments & Workforce</title>
+
+    <!-- Google Fonts: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap Icons & Font Awesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/css/premium-theme.css">
+    <link rel="stylesheet" href="/css/unified-pages.css">
+    <script src="/js/theme-init.js"></script>
+
+    <style>
+        /* Task Assignment Custom Refinements */
+        .status-badge.active {
+            background: #ecfdf5;
+            color: #059669;
+            border: 1px solid #a7f3d0;
+        }
+
+        .status-badge.completed {
+            background: #eff6ff;
+            color: #1a56db;
+            border: 1px solid #bfdbfe;
+        }
+
+        .status-badge.cancelled {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .role-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: #f1f5f9;
+            color: #475569;
+            font-size: 11.5px;
+            font-weight: 600;
+        }
+
+        .responsibility-cell {
+            max-width: 280px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #334155;
+            font-size: 12.5px;
+            font-weight: 500;
+        }
+
+        #assignmentTableBody td {
+            color: #0f172a !important;
+            font-size: 13px;
+        }
+
+        .table-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .table-action {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        }
+
+        .table-action.view {
+            background: #eff6ff !important;
+            color: #1a56db !important;
+            border-color: #bfdbfe !important;
+        }
+
+        .table-action.view:hover {
+            background: #1a56db !important;
+            color: #ffffff !important;
+            border-color: #1a56db !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 86, 219, 0.35) !important;
+        }
+
+        .table-action.edit {
+            background: #fff7ed !important;
+            color: #ea580c !important;
+            border-color: #fed7aa !important;
+        }
+
+        .table-action.edit:hover {
+            background: #ea580c !important;
+            color: #ffffff !important;
+            border-color: #ea580c !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(234, 88, 12, 0.35) !important;
+        }
+
+        .table-action.delete {
+            background: #fef2f2 !important;
+            color: #dc2626 !important;
+            border-color: #fecaca !important;
+        }
+
+        .table-action.delete:hover {
+            background: #dc2626 !important;
+            color: #ffffff !important;
+            border-color: #dc2626 !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.35) !important;
+        }
+
+        /* Modal Overlay & Dialog Centered Design */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .modal-overlay.show, .modal-overlay.open {
+            display: flex !important;
+            animation: modalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-dialog {
+            background: #ffffff;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 580px;
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh;
+        }
+
+        [data-theme="dark"] .modal-dialog {
+            background: #1e293b;
+            border-color: #334155;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        [data-theme="dark"] .modal-header {
+            border-bottom-color: #334155;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        [data-theme="dark"] .modal-header h3 {
+            color: #f8fafc;
+        }
+
+        .modal-header p {
+            margin: 4px 0 0;
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: #64748b;
+            font-size: 18px;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+            transition: all 0.15s;
+        }
+
+        .modal-close:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        [data-theme="dark"] .modal-close:hover {
+            background: #334155;
+            color: #f8fafc;
+        }
+
+        .modal-body {
+            padding: 20px 24px;
+            overflow-y: auto;
+        }
+
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            background: #f8fafc;
+        }
+
+        [data-theme="dark"] .modal-footer {
+            border-top-color: #334155;
+            background: #0f172a;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .form-group.full {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 6px;
+        }
+
+        [data-theme="dark"] .form-group label {
+            color: #cbd5e1;
+        }
+
+        .form-group label span {
+            color: #ef4444;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #0f172a;
+            background: #ffffff;
+            transition: border-color 0.15s, box-shadow 0.15s;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        [data-theme="dark"] .form-group input,
+        [data-theme="dark"] .form-group select,
+        [data-theme="dark"] .form-group textarea {
+            background: #0f172a;
+            border-color: #334155;
+            color: #f8fafc;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #1a56db;
+            box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.15);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .error-msg {
+            color: #ef4444;
+            font-size: 11px;
+            margin-top: 4px;
+            display: block;
+        }
+
+        /* View Modal Detail Rows */
+        .detail-row {
+            display: flex;
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        [data-theme="dark"] .detail-row {
+            border-bottom-color: #334155;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            width: 140px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            flex-shrink: 0;
+        }
+
+        .detail-value {
+            font-size: 13px;
+            color: #0f172a;
+            font-weight: 500;
+            flex: 1;
+        }
+
+        [data-theme="dark"] .detail-value {
+            color: #f1f5f9;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Security and Role Guard Script (PROJECT MANAGER, SITE ENGINEER & CONSTRUCTION SUPERVISOR only) -->
+<script>
+    (function() {
+        const token = localStorage.getItem("wbcms_token");
+        const userType = localStorage.getItem("wbcms_user_type") || "";
+        const role = (localStorage.getItem("wbcms_role") || "").toUpperCase();
+
+        const allowedRoles = ["PROJECT_MANAGER", "SITE_ENGINEER", "CONSTRUCTION_SUPERVISOR", "SYSTEM_ADMINISTRATOR"];
+
+        if (!token || userType.toUpperCase() === "CLIENT") {
+            window.location.replace("/staff-login.html");
+            return;
+        }
+
+        if (!allowedRoles.includes(role)) {
+            alert("Access Denied: Task Assignment operations are restricted to Project Managers, Site Engineers, and Construction Supervisors only.");
+            window.location.replace("/dashboard.html");
+        }
+    })();
+</script>
+
+<!-- Ambient Light Backdrop -->
+<div class="dashboard-backdrop">
+    <div class="dashboard-backdrop-img"></div>
+    <div class="dashboard-backdrop-overlay"></div>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-brand">
+        <div class="brand-logo">
+            <i class="bi bi-buildings-fill"></i>
+        </div>
+        <div>
+            <h2>WBCMS</h2>
+            <span>CONSTRUCTION</span>
+        </div>
+    </div>
+
+    <nav class="sidebar-navigation">
+        <p class="nav-title">MAIN MENU</p>
+
+        <a href="/dashboard.html" class="nav-item">
+            <i class="bi bi-grid-1x2-fill"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="/projects.html" class="nav-item">
+            <i class="bi bi-building"></i>
+            <span>Projects</span>
+        </a>
+
+        <a href="/tasks.html" class="nav-item">
+            <i class="bi bi-clipboard-check"></i>
+            <span>Tasks</span>
+        </a>
+
+        <a href="/task-assignments.html" class="nav-item active">
+            <i class="bi bi-person-workspace"></i>
+            <span>Task Assignments</span>
+        </a>
+
+        <a href="/milestones.html" class="nav-item">
+            <i class="bi bi-flag-fill"></i>
+            <span>Milestones</span>
+        </a>
+
+        <a href="/progress.html" class="nav-item">
+            <i class="bi bi-graph-up-arrow"></i>
+            <span>Progress Updates</span>
+        </a>
+
+        <a href="/progress-monitoring.html" class="nav-item">
+            <i class="bi bi-activity"></i>
+            <span>Progress Monitoring</span>
+        </a>
+
+        <a href="/material-inventory.html" class="nav-item">
+            <i class="bi bi-box-seam-fill"></i>
+            <span>Material & Inventory</span>
+        </a>
+
+        <a href="/material-requests.html" class="nav-item">
+            <i class="bi bi-file-earmark-plus-fill"></i>
+            <span>Material Requests</span>
+        </a>
+
+        <a href="/documents.html" class="nav-item">
+            <i class="bi bi-file-earmark-text-fill"></i>
+            <span>Documents</span>
+        </a>
+
+        <p class="nav-title management-title">MANAGEMENT</p>
+
+        <a href="/reports.html" class="nav-item">
+            <i class="bi bi-bar-chart-line"></i>
+            <span>Reports</span>
+        </a>
+
+        <a href="/suppliers.html" class="nav-item">
+            <i class="bi bi-truck"></i>
+            <span>Suppliers</span>
+        </a>
+
+        <a href="/users.html" class="nav-item">
+            <i class="bi bi-people-fill"></i>
+            <span>Users</span>
+        </a>
+    </nav>
+
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+        <div class="sidebar-version">
+            WBCMS v1.0
+            <span>Construction Management</span>
+        </div>
+        <button class="logout-button" onclick="logout()">
+            <i class="bi bi-box-arrow-left"></i>
+            Logout
+        </button>
+    </div>
+
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+
+    <!-- TOP HEADER -->
+    <header class="top-header">
+
+        <div class="header-left">
+            <button class="mobile-menu" onclick="toggleSidebar()" aria-label="Toggle navigation">
+                <i class="bi bi-list"></i>
+            </button>
+
+            <div class="header-module-badge">
+                <div class="module-icon">
+                    <i class="bi bi-person-workspace"></i>
+                </div>
+                <div class="module-text">
+                    <span class="module-title">Task Assignments</span>
+                    <span class="module-sub"><span class="live-pulse-dot"></span> Live DB Sync</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-center">
+            <div class="header-admin-nav">
+                <button class="hdr-btn primary" onclick="openCreateModal()" title="Assign Workforce to Task">
+                    <i class="bi bi-plus-circle-fill"></i>
+                    <span>Assign Staff</span>
+                </button>
+                <a href="/tasks.html" class="hdr-btn" title="View Tasks">
+                    <i class="bi bi-clipboard-check"></i>
+                    <span>Tasks</span>
+                </a>
+                <a href="/projects.html" class="hdr-btn" title="View Projects">
+                    <i class="bi bi-building"></i>
+                    <span>Projects</span>
+                </a>
+                <a href="/progress.html" class="hdr-btn" title="View Progress">
+                    <i class="bi bi-graph-up-arrow"></i>
+                    <span>Progress</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <button class="notification-button" title="Notifications">
+                <i class="bi bi-bell"></i>
+                <span class="notification-badge" id="topNotifCount">2</span>
+            </button>
+
+            <div class="header-separator"></div>
+
+            <div class="profile" onclick="this.classList.toggle('open')" id="profileCard">
+                <div class="profile-avatar" id="headerAvatar">PM</div>
+                <div class="profile-details">
+                    <strong id="profileName">User</strong>
+                    <span id="profileRole">PROJECT MANAGER</span>
+                </div>
+                <i class="bi bi-chevron-down"></i>
+
+                <div class="profile-dropdown-menu">
+                    <div class="dropdown-user-header">
+                        <strong id="dropdownUserName">User</strong>
+                        <span>Workforce Operations</span>
+                    </div>
+                    <a href="/tasks.html" class="dropdown-item">
+                        <i class="bi bi-clipboard-check"></i>
+                        <span>Tasks</span>
+                    </a>
+                    <a href="/projects.html" class="dropdown-item">
+                        <i class="bi bi-building"></i>
+                        <span>Projects</span>
+                    </a>
+                    <a href="/milestones.html" class="dropdown-item">
+                        <i class="bi bi-flag-fill"></i>
+                        <span>Milestones</span>
+                    </a>
+                    <a href="/progress.html" class="dropdown-item">
+                        <i class="bi bi-graph-up-arrow"></i>
+                        <span>Progress</span>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item logout" onclick="logout()">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Sign Out</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+    <!-- PAGE CONTENT -->
+    <section class="page-content" style="padding: 24px 32px;">
+
+        <!-- HERO SECTION -->
+        <div class="hero-section">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <span class="hero-label">SITE LABOUR & SPECIALIST RESOURCE ALLOCATION</span>
+                <h1>Workforce & Task Assignments</h1>
+                <p>Deploy site engineers, safety officers, foremen, and technicians directly onto civil engineering tasks with live accountability.</p>
+                <div class="hero-meta" style="display:flex; gap:16px; margin-top:14px; flex-wrap:wrap;">
+                    <span style="font-size:12px; color:#cbd5e1; display:inline-flex; align-items:center; gap:6px;">
+                        <i class="bi bi-shield-lock-fill" style="color:#10b981;"></i> Project Manager, Site Engineer & Supervisor Access
+                    </span>
+                    <span style="font-size:12px; color:#cbd5e1; display:inline-flex; align-items:center; gap:6px;">
+                        <i class="bi bi-database-check" style="color:#60a5fa;"></i> SQL Server Live Sync
+                    </span>
+                    <span style="font-size:12px; color:#cbd5e1; display:inline-flex; align-items:center; gap:6px;">
+                        <i class="bi bi-diagram-3-fill" style="color:#fbbf24;"></i> Role-Based Responsibilities
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4 TOP KPI STATS GRID -->
+        <section class="statistics-grid" style="margin-bottom: 24px;">
+
+            <!-- Total Assignments -->
+            <div class="stat-card">
+                <div>
+                    <div class="stat-icon blue">
+                        <i class="bi bi-person-workspace"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span>Total Assignments</span>
+                        <h2 id="totalAssignments">0</h2>
+                    </div>
+                </div>
+                <div class="stat-content">
+                    <small><i class="bi bi-database-check" style="color:#1a56db;"></i> Total logged allocations</small>
+                </div>
+            </div>
+
+            <!-- Active -->
+            <div class="stat-card">
+                <div>
+                    <div class="stat-icon green">
+                        <i class="bi bi-person-check-fill"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span>Active Deployments</span>
+                        <h2 id="activeAssignments">0</h2>
+                    </div>
+                </div>
+                <div class="stat-content">
+                    <small><i class="bi bi-hammer" style="color:#10b981;"></i> Currently active on site</small>
+                </div>
+            </div>
+
+            <!-- Completed -->
+            <div class="stat-card">
+                <div>
+                    <div class="stat-icon orange">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span>Completed</span>
+                        <h2 id="completedAssignments">0</h2>
+                    </div>
+                </div>
+                <div class="stat-content">
+                    <small><i class="bi bi-trophy" style="color:#ea580c;"></i> Successfully delivered</small>
+                </div>
+            </div>
+
+            <!-- Cancelled -->
+            <div class="stat-card">
+                <div>
+                    <div class="stat-icon warning">
+                        <i class="bi bi-person-x-fill"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span>Cancelled / Reallocated</span>
+                        <h2 id="cancelledAssignments">0</h2>
+                    </div>
+                </div>
+                <div class="stat-content">
+                    <small><i class="bi bi-arrow-left-right" style="color:#f59e0b;"></i> Reassigned resources</small>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ASSIGNMENTS CARD & TABLE -->
+        <section class="inventory-card">
+
+            <div class="card-header" style="display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:18px;">
+                <div>
+                    <span class="section-label">RESOURCE DEPLOYMENT DIRECTORY</span>
+                    <h2 style="font-size:20px; font-weight:800; color:#0f172a; margin:0 0 2px 0;">Task Assignments</h2>
+                    <p style="font-size:12.5px; color:#64748b; margin:0;">Active job assignments, task designations, and deployment history</p>
+                </div>
+
+                <div class="table-filters" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                    <div class="search-container" style="min-width:240px;">
+                        <i class="bi bi-search"></i>
+                        <input
+                                type="text"
+                                id="assignmentSearch"
+                                placeholder="Search by staff, task, responsibility..."
+                                autocomplete="off"
+                        >
+                    </div>
+
+                    <select id="statusFilter" style="padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; font-size:13px;">
+                        <option value="">All Statuses</option>
+                        <option value="ACTIVE">Active</option>
+                        <option value="COMPLETED">Completed</option>
+                        <option value="CANCELLED">Cancelled</option>
+                    </select>
+
+                    <button
+                            type="button"
+                            class="action-button primary"
+                            onclick="openCreateModal()"
+                    >
+                        <i class="bi bi-plus-lg"></i>
+                        Assign Staff
+                    </button>
+                </div>
+            </div>
+
+            <!-- TABLE -->
+            <div class="table-container" style="overflow-x:auto;">
+                <table>
+                    <thead>
+                    <tr>
+                        <th style="width: 50px;">#</th>
+                        <th>Task</th>
+                        <th>Staff Member</th>
+                        <th>Role / Designation</th>
+                        <th>Assigned Date</th>
+                        <th>Responsibility</th>
+                        <th>Status</th>
+                        <th style="width: 120px; text-align: center;">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="assignmentTableBody">
+                    <tr>
+                        <td colspan="8" style="text-align:center; padding:40px;">
+                            <i class="bi bi-arrow-repeat" style="font-size:24px; animation:spin 1s linear infinite; display:inline-block; color:var(--orange);"></i>
+                            <p style="margin-top:8px; color:#8a99ad;">Loading workforce assignments from SQL Server...</p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- EMPTY STATE -->
+            <div id="emptyTable" class="empty-state" style="display:none; text-align:center; padding:40px;">
+                <i class="bi bi-person-slash" style="font-size:42px; color:#64748b;"></i>
+                <h4 style="margin-top:12px; color:#475569; font-size:16px; font-weight:700;">No Assignments Found</h4>
+                <p style="color:#64748b; font-size:13px; max-width:400px; margin:6px auto 0;">No workforce assignment records match the current filter.</p>
+            </div>
+
+        </section>
+
+    </section>
+
+</main>
+
+<!-- =========================================================
+     CREATE / EDIT ASSIGNMENT MODAL (CENTERED OVERLAY)
+========================================================= -->
+<div class="modal-overlay" id="assignmentModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <div>
+                <h3 id="modalTitle">Assign Staff to Task</h3>
+                <p>Select task and personnel details below.</p>
+            </div>
+            <button type="button" class="modal-close" onclick="closeModal()" aria-label="Close">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <form id="assignmentForm">
+            <input type="hidden" id="assignmentId">
+
+            <div class="modal-body">
+                <div class="form-grid">
+                    <div class="form-group full">
+                        <label for="assignmentTask">Task <span>*</span></label>
+                        <select id="assignmentTask" required>
+                            <option value="">Select task</option>
+                        </select>
+                        <span id="taskError" class="error-msg"></span>
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="assignmentStaff">Staff Member <span>*</span></label>
+                        <select id="assignmentStaff" required>
+                            <option value="">Select staff member</option>
+                        </select>
+                        <span id="staffError" class="error-msg"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="assignedDate">Assigned Date <span>*</span></label>
+                        <input
+                                type="date"
+                                id="assignedDate"
+                                required
+                        >
+                        <span id="dateError" class="error-msg"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="assignmentStatus">Status <span>*</span></label>
+                        <select id="assignmentStatus" required>
+                            <option value="ACTIVE" selected>Active</option>
+                            <option value="COMPLETED">Completed</option>
+                            <option value="CANCELLED">Cancelled</option>
+                        </select>
+                        <span id="statusError" class="error-msg"></span>
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="responsibility">Responsibility & Scope <span>*</span></label>
+                        <textarea
+                                id="responsibility"
+                                maxlength="500"
+                                placeholder="Describe assigned responsibilities, safety checks, or technical tasks..."
+                                required
+                        ></textarea>
+                        <span id="responsibilityError" class="error-msg"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button
+                        type="button"
+                        class="action-button"
+                        onclick="closeModal()"
+                >
+                    Cancel
+                </button>
+                <button
+                        type="submit"
+                        class="action-button primary"
+                        id="saveAssignmentBtn"
+                >
+                    <i class="bi bi-check-lg"></i>
+                    <span>Save Assignment</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- =========================================================
+     VIEW ASSIGNMENT DETAILS MODAL (CENTERED OVERLAY)
+========================================================= -->
+<div class="modal-overlay" id="viewAssignmentModal" role="dialog" aria-modal="true" aria-labelledby="viewModalTitle">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <div>
+                <h3 id="viewModalTitle">Assignment Details</h3>
+                <p>Detailed view of workforce task allocation</p>
+            </div>
+            <button type="button" class="modal-close" onclick="closeViewModal()" aria-label="Close">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <div class="modal-body" id="viewAssignmentContent">
+            <!-- Dynamically populated -->
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="action-button" onclick="closeViewModal()">Close</button>
+            <button type="button" class="action-button primary" id="viewModalEditBtn">
+                <i class="bi bi-pencil"></i>
+                <span>Edit Assignment</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- =========================================================
+     DELETE CONFIRMATION MODAL (CENTERED OVERLAY)
+========================================================= -->
+<div class="modal-overlay" id="deleteAssignmentModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog" style="max-width: 440px;">
+        <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <div style="width:40px; height:40px; border-radius:50%; background:#fee2e2; color:#dc2626; display:grid; place-items:center; font-size:18px;">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                </div>
+                <div>
+                    <h3 style="font-size:16px;">Delete Assignment</h3>
+                    <p style="margin:2px 0 0; font-size:12px; color:#64748b;">This action cannot be undone.</p>
+                </div>
+            </div>
+            <button type="button" class="modal-close" onclick="closeDeleteModal()" aria-label="Close">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <div class="modal-body" style="padding: 16px 24px;">
+            <p id="deleteConfirmMessage" style="font-size:13.5px; color:#334155; line-height:1.5; margin:0;">
+                Are you sure you want to remove this staff assignment?
+            </p>
+        </div>
+
+        <div class="modal-footer" style="border-top:none; background:transparent;">
+            <button type="button" class="action-button" onclick="closeDeleteModal()">Cancel</button>
+            <button type="button" class="action-button" id="confirmDeleteBtn" style="background:#dc2626; color:#ffffff; border-color:#dc2626;">
+                <i class="bi bi-trash"></i>
+                <span>Delete Assignment</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast" role="status" aria-live="polite">
+    <i class="bi bi-check-circle-fill"></i>
+    <span id="toastMessage">Success</span>
+</div>
+
+<!-- JAVASCRIPT -->
+<script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        if (sidebar) sidebar.classList.toggle("open");
+    }
+</script>
+<script src="/js/task-assignments.js"></script>
+<script src="/js/notifications.js"></script>
+
+</body>
+
+</html>

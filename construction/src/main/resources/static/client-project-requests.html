@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WBCMS | Client Portal</title>
+
+    <!-- Google Fonts: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Base Premium Theme -->
+    <link rel="stylesheet" href="/css/premium-theme.css">
+    <link rel="stylesheet" href="/css/unified-pages.css">
+    <script src="/js/theme-init.js"></script>
+
+    <link rel="stylesheet" href="/css/client-portal.css">
+</head>
+
+<body class="dashboard-body">
+
+    <!-- =========================================================
+         SECURITY CHECK
+    ========================================================== -->
+    <script>
+        const token = localStorage.getItem("wbcms_token");
+        const role = localStorage.getItem("wbcms_role");
+        const userType = localStorage.getItem("wbcms_user_type");
+
+        if (!token || role !== "CLIENT" || userType !== "CLIENT") {
+            window.location.replace("/client-login.html");
+        }
+    </script>
+
+    <!-- Ambient Light Backdrop Matching Staff Dashboard -->
+    <div class="dashboard-backdrop">
+        <div class="dashboard-backdrop-img"></div>
+        <div class="dashboard-backdrop-overlay"></div>
+    </div>
+
+    <div class="dashboard-layout">
+
+        <!-- =====================================================
+             LEFT SIDEBAR NAVIGATION
+        ====================================================== -->
+        <aside class="dashboard-sidebar">
+
+            <!-- Logo -->
+            <div class="dashboard-logo">
+                <div class="dashboard-logo-icon">
+                    <i class="fa-solid fa-building"></i>
+                </div>
+                <div class="dashboard-logo-text">
+                    <strong>WBCMS</strong>
+                    <span>CLIENT PORTAL</span>
+                </div>
+            </div>
+
+            <!-- Profile Info Widget (Directly in Sidebar) -->
+            <div class="sidebar-client-profile-box" id="sidebarProfileBox" onclick="switchClientTab('profile')" style="cursor:pointer;" title="Click to view My Profile">
+                <div class="client-profile-header">
+                    <div class="client-avatar-circle" id="sidebarAvatar" style="overflow:hidden; padding:0;">
+                        <img src="" alt="Avatar" id="sidebarAvatarImg" style="width:100%; height:100%; object-fit:cover; border-radius:12px;">
+                    </div>
+                    <div class="client-header-text">
+                        <strong id="sidebarClientName">Client Name</strong>
+                        <span class="client-role-badge" id="sidebarClientRole">CLIENT</span>
+                    </div>
+                </div>
+
+                <div class="client-quick-details">
+                    <div class="client-detail-row" title="Email Address">
+                        <i class="fa-regular fa-envelope"></i>
+                        <span id="sidebarClientEmail">loading email...</span>
+                    </div>
+                    <div class="client-detail-row" title="Phone Number">
+                        <i class="fa-solid fa-phone"></i>
+                        <span id="sidebarClientPhone">loading phone...</span>
+                    </div>
+                    <div class="client-detail-row" style="margin-top:2px; justify-content:space-between;">
+                        <span class="sidebar-status-pill">Active Account</span>
+                        <span id="sidebarClientId" style="color:#64748b; font-size:10px;">#--</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Left Navigation Menu -->
+            <nav class="sidebar-nav">
+                <div class="sidebar-section-title">PORTAL MENU</div>
+
+                <a href="javascript:void(0)" class="sidebar-link active" id="navProjectRequests" onclick="switchClientTab('requests')">
+                    <i class="fa-solid fa-folder-open"></i>
+                    <span>My Project Requests</span>
+                    <span class="nav-count-badge" id="sidebarBadgeCount">0</span>
+                </a>
+
+                <a href="javascript:void(0)" class="sidebar-link" id="navMyProfile" onclick="switchClientTab('profile')">
+                    <i class="fa-solid fa-user"></i>
+                    <span>My Profile</span>
+                </a>
+
+                <a href="/index.html" class="sidebar-link" id="navMainInterface">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Main Interface</span>
+                </a>
+
+                <div class="sidebar-section-title">SESSION</div>
+
+                <a href="javascript:void(0)" class="sidebar-link" id="sidebarLogoutBtn" onclick="openLogoutModal()">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Logout</span>
+                </a>
+            </nav>
+
+            <!-- Sidebar Footer -->
+            <div class="sidebar-user" style="padding-top:10px; margin-top:auto;">
+                <div style="font-size:11px; color:#64748b; text-align:center;">
+                    WBCMS Client Console v1.0
+                </div>
+            </div>
+
+        </aside>
+
+        <!-- =====================================================
+             MAIN CONTENT
+        ====================================================== -->
+        <main class="dashboard-main">
+
+            <!-- TOPBAR HEADER -->
+            <header class="dashboard-topbar">
+                <div class="topbar-left">
+                    <h2 id="topbarTitle">Project Requests</h2>
+                    <p id="topbarSubtitle">Submit, view, and manage your property construction requests</p>
+                </div>
+
+                <div class="topbar-right" style="display:flex; align-items:center; gap:14px;">
+                    <!-- Quick New Request Button (Visible on Requests Tab) -->
+                    <button type="button" id="quickNewRequestBtn" class="btn-new-request" onclick="openRequestModal()" style="display:inline-flex;">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>New Project Request</span>
+                    </button>
+
+                    <!-- Notification Bell with Dropdown -->
+                    <button type="button" class="notification-button cw-notif-btn" id="clientNotifBell" title="Notifications">
+                        <i class="fa-solid fa-bell"></i>
+                    </button>
+
+                    <!-- Top-Right Profile Widget & Dropdown -->
+                    <div class="profile-dropdown">
+                        <button class="profile-trigger" id="profileTrigger">
+                            <span class="cw-profile-name" id="topClientName">Client</span>
+                            <i class="fa-solid fa-chevron-down" style="font-size:11px; color:#64748b; margin-right:2px;"></i>
+                            <img src="" alt="Avatar" id="topAvatarImg" style="width:34px; height:34px; border-radius:50%; object-fit:cover; border:1.5px solid #e2e8f0; flex-shrink:0;">
+                        </button>
+
+                        <div class="dropdown-menu" id="profileDropdown">
+                            <a href="javascript:void(0)" class="dropdown-item" onclick="switchClientTab('requests')">
+                                <i class="fa-solid fa-folder-open"></i>
+                                My Project Requests
+                            </a>
+                            <a href="javascript:void(0)" class="dropdown-item" onclick="switchClientTab('profile')">
+                                <i class="fa-solid fa-user"></i>
+                                My Profile
+                            </a>
+                            <a href="/index.html" class="dropdown-item">
+                                <i class="fa-solid fa-house"></i>
+                                Main Interface
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="javascript:void(0)" class="dropdown-item danger" onclick="openLogoutModal()">
+                                <i class="fa-solid fa-right-from-bracket"></i>
+                                Sign Out
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- PORTAL CONTENT WRAPPER -->
+            <div class="portal-content">
+
+                <!-- Alert Messages Banner -->
+                <div id="portalMessage" class="portal-alert">
+                    <i id="portalAlertIcon" class="fa-solid fa-circle-check"></i>
+                    <span id="portalAlertText"></span>
+                </div>
+
+                <!-- =================================================
+                     TAB 1: PROJECT REQUESTS WORKSPACE (CRUD)
+                ================================================== -->
+                <div id="tabRequestsView" style="display:block;">
+
+                    <!-- Live Database Stats Row -->
+                    <div class="stats-grid">
+                        <div class="stat-card-styled">
+                            <div class="stat-icon-box stat-icon-blue">
+                                <i class="fa-solid fa-folder-open"></i>
+                            </div>
+                            <div class="stat-info-text">
+                                <span>Total Submitted</span>
+                                <strong id="statTotalRequests">0</strong>
+                            </div>
+                        </div>
+
+                        <div class="stat-card-styled">
+                            <div class="stat-icon-box stat-icon-amber">
+                                <i class="fa-solid fa-clock"></i>
+                            </div>
+                            <div class="stat-info-text">
+                                <span>Pending Approval</span>
+                                <strong id="statPendingRequests">0</strong>
+                            </div>
+                        </div>
+
+                        <div class="stat-card-styled">
+                            <div class="stat-icon-box stat-icon-green">
+                                <i class="fa-solid fa-circle-check"></i>
+                            </div>
+                            <div class="stat-info-text">
+                                <span>Approved</span>
+                                <strong id="statApprovedRequests">0</strong>
+                            </div>
+                        </div>
+
+                        <div class="stat-card-styled">
+                            <div class="stat-icon-box stat-icon-red">
+                                <i class="fa-solid fa-circle-xmark"></i>
+                            </div>
+                            <div class="stat-info-text">
+                                <span>Rejected</span>
+                                <strong id="statRejectedRequests">0</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Requests Table Card -->
+                    <div class="workspace-card">
+                        <div class="workspace-card-header">
+                            <div class="workspace-title-group">
+                                <h2>
+                                    <i class="fa-solid fa-list-check" style="color:#ff7600;"></i>
+                                    My Submitted Project Requests
+                                </h2>
+                                <p>Track approval status, inspect scope, or edit pending construction requests</p>
+                            </div>
+
+                            <button type="button" class="btn-new-request" onclick="openRequestModal()">
+                                <i class="fa-solid fa-plus"></i>
+                                <span>New Request</span>
+                            </button>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th>Project Name</th>
+                                        <th>Type</th>
+                                        <th>Location</th>
+                                        <th>Estimated Budget (LKR)</th>
+                                        <th>Preferred Start</th>
+                                        <th>Status</th>
+                                        <th style="text-align:right;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="requestTableBody">
+                                    <!-- Dynamic Rows Loaded from API -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Empty State -->
+                        <div id="emptyState" class="empty-placeholder" style="display:none;">
+                            <i class="fa-solid fa-building-circle-check"></i>
+                            <h3>No Project Requests Yet</h3>
+                            <p>You haven't submitted any construction project requests yet. Click below to submit your first request.</p>
+                            <button type="button" class="btn-new-request" onclick="openRequestModal()">
+                                <i class="fa-solid fa-plus"></i> Create First Project Request
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- =================================================
+                     TAB 2: USER PROFILE / MY PROFILE WORKSPACE
+                ================================================== -->
+                <div id="tabProfileView" style="display:none;" class="profile-workspace-view">
+
+                    <!-- 1. Profile Hero Banner Card -->
+                    <div class="workspace-card profile-hero-card">
+                        <div class="profile-hero-left">
+                            <div class="profile-hero-avatar-wrap" onclick="triggerAvatarUpload()" title="Click to upload or change profile photo">
+                                <img src="" alt="Avatar" id="heroProfileAvatarImg" class="profile-hero-avatar-img">
+                                <span class="profile-online-badge" title="Active Client Account"></span>
+                                <div class="hero-avatar-camera-btn" title="Change Photo">
+                                    <i class="fa-solid fa-camera"></i>
+                                </div>
+                            </div>
+                            <div class="profile-hero-meta">
+                                <div class="profile-name-row">
+                                    <h2 id="heroProfileName">Client Profile</h2>
+                                    <span class="profile-verified-badge" title="Verified Customer Account">
+                                        <i class="fa-solid fa-circle-check"></i>
+                                    </span>
+                                </div>
+                                <div class="profile-chips-row">
+                                    <span class="profile-chip chip-username" id="heroProfileUsername">
+                                        <i class="fa-solid fa-at"></i> @client
+                                    </span>
+                                    <span class="profile-chip chip-role">
+                                        <i class="fa-solid fa-shield-halved"></i> CLIENT PORTAL
+                                    </span>
+                                    <span class="profile-chip chip-status">
+                                        <span class="pulse-dot-green"></span> Active Account
+                                    </span>
+                                    <span class="profile-chip chip-id" id="heroUserIdChip">
+                                        <i class="fa-solid fa-hashtag"></i> ID: --
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="profile-hero-actions">
+                            <button type="button" class="btn-profile-action" onclick="switchClientTab('requests')">
+                                <i class="fa-solid fa-folder-open"></i>
+                                <span>My Project Requests</span>
+                            </button>
+                            <button type="button" class="btn-profile-action btn-profile-primary" onclick="document.getElementById('editFullName').focus()">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                                <span>Edit Profile</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 2. Quick Overview Metrics Row (Matching 4-Stat Row from Requests) -->
+                    <div class="stats-grid profile-metrics-row">
+                        <div class="stat-card-styled">
+                            <div class="stat-icon-box stat-icon-blue">
+                                <i class="fa-solid fa-user-tag"></i>
+                            </div>
+                            <div class="stat-info-text">
+                                <span>Account Username</span>
+                                <strong id="metricUsername" style="font-size:16px; word-break:break-all;">--</strong>
+                            </div>
+                        </div>
+
+                        <div class="stat-card-styled">
+                            <div class="stat-icon-box stat-icon-green">
+                                <i class="fa-solid fa-envelope"></i>
+                            </div>
+                            <div class="stat-info-text">
+                                <span>Verified Email</span>
+                                <strong id="metricEmail" style="font-size:14px; word-break:break-all; font-weight:600;">--</strong>
+                            </div>
+                        </div>
+
+                        <div class="stat-card-styled">
+                            <div class="stat-icon-box stat-icon-amber">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                            <div class="stat-info-text">
+                                <span>Contact Number</span>
+                                <strong id="metricPhone" style="font-size:15px;">--</strong>
+                            </div>
+                        </div>
+
+                        <div class="stat-card-styled">
+                            <div class="stat-icon-box stat-icon-red" style="background:rgba(168, 85, 247, 0.15); color:#c084fc; border-color:rgba(168,85,247,0.3);">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+                            <div class="stat-info-text">
+                                <span>Access Role</span>
+                                <strong style="font-size:16px; color:#c084fc;">Client Portal</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Profile Two-Column Layout -->
+                    <div class="profile-grid-layout">
+
+                        <!-- Left Column: Database Records Overview Card -->
+                        <div class="profile-card profile-details-card">
+                            <div class="profile-card-header">
+                                <h3>
+                                    <i class="fa-solid fa-address-card" style="color:#3b82f6;"></i>
+                                    <span>Account Information</span>
+                                </h3>
+                                <span class="profile-sync-pill">
+                                    <i class="fa-solid fa-database"></i> Live Database
+                                </span>
+                            </div>
+
+                            <p class="profile-card-subtitle">
+                                Your verified account credentials and property development registry details
+                            </p>
+
+                            <div class="profile-info-tiles-grid">
+                                <div class="profile-info-tile">
+                                    <div class="tile-icon-box">
+                                        <i class="fa-solid fa-id-badge"></i>
+                                    </div>
+                                    <div class="tile-content">
+                                        <span class="tile-label">Client User ID</span>
+                                        <strong class="tile-val" id="dbUserId">#--</strong>
+                                    </div>
+                                </div>
+
+                                <div class="profile-info-tile">
+                                    <div class="tile-icon-box">
+                                        <i class="fa-solid fa-user"></i>
+                                    </div>
+                                    <div class="tile-content">
+                                        <span class="tile-label">Full Legal Name</span>
+                                        <strong class="tile-val" id="dbFullName">--</strong>
+                                    </div>
+                                </div>
+
+                                <div class="profile-info-tile">
+                                    <div class="tile-icon-box">
+                                        <i class="fa-solid fa-at"></i>
+                                    </div>
+                                    <div class="tile-content">
+                                        <span class="tile-label">Account Username</span>
+                                        <strong class="tile-val" id="dbUsername">--</strong>
+                                    </div>
+                                </div>
+
+                                <div class="profile-info-tile">
+                                    <div class="tile-icon-box">
+                                        <i class="fa-solid fa-envelope"></i>
+                                    </div>
+                                    <div class="tile-content">
+                                        <span class="tile-label">Primary Email</span>
+                                        <strong class="tile-val" id="dbEmail">--</strong>
+                                    </div>
+                                </div>
+
+                                <div class="profile-info-tile">
+                                    <div class="tile-icon-box">
+                                        <i class="fa-solid fa-phone"></i>
+                                    </div>
+                                    <div class="tile-content">
+                                        <span class="tile-label">Contact Phone</span>
+                                        <strong class="tile-val" id="dbPhone">Not Provided</strong>
+                                    </div>
+                                </div>
+
+                                <div class="profile-info-tile">
+                                    <div class="tile-icon-box">
+                                        <i class="fa-solid fa-shield-halved"></i>
+                                    </div>
+                                    <div class="tile-content">
+                                        <span class="tile-label">System Role</span>
+                                        <strong class="tile-val" id="dbRole" style="color:#60a5fa;">CLIENT (Client Portal)</strong>
+                                    </div>
+                                </div>
+
+                                <div class="profile-info-tile">
+                                    <div class="tile-icon-box">
+                                        <i class="fa-solid fa-calendar-check"></i>
+                                    </div>
+                                    <div class="tile-content">
+                                        <span class="tile-label">Registration Date</span>
+                                        <strong class="tile-val" id="dbCreatedAt">--</strong>
+                                    </div>
+                                </div>
+
+                                <div class="profile-info-tile">
+                                    <div class="tile-icon-box">
+                                        <i class="fa-solid fa-clock-rotate-left"></i>
+                                    </div>
+                                    <div class="tile-content">
+                                        <span class="tile-label">Last Profile Update</span>
+                                        <strong class="tile-val" id="dbUpdatedAt">--</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Edit Profile Information Form Card -->
+                        <div class="profile-card profile-edit-card">
+                            <div class="profile-card-header">
+                                <h3>
+                                    <i class="fa-solid fa-user-pen" style="color:#ff7600;"></i>
+                                    <span>Edit Profile Information</span>
+                                </h3>
+                                <span class="profile-sync-pill" style="color:#60a5fa; border-color:rgba(59,130,246,0.3); background:rgba(59,130,246,0.1);">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i> Real-Time Sync
+                                </span>
+                            </div>
+
+                            <p class="profile-card-subtitle">
+                                Update your contact information, username, or change your account security password
+                            </p>
+
+                            <form id="clientProfileForm">
+                                <!-- Profile Picture Upload Control -->
+                                <div class="profile-photo-uploader-box">
+                                    <div class="form-avatar-preview-wrap">
+                                        <img id="formAvatarPreviewImg" src="" alt="Preview" class="form-avatar-preview-img">
+                                    </div>
+                                    <div class="profile-photo-uploader-actions">
+                                        <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+                                            <button type="button" class="btn-upload-photo" onclick="triggerAvatarUpload()">
+                                                <i class="fa-solid fa-cloud-arrow-up"></i> Upload Photo from Computer
+                                            </button>
+                                            <button type="button" id="btnRemovePhoto" class="btn-remove-photo" style="display:none;" onclick="removeProfilePicture()">
+                                                <i class="fa-solid fa-trash-can"></i> Remove Photo
+                                            </button>
+                                        </div>
+                                        <p class="photo-uploader-hint">
+                                            <i class="fa-solid fa-circle-info"></i> Upload your photo from your computer (JPG, PNG, GIF, WEBP, max 5MB).
+                                        </p>
+                                    </div>
+                                    <input type="file" id="clientAvatarFileInput" accept="image/png, image/jpeg, image/jpg, image/webp, image/gif" style="display:none;" onchange="handleAvatarFileSelect(event)">
+                                </div>
+
+                                <div class="form-group-styled">
+                                    <label for="editFullName"><i class="fa-solid fa-user" style="color:#ff7600; margin-right:5px;"></i> Full Name *</label>
+                                    <input type="text" id="editFullName" class="form-input-styled" required maxlength="120" placeholder="Enter your full name">
+                                </div>
+
+                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                                    <div class="form-group-styled">
+                                        <label for="editUsername"><i class="fa-solid fa-at" style="color:#3b82f6; margin-right:5px;"></i> Username *</label>
+                                        <input type="text" id="editUsername" class="form-input-styled" required maxlength="50" placeholder="Choose username">
+                                    </div>
+                                    <div class="form-group-styled">
+                                        <label for="editEmail"><i class="fa-solid fa-envelope" style="color:#22c55e; margin-right:5px;"></i> Email Address *</label>
+                                        <input type="email" id="editEmail" class="form-input-styled" required maxlength="120" placeholder="Enter email">
+                                    </div>
+                                </div>
+
+                                <div class="form-group-styled">
+                                    <label for="editPhone"><i class="fa-solid fa-phone" style="color:#f59e0b; margin-right:5px;"></i> Phone Number</label>
+                                    <input type="tel" id="editPhone" class="form-input-styled" maxlength="30" placeholder="e.g. +94 11 234 5678 or 0771234567">
+                                </div>
+
+                                <div class="form-group-styled">
+                                    <label for="editPassword"><i class="fa-solid fa-lock" style="color:#cbd5e1; margin-right:5px;"></i> New Password (Optional)</label>
+                                    <div style="position:relative;">
+                                        <input type="password" id="editPassword" class="form-input-styled" placeholder="Leave blank to retain current password" minlength="8" maxlength="100">
+                                        <button type="button" onclick="togglePasswordVisibility('editPassword', this)" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; color:#64748b; cursor:pointer; font-size:14px;">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </button>
+                                    </div>
+                                    <span style="font-size:11px; color:#64748b; margin-top:2px;">Minimum 8 characters if changing password</span>
+                                </div>
+
+                                <div class="profile-form-footer">
+                                    <button type="button" class="btn-discard-profile" onclick="populateProfileForm(latestDatabaseProfile)">
+                                        <i class="fa-solid fa-rotate-left"></i> Discard Changes
+                                    </button>
+                                    <button type="submit" id="saveProfileBtn" class="btn-save-profile">
+                                        <i class="fa-solid fa-floppy-disk"></i> Save Profile to Database
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+
+                    <!-- 4. Danger Zone Card -->
+                    <div class="profile-danger-box">
+                        <div class="danger-copy">
+                            <h4>
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                <span>Danger Zone: Delete Client Profile</span>
+                            </h4>
+                            <p>
+                                Permanently delete your client account, profile details, and submitted project requests from the WBCMS database.<br>
+                                Once deleted, this action cannot be undone and you will be logged out immediately.
+                            </p>
+                        </div>
+                        <button type="button" class="btn-trigger-delete" onclick="openDeleteProfileModal()">
+                            <i class="fa-solid fa-trash-can"></i> Delete Profile
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- =========================================================
+         MODAL 1: CREATE / UPDATE PROJECT REQUEST
+    ========================================================== -->
+    <div id="requestModal" class="modal-custom" role="dialog" aria-modal="true">
+        <div class="modal-custom-card">
+            <div class="modal-custom-header">
+                <h3 id="requestModalTitle">
+                    <i class="fa-solid fa-folder-plus" style="color:#ff7600;"></i>
+                    <span>Create Project Request</span>
+                </h3>
+                <button type="button" class="btn-close-modal" onclick="closeRequestModal()">&times;</button>
+            </div>
+
+            <form id="projectRequestForm">
+                <input type="hidden" id="editingRequestId">
+
+                <div class="modal-custom-body">
+                    <div class="form-group-styled">
+                        <label for="projectName">Project Name *</label>
+                        <input type="text" id="projectName" class="form-input-styled" required placeholder="e.g. Modern Residential Villa">
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+                        <div class="form-group-styled">
+                            <label for="projectType">Project Type *</label>
+                            <select id="projectType" class="form-input-styled" required>
+                                <option value="" disabled selected>Select Type</option>
+                                <option value="Residential">Residential</option>
+                                <option value="Commercial">Commercial</option>
+                                <option value="Industrial">Industrial</option>
+                                <option value="Infrastructure">Infrastructure</option>
+                                <option value="Renovation">Renovation</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group-styled">
+                            <label for="location">Location *</label>
+                            <input type="text" id="location" class="form-input-styled" required placeholder="e.g. Colombo 03, Sri Lanka">
+                        </div>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+                        <div class="form-group-styled">
+                            <label for="estimatedBudget">Estimated Budget (LKR) *</label>
+                            <input type="number" id="estimatedBudget" class="form-input-styled" required min="1" step="any" placeholder="e.g. 15000000">
+                        </div>
+
+                        <div class="form-group-styled">
+                            <label for="preferredStartDate">Preferred Start Date *</label>
+                            <input type="date" id="preferredStartDate" class="form-input-styled" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group-styled">
+                        <label for="description">Detailed Project Scope / Description *</label>
+                        <textarea id="description" class="form-input-styled" rows="4" required placeholder="Describe the structural work, requirements, land area, or specifications..."></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-custom-footer">
+                    <button type="button" class="btn-discard-profile" onclick="closeRequestModal()">Cancel</button>
+                    <button type="submit" id="saveRequestBtn" class="btn-new-request">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>Submit Project Request</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         MODAL 2: VIEW PROJECT REQUEST DETAILS
+    ========================================================== -->
+    <div id="viewRequestModal" class="modal-custom" role="dialog" aria-modal="true">
+        <div class="modal-custom-card">
+            <div class="modal-custom-header">
+                <h3>
+                    <i class="fa-solid fa-circle-info" style="color:#3b82f6;"></i>
+                    <span>Project Request Details</span>
+                </h3>
+                <button type="button" class="btn-close-modal" onclick="closeViewModal()">&times;</button>
+            </div>
+
+            <div class="modal-custom-body" id="viewRequestContent">
+                <!-- Dynamically Populated -->
+            </div>
+
+            <div class="modal-custom-footer">
+                <button type="button" class="btn-discard-profile" onclick="closeViewModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         MODAL 3: DELETE PROJECT REQUEST CONFIRMATION
+    ========================================================== -->
+    <div id="deleteRequestConfirmModal" class="modal-custom" role="dialog" aria-modal="true">
+        <div class="modal-custom-card" style="max-width:440px; text-align:center;">
+            <div class="modal-custom-body" style="padding:28px 24px;">
+                <div style="width:58px; height:58px; border-radius:50%; background:rgba(239,68,68,0.15); color:#ef4444; display:grid; place-items:center; font-size:24px; margin:0 auto 16px;">
+                    <i class="fa-solid fa-trash-can"></i>
+                </div>
+                <h3 style="font-size:18px; margin:0 0 8px 0; color:#0f172a;">Delete Project Request?</h3>
+                <p style="font-size:13px; color:#64748b; margin:0 0 20px 0; line-height:1.5;">
+                    Are you sure you want to delete this pending project request? This action cannot be undone.
+                </p>
+                <div style="display:flex; justify-content:center; gap:12px;">
+                    <button type="button" class="btn-discard-profile" onclick="closeDeleteRequestModal()" style="flex:1;">Cancel</button>
+                    <button type="button" id="confirmDeleteRequestBtn" class="btn-trigger-delete" style="flex:1; justify-content:center; background:#ef4444; color:#fff; border-color:#ef4444;">
+                        Yes, Delete Request
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         MODAL 4: DELETE CLIENT PROFILE CONFIRMATION (Yes / No)
+    ========================================================== -->
+    <div id="deleteProfileConfirmModal" class="modal-custom" role="dialog" aria-modal="true">
+        <div class="modal-custom-card" style="max-width:460px; text-align:center;">
+            <div class="modal-custom-body" style="padding:32px 26px;">
+                <div style="width:64px; height:64px; border-radius:50%; background:rgba(239,68,68,0.15); border:2px solid rgba(239,68,68,0.3); color:#ef4444; display:grid; place-items:center; font-size:26px; margin:0 auto 18px;">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <h3 style="font-size:20px; font-weight:700; margin:0 0 10px 0; color:#0f172a;">
+                    Are you sure you want to delete your profile?
+                </h3>
+                <p style="font-size:13px; color:#64748b; margin:0 0 24px 0; line-height:1.55;">
+                    This will permanently delete your client account, profile credentials, and submitted requests from the database. You will be logged out immediately.
+                </p>
+                <div style="display:flex; justify-content:center; gap:12px;">
+                    <button type="button" class="btn-discard-profile" onclick="closeDeleteProfileModal()" style="flex:1;">
+                        <i class="fa-solid fa-xmark"></i> No, Keep Profile
+                    </button>
+                    <button type="button" id="confirmDeleteProfileBtn" onclick="executeDeleteProfile()" class="btn-trigger-delete" style="flex:1; justify-content:center; background:#ef4444; color:#fff; border-color:#ef4444;">
+                        <i class="fa-solid fa-trash-can"></i> Yes, Delete Profile
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         MODAL 5: LOGOUT CONFIRMATION (Yes / No)
+    ========================================================== -->
+    <div id="logoutConfirmModal" class="modal-custom" role="dialog" aria-modal="true">
+        <div class="modal-custom-card" style="max-width:440px; text-align:center;">
+            <div class="modal-custom-body" style="padding:32px 26px;">
+                <div style="width:62px; height:62px; border-radius:50%; background:rgba(255,118,0,0.15); border:2px solid rgba(255,118,0,0.35); color:#ff7600; display:grid; place-items:center; font-size:24px; margin:0 auto 16px;">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </div>
+                <h3 style="font-size:20px; font-weight:700; margin:0 0 10px 0; color:#0f172a;">
+                    Are you sure you want to logout?
+                </h3>
+                <p style="font-size:13.5px; color:#64748b; margin:0 0 24px 0; line-height:1.5;">
+                    You will be securely signed out of your client session.
+                </p>
+                <div style="display:flex; justify-content:center; gap:12px;">
+                    <button type="button" class="btn-discard-profile" onclick="closeLogoutModal()" style="flex:1; justify-content:center; font-size:13.5px;">
+                        <i class="fa-solid fa-xmark"></i> No
+                    </button>
+                    <button type="button" id="confirmLogoutModalBtn" onclick="confirmAndLogout()" class="btn-new-request" style="flex:1; justify-content:center; background:linear-gradient(135deg, #ef4444, #dc2626); border:none; color:#fff; box-shadow:0 4px 14px rgba(239,68,68,0.4); font-size:13.5px;">
+                        <i class="fa-solid fa-check"></i> Yes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         INTEGRATED CLIENT PORTAL JAVASCRIPT
+    ========================================================== -->
+    <script>
+        const API_REQUESTS = "/api/client/project-requests";
+        const API_PROFILE = "/api/client/profile";
+
+        let currentRequestsList = [];
+        let latestDatabaseProfile = null;
+        let pendingDeleteRequestId = null;
+
+        function getAuthToken() {
+            return localStorage.getItem("wbcms_token");
+        }
+
+        function getAuthHeaders() {
+            return {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + getAuthToken()
+            };
+        }
+
+        function showPortalMessage(msg, isError = false) {
+            const box = document.getElementById("portalMessage");
+            const text = document.getElementById("portalAlertText");
+            const icon = document.getElementById("portalAlertIcon");
+
+            text.textContent = msg;
+            box.className = "portal-alert show " + (isError ? "error" : "success");
+            icon.className = isError ? "fa-solid fa-triangle-exclamation" : "fa-solid fa-circle-check";
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (!isError) {
+                setTimeout(() => {
+                    box.classList.remove("show");
+                }, 4000);
+            }
+        }
+
+        function formatCurrency(val) {
+            if (val === null || val === undefined || isNaN(val)) return "LKR 0";
+            return "LKR " + Number(val).toLocaleString("en-LK", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
+        function formatDate(val) {
+            if (!val) return "-";
+            const d = new Date(val);
+            return d.toLocaleDateString("en-LK", {
+                year: "numeric", month: "short", day: "numeric"
+            });
+        }
+
+        function formatDateTime(val) {
+            if (!val) return "-";
+            const d = new Date(val);
+            return d.toLocaleString("en-LK", {
+                year: "numeric", month: "short", day: "2-digit", hour: "2-digit", minute: "2-digit"
+            });
+        }
+
+        function escapeHtml(str) {
+            if (str === null || str === undefined) return "";
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function togglePasswordVisibility(id, btn) {
+            const input = document.getElementById(id);
+            const icon = btn.querySelector("i");
+            if (input.type === "password") {
+                input.type = "text";
+                icon.className = "fa-solid fa-eye-slash";
+            } else {
+                input.type = "password";
+                icon.className = "fa-solid fa-eye";
+            }
+        }
+
+        // ==========================================
+        // TAB SWITCHING (Requests vs My Profile)
+        // ==========================================
+        function switchClientTab(tabName) {
+            const reqView = document.getElementById("tabRequestsView");
+            const profView = document.getElementById("tabProfileView");
+            const navReq = document.getElementById("navProjectRequests");
+            const navProf = document.getElementById("navMyProfile");
+            const topTitle = document.getElementById("topbarTitle");
+            const topSub = document.getElementById("topbarSubtitle");
+            const quickBtn = document.getElementById("quickNewRequestBtn");
+
+            if (tabName === "profile") {
+                if (reqView) reqView.style.display = "none";
+                if (profView) profView.style.display = "flex";
+                if (navReq) navReq.classList.remove("active");
+                if (navProf) navProf.classList.add("active");
+                if (topTitle) topTitle.textContent = "My Profile";
+                if (topSub) topSub.textContent = "View, update, or manage your personal client details";
+                if (quickBtn) quickBtn.style.display = "none";
+                try {
+                    const url = new URL(window.location.href);
+                    if (url.searchParams.get("tab") !== "profile") {
+                        url.searchParams.set("tab", "profile");
+                        window.history.pushState({ tab: "profile" }, "", url.toString());
+                    }
+                } catch (e) {}
+            } else {
+                if (reqView) reqView.style.display = "block";
+                if (profView) profView.style.display = "none";
+                if (navReq) navReq.classList.add("active");
+                if (navProf) navProf.classList.remove("active");
+                if (topTitle) topTitle.textContent = "Project Requests";
+                if (topSub) topSub.textContent = "Submit, view, and manage your property construction requests";
+                if (quickBtn) quickBtn.style.display = "inline-flex";
+                try {
+                    const url = new URL(window.location.href);
+                    if (url.searchParams.has("tab")) {
+                        url.searchParams.delete("tab");
+                        window.history.pushState({ tab: "requests" }, "", url.pathname + (url.search ? url.search : ""));
+                    }
+                } catch (e) {}
+            }
+        }
+
+        // ==========================================
+        // 1. PROFILE PICTURE & AVATAR HELPER
+        // ==========================================
+        let currentSelectedAvatarBase64 = null;
+
+        function getAvatarUrl(profilePicture, displayName) {
+            if (profilePicture && typeof profilePicture === "string" && profilePicture.trim().length > 0) {
+                return profilePicture;
+            }
+            const initial = (displayName || "Client").trim().charAt(0).toUpperCase() || "C";
+            const colors = [
+                ["#3b82f6", "#1d4ed8"],
+                ["#8b5cf6", "#6d28d9"],
+                ["#ec4899", "#be185d"],
+                ["#f59e0b", "#d97706"],
+                ["#10b981", "#047857"],
+                ["#06b6d4", "#0e7490"]
+            ];
+            const code = initial.charCodeAt(0) % colors.length;
+            const [c1, c2] = colors[code];
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                <defs>
+                    <linearGradient id="g_${initial}_${code}" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="${c1}" />
+                        <stop offset="100%" stop-color="${c2}" />
+                    </linearGradient>
+                </defs>
+                <rect width="100" height="100" rx="50" fill="url(#g_${initial}_${code})" />
+                <text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="44" font-weight="700" fill="#ffffff">${initial}</text>
+            </svg>`;
+            return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
+        }
+
+        function triggerAvatarUpload() {
+            const input = document.getElementById("clientAvatarFileInput");
+            if (input) input.click();
+        }
+
+        function handleAvatarFileSelect(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith("image/")) {
+                showPortalMessage("Please select a valid image file (PNG, JPG, JPEG, WEBP).", true);
+                return;
+            }
+
+            if (file.size > 5 * 1024 * 1024) {
+                showPortalMessage("Image size exceeds 5MB limit. Please choose a smaller image.", true);
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    try {
+                        const canvas = document.createElement("canvas");
+                        const size = Math.min(img.width, img.height);
+                        const targetSize = Math.min(size, 400);
+                        canvas.width = targetSize;
+                        canvas.height = targetSize;
+                        const ctx = canvas.getContext("2d");
+
+                        const sx = (img.width - size) / 2;
+                        const sy = (img.height - size) / 2;
+                        ctx.drawImage(img, sx, sy, size, size, 0, 0, targetSize, targetSize);
+
+                        const compressedBase64 = canvas.toDataURL("image/jpeg", 0.88);
+                        currentSelectedAvatarBase64 = compressedBase64;
+
+                        // Update live previews across portal
+                        const displayName = document.getElementById("editFullName").value || (latestDatabaseProfile ? (latestDatabaseProfile.fullName || latestDatabaseProfile.username) : "Client");
+                        updateAvatarImages(compressedBase64, displayName);
+
+                        const removeBtn = document.getElementById("btnRemovePhoto");
+                        if (removeBtn) removeBtn.style.display = "inline-flex";
+
+                        showPortalMessage("Photo selected! Click 'Save Profile to Database' below to save it permanently.", false);
+                    } catch (err) {
+                        console.error("Image processing error:", err);
+                        showPortalMessage("Error processing image. Please try another photo.", true);
+                    }
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removeProfilePicture() {
+            currentSelectedAvatarBase64 = "";
+            const displayName = document.getElementById("editFullName").value || (latestDatabaseProfile ? (latestDatabaseProfile.fullName || latestDatabaseProfile.username) : "Client");
+            updateAvatarImages(null, displayName);
+            const removeBtn = document.getElementById("btnRemovePhoto");
+            if (removeBtn) removeBtn.style.display = "none";
+            const fileInput = document.getElementById("clientAvatarFileInput");
+            if (fileInput) fileInput.value = "";
+            showPortalMessage("Photo removed. Click 'Save Profile to Database' to save changes.", false);
+        }
+
+        function updateAvatarImages(avatarUrl, displayName) {
+            const finalUrl = getAvatarUrl(avatarUrl, displayName);
+            const sideImg = document.getElementById("sidebarAvatarImg");
+            if (sideImg) { sideImg.src = finalUrl; sideImg.style.display = 'block'; }
+            const topImg = document.getElementById("topAvatarImg");
+            if (topImg) { topImg.src = finalUrl; topImg.style.display = 'block'; }
+            const heroAvatarImg = document.getElementById("heroProfileAvatarImg");
+            if (heroAvatarImg) { heroAvatarImg.src = finalUrl; heroAvatarImg.style.display = 'block'; }
+            const formAvatarImg = document.getElementById("formAvatarPreviewImg");
+            if (formAvatarImg) { formAvatarImg.src = finalUrl; formAvatarImg.style.display = 'block'; }
+        }
+
+        // ==========================================
+        // 2. LOAD & SYNC CLIENT PROFILE FROM DATABASE
+        // ==========================================
+        async function fetchClientProfile() {
+            try {
+                const response = await fetch(API_PROFILE, {
+                    headers: getAuthHeaders()
+                });
+
+                if (response.status === 401 || response.status === 403) {
+                    clientLogout();
+                    return;
+                }
+
+                if (!response.ok) {
+                    throw new Error("Unable to fetch client profile from database.");
+                }
+
+                const data = await response.json();
+                latestDatabaseProfile = data;
+                currentSelectedAvatarBase64 = data.profilePicture || null;
+
+                const displayName = data.fullName || data.username || "Client";
+
+                // 1. Sidebar profile information widget
+                document.getElementById("sidebarClientName").textContent = displayName;
+                document.getElementById("sidebarClientEmail").textContent = data.email || "No email";
+                document.getElementById("sidebarClientPhone").textContent = data.phoneNumber || "No phone provided";
+                document.getElementById("sidebarClientRole").textContent = data.role || "CLIENT";
+                document.getElementById("sidebarClientId").textContent = "#" + data.id;
+
+                // 2. Top-right profile widget: SHOW ONLY USERNAME
+                const usernameOnly = data.username || "Client";
+                const topNameElem = document.getElementById("topClientName");
+                if (topNameElem) topNameElem.textContent = usernameOnly;
+
+                // 3. Profile view hero
+                const heroName = document.getElementById("heroProfileName");
+                if (heroName) heroName.textContent = displayName;
+                const heroUser = document.getElementById("heroProfileUsername");
+                if (heroUser) heroUser.innerHTML = '<i class="fa-solid fa-at"></i> @' + (data.username || "client");
+                const heroIdChip = document.getElementById("heroUserIdChip");
+                if (heroIdChip) heroIdChip.innerHTML = '<i class="fa-solid fa-hashtag"></i> ID: #' + data.id;
+
+                // 4. Update all avatars across the page with real picture or dynamic unisex fallback
+                updateAvatarImages(data.profilePicture, displayName);
+
+                // 5. Quick Overview Metrics Row
+                const mUser = document.getElementById("metricUsername");
+                if (mUser) mUser.textContent = "@" + (data.username || "-");
+                const mEmail = document.getElementById("metricEmail");
+                if (mEmail) mEmail.textContent = data.email || "-";
+                const mPhone = document.getElementById("metricPhone");
+                if (mPhone) mPhone.textContent = data.phoneNumber || "Not Provided";
+
+                // 6. Database overview card
+                document.getElementById("dbUserId").textContent = "#" + data.id;
+                document.getElementById("dbFullName").textContent = data.fullName || "-";
+                document.getElementById("dbUsername").textContent = data.username || "-";
+                document.getElementById("dbEmail").textContent = data.email || "-";
+                document.getElementById("dbPhone").textContent = data.phoneNumber || "Not Provided";
+                document.getElementById("dbRole").textContent = (data.role || "CLIENT") + " (Client Portal)";
+                document.getElementById("dbCreatedAt").textContent = formatDateTime(data.createdAt);
+                document.getElementById("dbUpdatedAt").textContent = formatDateTime(data.updatedAt);
+
+                // 7. Populate Profile Edit Form
+                populateProfileForm(data);
+
+            } catch (err) {
+                console.error("Profile load error:", err);
+            }
+        }
+
+        function populateProfileForm(data) {
+            if (!data) return;
+            document.getElementById("editFullName").value = data.fullName || "";
+            document.getElementById("editUsername").value = data.username || "";
+            document.getElementById("editEmail").value = data.email || "";
+            document.getElementById("editPhone").value = data.phoneNumber || "";
+            document.getElementById("editPassword").value = "";
+            currentSelectedAvatarBase64 = data.profilePicture || null;
+            updateAvatarImages(currentSelectedAvatarBase64, data.fullName || data.username || "Client");
+            const removeBtn = document.getElementById("btnRemovePhoto");
+            if (removeBtn) removeBtn.style.display = (data.profilePicture && data.profilePicture.trim()) ? "inline-flex" : "none";
+        }
+
+        // ==========================================
+        // 3. SAVE PROFILE UPDATES TO DATABASE
+        // ==========================================
+        document.getElementById("clientProfileForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+
+            const fullName = document.getElementById("editFullName").value.trim();
+            const username = document.getElementById("editUsername").value.trim();
+            const email = document.getElementById("editEmail").value.trim();
+            const phoneNumber = document.getElementById("editPhone").value.trim();
+            const password = document.getElementById("editPassword").value;
+
+            if (!fullName || !username || !email) {
+                showPortalMessage("Full Name, Username, and Email are required.", true);
+                return;
+            }
+
+            if (password && password.length < 8) {
+                showPortalMessage("New password must be at least 8 characters long.", true);
+                return;
+            }
+
+            const btn = document.getElementById("saveProfileBtn");
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
+            try {
+                const response = await fetch(API_PROFILE, {
+                    method: "PUT",
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify({
+                        fullName: fullName,
+                        username: username,
+                        email: email,
+                        phoneNumber: phoneNumber,
+                        password: password || "",
+                        profilePicture: currentSelectedAvatarBase64 !== undefined ? currentSelectedAvatarBase64 : (latestDatabaseProfile ? latestDatabaseProfile.profilePicture : null)
+                    })
+                });
+
+                const data = await response.json().catch(() => null);
+
+                if (!response.ok) {
+                    throw new Error((data && (data.message || data.error)) || "Failed to update profile.");
+                }
+
+                // If new token returned (username update)
+                if (data.token) {
+                    localStorage.setItem("wbcms_token", data.token);
+                }
+
+                const updated = data.profile || data;
+                localStorage.setItem("wbcms_username", updated.username);
+                localStorage.setItem("wbcms_full_name", updated.fullName);
+
+                showPortalMessage("Profile information updated successfully in the database!", false);
+                await fetchClientProfile();
+
+            } catch (err) {
+                console.error("Update profile error:", err);
+                showPortalMessage(err.message || "Failed to update profile.", true);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Profile to Database';
+            }
+        });
+
+        // ==========================================
+        // 3. DELETE CLIENT PROFILE (Confirmation Yes / No)
+        // ==========================================
+        function openDeleteProfileModal() {
+            document.getElementById("deleteProfileConfirmModal").classList.add("show");
+        }
+
+        function closeDeleteProfileModal() {
+            document.getElementById("deleteProfileConfirmModal").classList.remove("show");
+        }
+
+        async function executeDeleteProfile() {
+            const btn = document.getElementById("confirmDeleteProfileBtn");
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Deleting Profile...';
+
+            try {
+                const response = await fetch(API_PROFILE, {
+                    method: "DELETE",
+                    headers: getAuthHeaders()
+                });
+
+                if (!response.ok && response.status !== 204) {
+                    const data = await response.json().catch(() => null);
+                    throw new Error((data && (data.message || data.error)) || "Failed to delete profile.");
+                }
+
+                closeDeleteProfileModal();
+                showPortalMessage("Your profile has been deleted. Logging you out...", false);
+
+                clientLogout(false);
+
+            } catch (err) {
+                console.error("Delete profile error:", err);
+                closeDeleteProfileModal();
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-trash-can"></i> Yes, Delete Profile';
+                showPortalMessage(err.message || "Failed to delete profile.", true);
+            }
+        }
+
+        // ==========================================
+        // 4. LOAD & RENDER PROJECT REQUESTS (CRUD: READ)
+        // ==========================================
+        async function loadProjectRequests() {
+            try {
+                const response = await fetch(API_REQUESTS, {
+                    headers: getAuthHeaders()
+                });
+
+                if (response.status === 401 || response.status === 403) {
+                    clientLogout();
+                    return;
+                }
+
+                const data = await response.json().catch(() => []);
+
+                if (!response.ok) {
+                    throw new Error((data && (data.message || data.error)) || "Failed to load project requests.");
+                }
+
+                currentRequestsList = data;
+                renderRequestsTable(data);
+                updateRequestStats(data);
+
+            } catch (err) {
+                console.error("Load requests error:", err);
+                showPortalMessage(err.message || "Failed to load requests.", true);
+            }
+        }
+
+        function updateRequestStats(requests) {
+            const total = requests.length;
+            const pending = requests.filter(r => r.status === "PENDING").length;
+            const approved = requests.filter(r => r.status === "APPROVED").length;
+            const rejected = requests.filter(r => r.status === "REJECTED").length;
+
+            document.getElementById("statTotalRequests").textContent = total;
+            document.getElementById("statPendingRequests").textContent = pending;
+            document.getElementById("statApprovedRequests").textContent = approved;
+            document.getElementById("statRejectedRequests").textContent = rejected;
+
+            const sideBadge = document.getElementById("sidebarBadgeCount");
+            if (sideBadge) sideBadge.textContent = total;
+            const topBadge = document.getElementById("topNotifBadge");
+            if (topBadge) topBadge.textContent = total > 0 ? total : "1";
+        }
+
+        function renderRequestsTable(requests) {
+            const tbody = document.getElementById("requestTableBody");
+            const empty = document.getElementById("emptyState");
+
+            tbody.innerHTML = "";
+
+            if (!requests || requests.length === 0) {
+                empty.style.display = "block";
+                return;
+            }
+
+            empty.style.display = "none";
+
+            requests.forEach(req => {
+                const tr = document.createElement("tr");
+
+                const isPending = (req.status === "PENDING");
+
+                tr.innerHTML = `
+                    <td>
+                        <div class="project-title">${escapeHtml(req.projectName)}</div>
+                        <div style="font-size:11px; color:#64748b;">Submitted: ${formatDate(req.createdAt)}</div>
+                    </td>
+                    <td><span class="type-tag">${escapeHtml(req.projectType)}</span></td>
+                    <td><i class="fa-solid fa-location-dot" style="color:#ef4444; font-size:11px; margin-right:4px;"></i>${escapeHtml(req.location)}</td>
+                    <td style="font-weight:600;">${formatCurrency(req.estimatedBudget)}</td>
+                    <td>${formatDate(req.preferredStartDate)}</td>
+                    <td>
+                        <span class="status-badge status-${req.status}">
+                            <i class="fa-solid ${req.status === 'APPROVED' ? 'fa-check' : req.status === 'REJECTED' ? 'fa-xmark' : 'fa-clock'}"></i>
+                            ${req.status}
+                        </span>
+                    </td>
+                    <td style="text-align:right;">
+                        <div class="action-btn-group" style="justify-content:flex-end;">
+                            <button type="button" class="action-icon-btn" title="View Request Details" onclick="viewRequestDetails(${req.id})">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                            ${isPending ? `
+                                <button type="button" class="action-icon-btn" title="Edit Request" onclick="openEditRequestModal(${req.id})">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                                <button type="button" class="action-icon-btn btn-delete-req" title="Delete Request" onclick="promptDeleteRequest(${req.id})">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        // ==========================================
+        // 5. CREATE & UPDATE PROJECT REQUEST (CRUD: CREATE / UPDATE)
+        // ==========================================
+        function openRequestModal() {
+            document.getElementById("editingRequestId").value = "";
+            document.getElementById("projectRequestForm").reset();
+            document.getElementById("requestModalTitle").innerHTML = '<i class="fa-solid fa-folder-plus" style="color:#ff7600;"></i> <span>Create Project Request</span>';
+            document.getElementById("saveRequestBtn").innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>Submit Project Request</span>';
+
+            // Set min date to today
+            const today = new Date().toISOString().split("T")[0];
+            document.getElementById("preferredStartDate").min = today;
+
+            document.getElementById("requestModal").classList.add("show");
+        }
+
+        function closeRequestModal() {
+            document.getElementById("requestModal").classList.remove("show");
+        }
+
+        async function openEditRequestModal(id) {
+            try {
+                const response = await fetch(`${API_REQUESTS}/${id}`, {
+                    headers: getAuthHeaders()
+                });
+
+                if (!response.ok) {
+                    throw new Error("Unable to load request details.");
+                }
+
+                const data = await response.json();
+
+                if (data.status !== "PENDING") {
+                    showPortalMessage("Only pending project requests can be edited.", true);
+                    return;
+                }
+
+                document.getElementById("editingRequestId").value = data.id;
+                document.getElementById("projectName").value = data.projectName || "";
+                document.getElementById("projectType").value = data.projectType || "";
+                document.getElementById("location").value = data.location || "";
+                document.getElementById("estimatedBudget").value = data.estimatedBudget || "";
+                document.getElementById("preferredStartDate").value = data.preferredStartDate || "";
+                document.getElementById("description").value = data.description || "";
+
+                document.getElementById("requestModalTitle").innerHTML = '<i class="fa-solid fa-pen-to-square" style="color:#3b82f6;"></i> <span>Edit Project Request</span>';
+                document.getElementById("saveRequestBtn").innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span>Update Project Request</span>';
+
+                document.getElementById("requestModal").classList.add("show");
+
+            } catch (err) {
+                console.error("Open edit modal error:", err);
+                showPortalMessage(err.message || "Could not open edit modal.", true);
+            }
+        }
+
+        document.getElementById("projectRequestForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+
+            const editingId = document.getElementById("editingRequestId").value;
+            const isUpdate = Boolean(editingId);
+
+            const projectName = document.getElementById("projectName").value.trim();
+            const projectType = document.getElementById("projectType").value;
+            const location = document.getElementById("location").value.trim();
+            const estimatedBudget = Number(document.getElementById("estimatedBudget").value);
+            const preferredStartDate = document.getElementById("preferredStartDate").value;
+            const description = document.getElementById("description").value.trim();
+
+            if (!projectName || !projectType || !location || !estimatedBudget || !preferredStartDate || !description) {
+                showPortalMessage("Please fill in all required request fields.", true);
+                return;
+            }
+
+            if (estimatedBudget <= 0) {
+                showPortalMessage("Estimated budget must be greater than zero.", true);
+                return;
+            }
+
+            const btn = document.getElementById("saveRequestBtn");
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
+            const payload = {
+                projectName,
+                projectType,
+                location,
+                estimatedBudget,
+                preferredStartDate,
+                description
+            };
+
+            try {
+                const url = isUpdate ? `${API_REQUESTS}/${editingId}` : API_REQUESTS;
+                const method = isUpdate ? "PUT" : "POST";
+
+                const response = await fetch(url, {
+                    method: method,
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json().catch(() => null);
+
+                if (!response.ok) {
+                    throw new Error((data && (data.message || data.error)) || "Failed to save project request.");
+                }
+
+                closeRequestModal();
+                showPortalMessage(isUpdate ? "Project request updated successfully!" : "Project request submitted successfully!", false);
+
+                await loadProjectRequests();
+
+            } catch (err) {
+                console.error("Save request error:", err);
+                showPortalMessage(err.message || "Failed to save request.", true);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = isUpdate ? '<i class="fa-solid fa-floppy-disk"></i> <span>Update Project Request</span>' : '<i class="fa-solid fa-paper-plane"></i> <span>Submit Project Request</span>';
+            }
+        });
+
+        // ==========================================
+        // 6. VIEW PROJECT REQUEST (CRUD: READ ONE)
+        // ==========================================
+        async function viewRequestDetails(id) {
+            try {
+                const response = await fetch(`${API_REQUESTS}/${id}`, {
+                    headers: getAuthHeaders()
+                });
+
+                if (!response.ok) throw new Error("Could not fetch request details.");
+
+                const data = await response.json();
+                const container = document.getElementById("viewRequestContent");
+
+                container.innerHTML = `
+                    <div style="display:flex; flex-direction:column; gap:14px;">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:1px solid var(--border-subtle); padding-bottom:12px;">
+                            <div>
+                                <h4 style="margin:0 0 4px 0; font-size:18px; color:#fff;">${escapeHtml(data.projectName)}</h4>
+                                <span class="type-tag">${escapeHtml(data.projectType)}</span>
+                            </div>
+                            <span class="status-badge status-${data.status}">${data.status}</span>
+                        </div>
+
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                            <div class="profile-detail-cell">
+                                <span class="cell-lbl">Location</span>
+                                <span class="cell-val"><i class="fa-solid fa-location-dot" style="color:#ef4444; margin-right:4px;"></i>${escapeHtml(data.location)}</span>
+                            </div>
+                            <div class="profile-detail-cell">
+                                <span class="cell-lbl">Estimated Budget</span>
+                                <span class="cell-val" style="color:#4ade80;">${formatCurrency(data.estimatedBudget)}</span>
+                            </div>
+                        </div>
+
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                            <div class="profile-detail-cell">
+                                <span class="cell-lbl">Preferred Start Date</span>
+                                <span class="cell-val">${formatDate(data.preferredStartDate)}</span>
+                            </div>
+                            <div class="profile-detail-cell">
+                                <span class="cell-lbl">Submitted On</span>
+                                <span class="cell-val">${formatDateTime(data.createdAt)}</span>
+                            </div>
+                        </div>
+
+                        <div class="profile-detail-cell">
+                            <span class="cell-lbl">Project Description & Scope</span>
+                            <span class="cell-val" style="font-weight:400; line-height:1.6; margin-top:4px;">${escapeHtml(data.description)}</span>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById("viewRequestModal").classList.add("show");
+
+            } catch (err) {
+                console.error("View error:", err);
+                showPortalMessage(err.message || "Could not view request.", true);
+            }
+        }
+
+        function closeViewModal() {
+            document.getElementById("viewRequestModal").classList.remove("show");
+        }
+
+        // ==========================================
+        // 7. DELETE PROJECT REQUEST (CRUD: DELETE)
+        // ==========================================
+        function promptDeleteRequest(id) {
+            pendingDeleteRequestId = id;
+            document.getElementById("deleteRequestConfirmModal").classList.add("show");
+        }
+
+        function closeDeleteRequestModal() {
+            pendingDeleteRequestId = null;
+            document.getElementById("deleteRequestConfirmModal").classList.remove("show");
+        }
+
+        document.getElementById("confirmDeleteRequestBtn").addEventListener("click", async function() {
+            if (!pendingDeleteRequestId) return;
+
+            const btn = document.getElementById("confirmDeleteRequestBtn");
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Deleting...';
+
+            try {
+                const response = await fetch(`${API_REQUESTS}/${pendingDeleteRequestId}`, {
+                    method: "DELETE",
+                    headers: getAuthHeaders()
+                });
+
+                if (!response.ok && response.status !== 204) {
+                    const data = await response.json().catch(() => null);
+                    throw new Error((data && (data.message || data.error)) || "Failed to delete request.");
+                }
+
+                closeDeleteRequestModal();
+                showPortalMessage("Project request deleted successfully from database.", false);
+                await loadProjectRequests();
+
+            } catch (err) {
+                console.error("Delete request error:", err);
+                closeDeleteRequestModal();
+                showPortalMessage(err.message || "Failed to delete request.", true);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = "Yes, Delete Request";
+            }
+        });
+
+        // ==========================================
+        // 8. LOGOUT FUNCTIONALITY (With Yes/No Confirmation)
+        // ==========================================
+        function openLogoutModal() {
+            const m = document.getElementById("logoutConfirmModal");
+            if (m) m.classList.add("show");
+        }
+
+        function closeLogoutModal() {
+            const m = document.getElementById("logoutConfirmModal");
+            if (m) m.classList.remove("show");
+        }
+
+        function confirmAndLogout() {
+            closeLogoutModal();
+            clientLogout(true);
+        }
+
+        function clientLogout(notify = true) {
+            const t = getAuthToken();
+            if (t) {
+                fetch("/api/auth/logout", {
+                    method: "POST",
+                    headers: { "Authorization": "Bearer " + t }
+                }).catch(() => {});
+            }
+
+            localStorage.removeItem("wbcms_token");
+            localStorage.removeItem("wbcms_user_id");
+            localStorage.removeItem("wbcms_username");
+            localStorage.removeItem("wbcms_role");
+            localStorage.removeItem("wbcms_user_type");
+            localStorage.removeItem("wbcms_full_name");
+            localStorage.removeItem("wbcms_user");
+
+            if (notify) {
+                window.location.replace("/client-login.html");
+            } else {
+                setTimeout(() => {
+                    window.location.replace("/client-login.html");
+                }, 1000);
+            }
+        }
+
+        // ==========================================
+        // 9. PROFILE DROPDOWN
+        // ==========================================
+        const trigger = document.getElementById("profileTrigger");
+        const dropdown = document.getElementById("profileDropdown");
+
+        trigger.addEventListener("click", function(e) {
+            e.stopPropagation();
+            dropdown.classList.toggle("show");
+        });
+
+        document.addEventListener("click", function() {
+            dropdown.classList.remove("show");
+        });
+
+        // Close modals on escape key
+        document.addEventListener("keydown", function(e) {
+            if (e.key === "Escape") {
+                closeRequestModal();
+                closeViewModal();
+                closeDeleteRequestModal();
+                closeDeleteProfileModal();
+                dropdown.classList.remove("show");
+            }
+        });
+
+        // ==========================================
+        // INITIALIZATION
+        // ==========================================
+        document.addEventListener("DOMContentLoaded", async function() {
+            await fetchClientProfile();
+            await loadProjectRequests();
+
+            // Default view displays Project Requests; switch to profile only if explicitly requested (?tab=profile)
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get("tab") === "profile") {
+                switchClientTab("profile");
+            } else {
+                switchClientTab("requests");
+            }
+        });
+
+        window.addEventListener("popstate", function(event) {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get("tab") === "profile" || (event.state && event.state.tab === "profile")) {
+                switchClientTab("profile");
+            } else {
+                switchClientTab("requests");
+            }
+        });
+    </script>
+    <script src="/js/notifications.js"></script>
+</body>
+</html>

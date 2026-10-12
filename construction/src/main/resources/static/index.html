@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WBCMS – Enterprise Construction Management Platform</title>
+<meta name="description" content="Next-generation construction management operating system. Connect project managers, field engineers, procurement, and clients with live database tracking.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f8fafc;
+  --bg-subtle:#f1f5f9;
+  --surface:#ffffff;
+  --surface2:#f1f5f9;
+  --surface-elevated:#ffffff;
+  --text:#0f172a;
+  --text-secondary:#334155;
+  --muted:#64748b;
+  --line:#e2e8f0;
+  --line-strong:#cbd5e1;
+  --brand:#ff5a1a;
+  --brand2:#ff334b;
+  --brand-glow:rgba(255,90,26,0.22);
+  --blue:#2563eb;
+  --blue-soft:rgba(37,99,235,0.1);
+  --navy:#0b1536;
+  --green:#10b981;
+  --green-soft:rgba(16,185,129,0.12);
+  --shadow-sm:0 2px 8px rgba(15,23,42,0.04);
+  --shadow:0 12px 32px -4px rgba(15,23,42,0.08), 0 4px 12px -2px rgba(15,23,42,0.04);
+  --shadow-lg:0 24px 54px -8px rgba(15,23,42,0.12), 0 8px 24px -4px rgba(15,23,42,0.06);
+  --shadow-glow:0 12px 30px rgba(255,90,26,0.3);
+  --radius-sm:10px;
+  --radius:18px;
+  --radius-lg:28px;
+}
+[data-theme="dark"]{
+  --bg:#070b14;
+  --bg-subtle:#0b1120;
+  --surface:#0e172a;
+  --surface2:#15223c;
+  --surface-elevated:#121e38;
+  --text:#f8fafc;
+  --text-secondary:#cbd5e1;
+  --muted:#94a3b8;
+  --line:#1e293b;
+  --line-strong:#334155;
+  --brand-glow:rgba(255,90,26,0.32);
+  --shadow-sm:0 2px 8px rgba(0,0,0,0.3);
+  --shadow:0 12px 36px rgba(0,0,0,0.45);
+  --shadow-lg:0 28px 64px rgba(0,0,0,0.65);
+  --shadow-glow:0 12px 36px rgba(255,90,26,0.4);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.65;
+  transition:background .35s ease,color .35s ease,border-color .35s ease;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none;transition:all .2s ease}
+img{max-width:100%;display:block}
+button,input,select,textarea{font-family:inherit}
+.container{max-width:1240px;margin:0 auto;padding:0 28px}
+.grad{
+  background:linear-gradient(135deg,var(--brand) 0%,var(--brand2) 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding:13px 26px;
+  border-radius:12px;
+  font-weight:700;
+  font-size:14.5px;
+  letter-spacing:-0.01em;
+  border:1px solid transparent;
+  cursor:pointer;
+  transition:all .25s cubic-bezier(0.16,1,0.3,1);
+  white-space:nowrap;
+}
+.btn-primary{
+  background:linear-gradient(135deg,var(--brand) 0%,var(--brand2) 100%);
+  color:#fff;
+  box-shadow:var(--shadow-glow);
+}
+.btn-primary:hover{
+  transform:translateY(-2px);
+  box-shadow:0 16px 36px rgba(255,90,26,0.45);
+  filter:brightness(1.05);
+}
+.btn-primary:active{transform:translateY(0)}
+.btn-ghost{
+  background:var(--surface);
+  color:var(--text);
+  border-color:var(--line);
+  box-shadow:var(--shadow-sm);
+}
+.btn-ghost:hover{
+  border-color:var(--brand);
+  color:var(--brand);
+  transform:translateY(-2px);
+  box-shadow:var(--shadow);
+}
+.eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--brand);
+  margin-bottom:14px;
+}
+.eyebrow::before{
+  content:"";
+  display:inline-block;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--brand);
+  box-shadow:0 0 10px var(--brand);
+}
+.section{padding:104px 0;position:relative}
+.section-head{text-align:center;max-width:760px;margin:0 auto 58px}
+.section-head h2{
+  font-size:clamp(30px,4.5vw,46px);
+  font-weight:800;
+  letter-spacing:-.03em;
+  line-height:1.16;
+}
+.section-head p{
+  color:var(--muted);
+  margin-top:16px;
+  font-size:17.5px;
+  line-height:1.65;
+}
+
+/* NAV */
+header{
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:color-mix(in srgb,var(--surface) 82%,transparent);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--line);
+  transition:border-color .3s,background .3s;
+}
+.nav{display:flex;align-items:center;justify-content:space-between;height:76px}
+.logo{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-weight:800;
+  font-size:22px;
+  letter-spacing:-.03em;
+}
+.logo-mark{
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--brand),var(--brand2));
+  display:grid;
+  place-items:center;
+  color:#fff;
+  font-size:20px;
+  box-shadow:0 6px 18px var(--brand-glow);
+  transition:transform .3s ease;
+}
+.logo:hover .logo-mark{transform:rotate(-6deg) scale(1.05)}
+.nav-links{display:flex;align-items:center;gap:30px}
+.nav-links a{
+  font-size:14.5px;
+  font-weight:600;
+  color:var(--muted);
+  position:relative;
+  padding:6px 0;
+}
+.nav-links a::after{
+  content:"";
+  position:absolute;
+  bottom:0;
+  left:0;
+  width:0;
+  height:2px;
+  background:var(--brand);
+  border-radius:2px;
+  transition:width .25s ease;
+}
+.nav-links a:hover{color:var(--text)}
+.nav-links a:hover::after{width:100%}
+.nav-actions{display:flex;align-items:center;gap:12px}
+.icon-btn{
+  width:44px;
+  height:44px;
+  border-radius:12px;
+  border:1px solid var(--line);
+  background:var(--surface);
+  cursor:pointer;
+  display:grid;
+  place-items:center;
+  color:var(--text);
+  font-size:18px;
+  transition:all .25s ease;
+  box-shadow:var(--shadow-sm);
+}
+.icon-btn:hover{
+  border-color:var(--brand);
+  color:var(--brand);
+  transform:translateY(-2px);
+  box-shadow:var(--shadow);
+}
+.menu-btn{display:none}
+@media(max-width:980px){
+  .nav-links{
+    position:fixed;
+    top:76px;
+    left:0;
+    right:0;
+    background:var(--surface);
+    flex-direction:column;
+    align-items:flex-start;
+    padding:30px 28px;
+    gap:20px;
+    border-bottom:1px solid var(--line);
+    box-shadow:var(--shadow-lg);
+    transform:translateY(-150%);
+    opacity:0;
+    pointer-events:none;
+    transition:transform .35s cubic-bezier(0.16,1,0.3,1),opacity .25s;
+    z-index:99;
+  }
+  .nav-links.open{
+    transform:translateY(0);
+    opacity:1;
+    pointer-events:auto;
+  }
+  .nav-links a{font-size:16px;width:100%}
+  .menu-btn{display:grid}
+  .hide-sm{display:none}
+}
+
+/* HERO */
+.hero{
+  position:relative;
+  overflow:hidden;
+  padding:90px 0 100px;
+  background:
+    radial-gradient(900px 520px at 85% -10%,rgba(255,90,26,0.18),transparent 65%),
+    radial-gradient(800px 520px at -5% 30%,rgba(37,99,235,0.14),transparent 65%),
+    var(--bg);
+}
+.hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:radial-gradient(var(--line) 1px,transparent 1px);
+  background-size:36px 36px;
+  opacity:.45;
+  pointer-events:none;
+  mask-image:linear-gradient(180deg,#000 60%,transparent);
+  -webkit-mask-image:linear-gradient(180deg,#000 60%,transparent);
+}
+.hero-grid{
+  position:relative;
+  display:grid;
+  grid-template-columns:1.08fr .92fr;
+  gap:64px;
+  align-items:center;
+}
+.pill{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:8px 18px;
+  border-radius:999px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  font-size:12.5px;
+  font-weight:800;
+  color:var(--brand);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  box-shadow:var(--shadow-sm);
+}
+.hero h1{
+  font-size:clamp(44px,6.2vw,74px);
+  font-weight:800;
+  line-height:1.06;
+  letter-spacing:-.035em;
+  margin:24px 0 20px;
+}
+.hero p.lead{
+  font-size:18.5px;
+  color:var(--muted);
+  max-width:560px;
+  line-height:1.65;
+}
+.hero-cta{display:flex;flex-wrap:wrap;gap:16px;margin:36px 0 44px}
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:24px;
+  box-shadow:var(--shadow);
+}
+.stat{text-align:left;padding:0 8px}
+.stat:not(:last-child){border-right:1px solid var(--line)}
+.stat b{
+  display:block;
+  font-size:30px;
+  font-weight:800;
+  letter-spacing:-.03em;
+  line-height:1.1;
+  color:var(--text);
+}
+.stat span{
+  font-size:12.5px;
+  font-weight:600;
+  color:var(--muted);
+  margin-top:4px;
+  display:block;
+}
+
+/* CONSOLE */
+.console{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:28px;
+  box-shadow:var(--shadow-lg);
+  position:relative;
+  z-index:2;
+}
+.console::before{
+  content:"";
+  position:absolute;
+  inset:-16px;
+  border-radius:36px;
+  background:linear-gradient(135deg,rgba(255,90,26,0.32),rgba(37,99,235,0.25));
+  filter:blur(36px);
+  z-index:-1;
+  opacity:.85;
+}
+.console-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+  padding-bottom:14px;
+  border-bottom:1px solid var(--line);
+  font-weight:800;
+  font-size:14.5px;
+  letter-spacing:-0.01em;
+}
+.live{
+  font-size:12px;
+  color:var(--green);
+  background:var(--green-soft);
+  border:1px solid rgba(16,185,129,0.3);
+  padding:5px 14px;
+  border-radius:999px;
+  font-weight:700;
+  display:inline-flex;
+  align-items:center;
+}
+.live::before{
+  content:"";
+  display:inline-block;
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--green);
+  margin-right:8px;
+  box-shadow:0 0 10px var(--green);
+  animation:pulse 1.6s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.2)}}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.kpi{
+  background:var(--surface2);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:16px 18px;
+  transition:transform .2s ease;
+}
+.kpi:hover{transform:translateY(-2px)}
+.kpi small{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+  display:block;
+}
+.kpi b{
+  display:block;
+  font-size:18px;
+  font-weight:800;
+  margin-top:4px;
+  letter-spacing:-.02em;
+}
+.kpi .g{color:var(--green)}
+.kpi .b{color:var(--blue)}
+.proj-bar{
+  margin-top:16px;
+  background:var(--surface2);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:18px;
+}
+.proj-bar .row{
+  display:flex;
+  justify-content:space-between;
+  font-size:13.5px;
+  font-weight:700;
+  margin-bottom:12px;
+}
+.track{
+  height:10px;
+  background:var(--line);
+  border-radius:999px;
+  overflow:hidden;
+  position:relative;
+}
+.fill{
+  height:100%;
+  width:0;
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--brand),var(--green));
+  box-shadow:0 0 14px var(--brand-glow);
+  transition:width 1.8s cubic-bezier(0.16,1,0.3,1);
+}
+.float-card{
+  position:absolute;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:14px 20px;
+  box-shadow:var(--shadow-lg);
+  font-size:13.5px;
+  font-weight:700;
+  display:flex;
+  gap:12px;
+  align-items:center;
+  animation:float 5s ease-in-out infinite;
+  z-index:3;
+}
+.float-card.a{left:-34px;bottom:-22px}
+.float-card.b{right:-22px;top:-22px;animation-delay:-2.5s}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@media(max-width:980px){
+  .hero-grid{grid-template-columns:1fr;gap:48px}
+  .stats{grid-template-columns:repeat(2,1fr);gap:16px}
+  .stat:not(:last-child){border-right:none}
+  .float-card{display:none}
+}
+
+/* TRUST BAR */
+.trust{
+  padding:36px 0;
+  background:var(--surface);
+  border-block:1px solid var(--line);
+  position:relative;
+}
+.trust-row{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:center;
+  gap:18px 48px;
+  color:var(--muted);
+  font-weight:800;
+  letter-spacing:.12em;
+  font-size:14px;
+}
+.trust-row span{
+  transition:color .25s,transform .25s;
+  cursor:default;
+}
+.trust-row span:hover{
+  color:var(--text);
+  transform:translateY(-2px);
+}
+
+/* PROJECTS */
+.filters{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:12px;
+  margin-bottom:44px;
+}
+.chip{
+  padding:11px 24px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:var(--surface);
+  font-weight:700;
+  font-size:14px;
+  cursor:pointer;
+  color:var(--muted);
+  transition:all .25s ease;
+  box-shadow:var(--shadow-sm);
+}
+.chip:hover{
+  color:var(--brand);
+  border-color:var(--brand);
+  transform:translateY(-2px);
+}
+.chip.active{
+  background:linear-gradient(135deg,var(--brand),var(--brand2));
+  color:#fff;
+  border-color:transparent;
+  box-shadow:0 8px 22px rgba(255,90,26,0.38);
+}
+.cards{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:30px;
+}
+.card{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  overflow:hidden;
+  box-shadow:var(--shadow);
+  transition:transform .35s cubic-bezier(0.16,1,0.3,1),box-shadow .35s ease,border-color .35s ease;
+  display:flex;
+  flex-direction:column;
+}
+.card:hover{
+  transform:translateY(-8px);
+  box-shadow:var(--shadow-lg);
+  border-color:color-mix(in srgb,var(--brand) 40%,var(--line));
+}
+.card.hide{display:none}
+.thumb{
+  position:relative;
+  height:230px;
+  overflow:hidden;
+  background:var(--surface2);
+}
+.thumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:transform .7s cubic-bezier(0.16,1,0.3,1);
+}
+.card:hover .thumb img{transform:scale(1.08)}
+.tag,.done{
+  position:absolute;
+  top:16px;
+  font-size:11.5px;
+  font-weight:800;
+  padding:6px 14px;
+  border-radius:999px;
+  letter-spacing:.05em;
+  z-index:2;
+  box-shadow:0 4px 14px rgba(0,0,0,0.18);
+}
+.tag{
+  left:16px;
+  background:rgba(255,255,255,0.94);
+  color:var(--navy);
+  text-transform:uppercase;
+  backdrop-filter:blur(8px);
+}
+.done{
+  right:16px;
+  background:var(--green);
+  color:#fff;
+}
+.card-body{
+  padding:26px;
+  display:flex;
+  flex-direction:column;
+  flex:1;
+}
+.card h3{
+  font-size:20px;
+  font-weight:800;
+  line-height:1.3;
+  letter-spacing:-.02em;
+}
+.loc{
+  color:var(--muted);
+  font-size:13.5px;
+  font-weight:600;
+  margin:8px 0 14px;
+  display:flex;
+  align-items:center;
+  gap:4px;
+}
+.card p{
+  color:var(--muted);
+  font-size:14.5px;
+  line-height:1.65;
+  flex:1;
+}
+.meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin:20px 0 22px;
+}
+.meta span{
+  background:var(--surface2);
+  border:1px solid var(--line);
+  padding:7px 14px;
+  border-radius:10px;
+  font-size:12.5px;
+  color:var(--muted);
+  font-weight:600;
+}
+.meta b{color:var(--text);font-weight:800}
+.card .btn{
+  justify-content:center;
+  width:100%;
+  padding:12px;
+}
+@media(max-width:980px){.cards{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.cards{grid-template-columns:1fr}}
+
+/* FEATURES */
+.features{
+  background:var(--surface);
+  border-block:1px solid var(--line);
+}
+.feat-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:28px;
+}
+.feat{
+  background:var(--bg);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:34px 30px;
+  transition:all .35s cubic-bezier(0.16,1,0.3,1);
+  position:relative;
+}
+.feat:hover{
+  transform:translateY(-6px);
+  box-shadow:var(--shadow-lg);
+  border-color:color-mix(in srgb,var(--brand) 30%,var(--line));
+  background:var(--surface);
+}
+.ico{
+  width:58px;
+  height:58px;
+  border-radius:16px;
+  display:grid;
+  place-items:center;
+  font-size:28px;
+  margin-bottom:22px;
+  box-shadow:var(--shadow-sm);
+  transition:transform .3s ease;
+}
+.feat:hover .ico{transform:scale(1.1) rotate(-4deg)}
+.feat h3{
+  font-size:20px;
+  font-weight:800;
+  margin-bottom:10px;
+  letter-spacing:-.02em;
+}
+.feat p{
+  color:var(--muted);
+  font-size:15px;
+  line-height:1.65;
+}
+.feat a{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin-top:18px;
+  color:var(--brand);
+  font-weight:800;
+  font-size:14px;
+}
+.feat a:hover{gap:10px}
+@media(max-width:980px){.feat-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.feat-grid{grid-template-columns:1fr}}
+
+/* PIPELINE */
+.steps{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:26px;
+  position:relative;
+}
+.step{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:32px 26px;
+  box-shadow:var(--shadow);
+  position:relative;
+  transition:transform .3s ease;
+}
+.step:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg)}
+.num{
+  width:52px;
+  height:52px;
+  border-radius:15px;
+  background:linear-gradient(135deg,var(--brand),var(--brand2));
+  color:#fff;
+  font-weight:900;
+  font-size:18px;
+  display:grid;
+  place-items:center;
+  margin-bottom:22px;
+  box-shadow:0 8px 20px var(--brand-glow);
+}
+.step h3{
+  margin-bottom:10px;
+  font-size:19px;
+  font-weight:800;
+  letter-spacing:-.02em;
+}
+.step p{
+  color:var(--muted);
+  font-size:14.5px;
+  line-height:1.6;
+}
+@media(max-width:980px){.steps{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.steps{grid-template-columns:1fr}}
+
+/* ESTIMATOR */
+.estimator{
+  background:linear-gradient(135deg,var(--navy) 0%,#132863 100%);
+  color:#fff;
+  border-radius:var(--radius-lg);
+  padding:64px;
+  display:grid;
+  grid-template-columns:1.05fr .95fr;
+  gap:56px;
+  align-items:center;
+  box-shadow:var(--shadow-lg);
+  position:relative;
+  overflow:hidden;
+}
+.estimator::before{
+  content:"";
+  position:absolute;
+  width:400px;
+  height:400px;
+  right:-100px;
+  top:-100px;
+  background:radial-gradient(circle,rgba(255,90,26,0.3),transparent 70%);
+  pointer-events:none;
+}
+.estimator h2{
+  font-size:clamp(28px,3.8vw,42px);
+  font-weight:800;
+  line-height:1.15;
+  margin:12px 0 16px;
+  letter-spacing:-.03em;
+}
+.estimator p{
+  color:#cbd5e1;
+  font-size:16.5px;
+  line-height:1.65;
+}
+.est-box{
+  background:rgba(255,255,255,0.07);
+  border:1px solid rgba(255,255,255,0.18);
+  backdrop-filter:blur(16px);
+  border-radius:24px;
+  padding:32px;
+}
+.est-box label{
+  display:block;
+  font-size:13.5px;
+  font-weight:700;
+  margin:18px 0 8px;
+  color:#e2e8f0;
+}
+.est-box label:first-of-type{margin-top:0}
+.est-box select,.est-box input[type=range]{width:100%}
+.est-box select{
+  padding:14px 16px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.2);
+  font-size:15px;
+  font-weight:600;
+  background:#ffffff;
+  color:#0f172a;
+  outline:none;
+  cursor:pointer;
+  box-shadow:0 4px 14px rgba(0,0,0,0.15);
+}
+.est-box input[type=range]{
+  accent-color:var(--brand);
+  height:8px;
+  border-radius:8px;
+  background:rgba(255,255,255,0.2);
+  cursor:pointer;
+  margin-top:6px;
+}
+.result{
+  margin-top:26px;
+  padding-top:24px;
+  border-top:1px solid rgba(255,255,255,0.18);
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+}
+.result small{
+  color:#cbd5e1;
+  font-size:12.5px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+  display:block;
+}
+.result b{
+  display:block;
+  font-size:38px;
+  font-weight:800;
+  letter-spacing:-.03em;
+  line-height:1.1;
+  color:#ffffff;
+  margin-top:4px;
+}
+@media(max-width:900px){.estimator{grid-template-columns:1fr;padding:36px 28px}}
+
+/* TESTIMONIALS */
+.tests{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:28px;
+}
+.test{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:34px 30px;
+  box-shadow:var(--shadow);
+  transition:all .3s ease;
+  display:flex;
+  flex-direction:column;
+}
+.test:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg)}
+.stars{
+  color:#f59e0b;
+  letter-spacing:4px;
+  font-size:17px;
+  margin-bottom:16px;
+}
+.test p{
+  font-size:15.5px;
+  line-height:1.7;
+  color:var(--text);
+  font-style:italic;
+  flex:1;
+}
+.who{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-top:26px;
+  padding-top:18px;
+  border-top:1px solid var(--line);
+}
+.avatar{
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--brand),var(--blue));
+  color:#fff;
+  display:grid;
+  place-items:center;
+  font-weight:800;
+  font-size:15px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.15);
+  flex-shrink:0;
+}
+.who b{display:block;font-size:15px;font-weight:800}
+.who small{color:var(--muted);display:block;font-size:13px;font-weight:600}
+@media(max-width:900px){.tests{grid-template-columns:1fr}}
+
+/* FAQ */
+.faq{max-width:820px;margin:0 auto}
+.qa{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:18px;
+  margin-bottom:14px;
+  overflow:hidden;
+  transition:all .3s ease;
+  box-shadow:var(--shadow-sm);
+}
+.qa:hover{border-color:var(--line-strong)}
+.qa.open{border-color:var(--brand);box-shadow:var(--shadow)}
+.qa button{
+  width:100%;
+  text-align:left;
+  background:none;
+  border:none;
+  padding:22px 28px;
+  font:700 17px 'Plus Jakarta Sans',sans-serif;
+  color:var(--text);
+  cursor:pointer;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  letter-spacing:-.01em;
+}
+.qa button::after{
+  content:"+";
+  font-size:26px;
+  font-weight:400;
+  color:var(--brand);
+  transition:transform .3s cubic-bezier(0.16,1,0.3,1);
+  line-height:1;
+}
+.qa.open button::after{transform:rotate(45deg)}
+.qa .ans{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .35s cubic-bezier(0.16,1,0.3,1),padding .35s;
+  color:var(--muted);
+  font-size:15.5px;
+  line-height:1.7;
+  padding:0 28px;
+}
+.qa.open .ans{max-height:220px;padding-bottom:24px}
+
+/* CONTACT */
+.contact{
+  display:grid;
+  grid-template-columns:1.05fr 1.15fr;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+  box-shadow:var(--shadow-lg);
+}
+.contact-info{
+  padding:52px 48px;
+  background:var(--surface);
+}
+.contact-info h2{
+  font-size:32px;
+  font-weight:800;
+  letter-spacing:-.03em;
+  margin:10px 0 14px;
+  line-height:1.2;
+}
+.contact-info>p{
+  color:var(--muted);
+  font-size:16px;
+  line-height:1.65;
+}
+.open-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:14px;
+  font-size:12.5px;
+  font-weight:800;
+  color:var(--green);
+  background:var(--green-soft);
+  border:1px solid rgba(16,185,129,0.3);
+  padding:6px 16px;
+  border-radius:999px;
+  letter-spacing:.02em;
+}
+.info{
+  display:flex;
+  gap:16px;
+  margin-top:26px;
+  align-items:flex-start;
+}
+.info .ico{
+  width:48px;
+  height:48px;
+  font-size:20px;
+  margin:0;
+  background:rgba(255,90,26,0.12);
+  flex-shrink:0;
+  border-radius:14px;
+}
+.info b{display:block;font-size:15px;font-weight:800}
+.info span{color:var(--muted);font-size:14px;line-height:1.5;margin-top:2px;display:block}
+.form{
+  padding:52px 48px;
+  background:var(--surface2);
+  border-left:1px solid var(--line);
+}
+.form h3{
+  margin-bottom:22px;
+  font-size:22px;
+  font-weight:800;
+  letter-spacing:-.02em;
+}
+.form input,.form textarea,.form select{
+  width:100%;
+  padding:14px 16px;
+  border-radius:12px;
+  border:1px solid var(--line);
+  background:var(--surface);
+  color:var(--text);
+  font:500 15px 'Plus Jakarta Sans',sans-serif;
+  margin-bottom:14px;
+  outline:none;
+  transition:all .2s ease;
+  box-shadow:var(--shadow-sm);
+}
+.form input:focus,.form textarea:focus,.form select:focus{
+  border-color:var(--brand);
+  box-shadow:0 0 0 4px var(--brand-glow);
+}
+.form .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form button{width:100%;padding:14px;margin-top:4px}
+.ok{
+  display:none;
+  color:var(--green);
+  background:var(--green-soft);
+  border:1px solid rgba(16,185,129,0.3);
+  padding:12px 18px;
+  border-radius:10px;
+  font-weight:700;
+  font-size:14px;
+  margin-top:14px;
+  text-align:center;
+}
+@media(max-width:900px){
+  .contact{grid-template-columns:1fr}
+  .form{border-left:none;border-top:1px solid var(--line);padding:36px 28px}
+  .contact-info{padding:36px 28px}
+  .form .two{grid-template-columns:1fr}
+}
+
+/* FOOTER */
+footer{
+  background:var(--navy);
+  color:#cbd5e1;
+  margin-top:100px;
+  padding:72px 0 32px;
+  border-top:1px solid rgba(255,255,255,0.08);
+}
+.foot-grid{
+  display:grid;
+  grid-template-columns:1.4fr 1fr 1fr 1.3fr;
+  gap:44px;
+}
+footer .logo{color:#fff;margin-bottom:16px}
+footer p{font-size:14.5px;line-height:1.65;color:#94a3b8}
+footer h4{
+  color:#fff;
+  font-size:13px;
+  font-weight:800;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  margin-bottom:18px;
+}
+footer ul{padding:0;list-style:none}
+footer li{margin-bottom:11px;font-size:14.5px}
+footer li a{color:#94a3b8;font-weight:600}
+footer li a:hover{color:var(--brand);padding-left:4px}
+.sub{display:flex;gap:10px;margin-top:8px}
+.sub input{
+  flex:1;
+  padding:13px 16px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.16);
+  background:rgba(255,255,255,0.06);
+  color:#fff;
+  outline:none;
+  font-size:14px;
+}
+.sub input:focus{border-color:var(--brand)}
+.sub .btn{padding:13px 20px}
+.status{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin-top:20px;
+  font-size:12.5px;
+  font-weight:700;
+  color:#4ade80;
+  background:rgba(74,222,128,0.12);
+  border:1px solid rgba(74,222,128,0.25);
+  padding:6px 16px;
+  border-radius:999px;
+}
+.status::before{
+  content:"";
+  display:inline-block;
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#4ade80;
+  box-shadow:0 0 8px #4ade80;
+}
+.copy{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:14px;
+  margin-top:54px;
+  padding-top:28px;
+  border-top:1px solid rgba(255,255,255,0.1);
+  font-size:13.5px;
+  color:#64748b;
+}
+@media(max-width:900px){.foot-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.foot-grid{grid-template-columns:1fr}}
+
+#top{
+  position:fixed;
+  right:26px;
+  bottom:26px;
+  width:48px;
+  height:48px;
+  border-radius:14px;
+  border:none;
+  background:linear-gradient(135deg,var(--brand),var(--brand2));
+  color:#fff;
+  font-size:20px;
+  font-weight:800;
+  cursor:pointer;
+  box-shadow:0 8px 24px rgba(255,90,26,0.45);
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(12px);
+  transition:all .3s cubic-bezier(0.16,1,0.3,1);
+  z-index:90;
+  display:grid;
+  place-items:center;
+}
+#top.show{
+  opacity:1;
+  pointer-events:auto;
+  transform:translateY(0);
+}
+#top:hover{
+  transform:translateY(-4px);
+  box-shadow:0 12px 30px rgba(255,90,26,0.55);
+}
+.reveal{
+  opacity:0;
+  transform:translateY(28px);
+  transition:opacity .7s cubic-bezier(0.16,1,0.3,1),transform .7s cubic-bezier(0.16,1,0.3,1);
+}
+.reveal.in{
+  opacity:1;
+  transform:none;
+}
+
+/* LOGIN CHOICE MODAL */
+.login-modal{
+  position:fixed;
+  inset:0;
+  width:100vw;
+  height:100vh;
+  background:rgba(3,10,24,0.82);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  z-index:99999;
+}
+.login-modal.show{
+  display:flex;
+}
+.login-modal-card{
+  position:relative;
+  width:100%;
+  max-width:490px;
+  padding:38px 32px 32px;
+  border-radius:24px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  color:var(--text);
+  box-shadow:0 30px 90px rgba(0,0,0,0.4), 0 0 40px var(--brand-glow);
+  animation:modalPopUp 0.26s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+@keyframes modalPopUp{
+  from{opacity:0;transform:scale(0.95) translateY(-10px)}
+  to{opacity:1;transform:scale(1) translateY(0)}
+}
+.modal-close{
+  position:absolute;
+  top:18px;
+  right:18px;
+  width:36px;
+  height:36px;
+  border:1px solid var(--line);
+  border-radius:50%;
+  background:var(--surface2);
+  color:var(--muted);
+  cursor:pointer;
+  font-size:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:all .2s ease;
+}
+.modal-close:hover{
+  background:rgba(239,68,68,0.12);
+  color:#ef4444;
+  border-color:rgba(239,68,68,0.3);
+  transform:rotate(90deg);
+}
+.modal-icon{
+  width:60px;
+  height:60px;
+  margin:0 auto 16px;
+  border-radius:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,var(--brand),var(--brand2));
+  color:#fff;
+  font-size:28px;
+  box-shadow:0 10px 25px var(--brand-glow);
+}
+.login-choice-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-top:20px;
+}
+.login-choice{
+  border:1px solid var(--line);
+  background:var(--surface2);
+  border-radius:18px;
+  padding:22px 16px;
+  cursor:pointer;
+  text-align:center;
+  transition:all .25s ease;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+.login-choice:hover{
+  transform:translateY(-5px);
+  box-shadow:var(--shadow-lg);
+}
+.client-choice:hover{
+  border-color:var(--blue);
+  background:color-mix(in srgb,var(--blue) 8%,var(--surface));
+}
+.staff-choice:hover{
+  border-color:var(--brand);
+  background:color-mix(in srgb,var(--brand) 8%,var(--surface));
+}
+.choice-icon{
+  width:50px;
+  height:50px;
+  margin:0 auto 12px;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  box-shadow:var(--shadow-sm);
+}
+.client-choice .choice-icon{
+  background:var(--blue-soft);
+  color:var(--blue);
+}
+.staff-choice .choice-icon{
+  background:rgba(255,90,26,0.14);
+  color:var(--brand);
+}
+.login-choice strong{
+  display:block;
+  font-size:15px;
+  font-weight:800;
+  color:var(--text);
+  margin-bottom:6px;
+}
+.login-choice small{
+  display:block;
+  color:var(--muted);
+  line-height:1.45;
+  font-size:11.5px;
+}
+@media(max-width:520px){
+  .login-choice-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container nav">
+    <a href="#home" class="logo"><span class="logo-mark">🏗️</span>WBCMS</a>
+    <nav class="nav-links" id="links">
+      <a href="#projects">Finished Projects</a>
+      <a href="#capabilities">Capabilities</a>
+      <a href="#workflow">Workflow</a>
+      <a href="#estimator">Estimator</a>
+      <a href="#contact">Headquarters</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn" id="theme" aria-label="Toggle theme">🌙</button>
+      <button type="button" class="btn btn-ghost hide-sm" onclick="openClientLogin()">Sign In</button>
+      <button type="button" class="btn btn-primary hide-sm" onclick="openClientLogin()">Get Started</button>
+      <button class="icon-btn menu-btn" id="menu" aria-label="Menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<section class="hero" id="home">
+  <div class="container hero-grid">
+    <div>
+      <span class="pill">⚡ Next-Generation Construction Platform</span>
+      <h1>Build Smarter.<br><span class="grad">Deliver Greater.</span></h1>
+      <p class="lead">The all-in-one construction management operating system. Connect project managers, field engineers, procurement teams, and clients seamlessly with live database tracking.</p>
+      <div class="hero-cta">
+        <button type="button" class="btn btn-primary" onclick="openLoginChoice()">Access Platform Portal →</button>
+        <a href="#projects" class="btn btn-ghost">Explore Finished Projects</a>
+      </div>
+      <div class="stats">
+        <div class="stat"><b data-count="50" data-suffix="+">0</b><span>Completed Builds</span></div>
+        <div class="stat"><b data-count="99.4" data-suffix="%" data-dec="1">0</b><span>Client Satisfaction</span></div>
+        <div class="stat"><b data-count="15" data-suffix="+">0</b><span>Partner Firms</span></div>
+        <div class="stat"><b>24/7</b><span>Live Monitoring</span></div>
+      </div>
+    </div>
+    <div style="position:relative">
+      <div class="console">
+        <div class="console-top"><span>📊 WBCMS Live Operations Console</span><span class="live">Live Sync</span></div>
+        <div class="kpis">
+          <div class="kpi"><small>Active Sites</small><b>12 Commercial Sites</b></div>
+          <div class="kpi"><small>Inventory Health</small><b class="g">98.6% In Stock</b></div>
+          <div class="kpi"><small>Milestone Schedule</small><b class="b">Ahead of Target</b></div>
+          <div class="kpi"><small>Active Team</small><b>84 Field Staff</b></div>
+        </div>
+        <div class="proj-bar">
+          <div class="row"><span>🏢 The Lumina Skyscraper Build</span><span style="color:var(--brand)">88% Completed</span></div>
+          <div class="track"><div class="fill" id="fill" data-w="88%"></div></div>
+        </div>
+      </div>
+      <div class="float-card a">✅ Safety audit passed</div>
+      <div class="float-card b">📦 Steel delivery arrived</div>
+    </div>
+  </div>
+</section>
+
+<div class="trust"><div class="container trust-row">
+  <span>APEX INFRASTRUCTURE</span><span>OCEAN RESIDENCES</span><span>LUMINA GROUP</span><span>VERDANT TECH</span><span>HORIZON DEVELOPERS</span>
+</div></div>
+
+<section class="section" id="projects">
+  <div class="container">
+    <div class="section-head reveal"><span class="eyebrow">Portfolio & Track Record</span>
+      <h2>Our Featured <span class="grad">Finished Projects</span></h2>
+      <p>Explore our landmark infrastructure, commercial high-rises, luxury resorts, and sustainable corporate campuses delivered to perfection.</p></div>
+    <div class="filters reveal" id="filters">
+      <button class="chip active" data-f="all">All Projects</button>
+      <button class="chip" data-f="commercial">Commercial & Towers</button>
+      <button class="chip" data-f="hospitality">Hospitality & Resorts</button>
+      <button class="chip" data-f="infra">Infrastructure & Bridges</button>
+      <button class="chip" data-f="eco">Sustainable & Eco-Campus</button>
+    </div>
+    <div class="cards" id="cards">
+      <article class="card reveal" data-c="commercial">
+        <div class="thumb" style="background:linear-gradient(135deg,#1d4ed8,#60a5fa)"><span class="tag">Commercial</span><span class="done">✔ Completed 2025</span>
+          <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=70" alt="Tower" onerror="this.style.display='none'"></div>
+        <div class="card-body"><h3>The Lumina Commercial Tower</h3><div class="loc">📍 Central Business District, Colombo 03</div>
+          <p>A prestigious 48-story corporate skyscraper featuring energy-efficient double-glazed curtain walls, integrated rooftop skygardens, and intelligent building automation.</p>
+          <div class="meta"><span>Budget: <b>$42.5M</b></span><span>Duration: <b>26 Months</b></span><span>★ Client: <b>5.0 / 5.0</b></span></div>
+          <a href="#contact" class="btn btn-ghost">View Project Dossier</a></div></article>
+      <article class="card reveal" data-c="hospitality">
+        <div class="thumb" style="background:linear-gradient(135deg,#0ea5e9,#fbbf24)"><span class="tag">Hospitality</span><span class="done">✔ Completed 2025</span>
+          <img src="https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800&q=70" alt="Resort" onerror="this.style.display='none'"></div>
+        <div class="card-body"><h3>Luna Mar Oceanfront Resort & Villas</h3><div class="loc">📍 Coastal Highway, Negombo</div>
+          <p>A 5-star tropical luxury resort featuring cantilevered timber decks, a 70m infinity horizon pool, overwater private suites, and coastal marine-grade engineering.</p>
+          <div class="meta"><span>Budget: <b>$28.0M</b></span><span>Duration: <b>18 Months</b></span><span>★ Client: <b>5.0 / 5.0</b></span></div>
+          <a href="#contact" class="btn btn-ghost">View Project Dossier</a></div></article>
+      <article class="card reveal" data-c="infra">
+        <div class="thumb" style="background:linear-gradient(135deg,#0b1a4a,#38bdf8)"><span class="tag">Civil Infrastructure</span><span class="done">✔ Completed 2024</span>
+          <img src="https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=800&q=70" alt="Bridge" onerror="this.style.display='none'"></div>
+        <div class="card-body"><h3>The Ocean Gateway Cable-Stayed Bridge</h3><div class="loc">📍 Port & Harbor Corridor, Galle</div>
+          <p>A 2.4 km multi-lane cable-stayed suspension bridge connecting the deep-sea port with regional expressways, engineered with high-tensile stay cables.</p>
+          <div class="meta"><span>Budget: <b>$65.0M</b></span><span>Duration: <b>32 Months</b></span><span>★ Client: <b>4.9 / 5.0</b></span></div>
+          <a href="#contact" class="btn btn-ghost">View Project Dossier</a></div></article>
+      <article class="card reveal" data-c="eco">
+        <div class="thumb" style="background:linear-gradient(135deg,#059669,#a3e635)"><span class="tag">Sustainable Tech</span><span class="done">✔ Completed 2025</span>
+          <img src="https://images.unsplash.com/photo-1518005020951-eccb494ad742?w=800&q=70" alt="Eco" onerror="this.style.display='none'"></div>
+        <div class="card-body"><h3>Verdant Solar Tech Innovation Campus</h3><div class="loc">📍 Technology Innovation Hub, Malabe</div>
+          <p>A net-zero carbon corporate research park featuring undulating rooftop photovoltaic arrays, rainwater bio-filtration ponds, and natural airflow architecture.</p>
+          <div class="meta"><span>Budget: <b>$35.2M</b></span><span>Duration: <b>22 Months</b></span><span>★ Client: <b>5.0 / 5.0</b></span></div>
+          <a href="#contact" class="btn btn-ghost">View Project Dossier</a></div></article>
+      <article class="card reveal" data-c="commercial">
+        <div class="thumb" style="background:linear-gradient(135deg,#7c3aed,#f472b6)"><span class="tag">Luxury Residential</span><span class="done">✔ Completed 2025</span>
+          <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=70" alt="Residences" onerror="this.style.display='none'"></div>
+        <div class="card-body"><h3>Grand Horizon Waterfront Residences</h3><div class="loc">📍 Marina Promenade, Colombo 01</div>
+          <p>Twin 42-story waterfront residential towers engineered with aerodynamic curved glass facades, vertical sky gardens, a cantilevered rooftop infinity pool, and private marina docking.</p>
+          <div class="meta"><span>Budget: <b>$54.0M</b></span><span>Duration: <b>24 Months</b></span><span>★ Client: <b>5.0 / 5.0</b></span></div>
+          <a href="#contact" class="btn btn-primary">View Project Dossier</a></div></article>
+      <article class="card reveal" data-c="infra">
+        <div class="thumb" style="background:linear-gradient(135deg,#334155,#f59e0b)"><span class="tag">Civil Infrastructure</span><span class="done">✔ Completed 2024</span>
+          <img src="https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=800&q=70" alt="Rail" onerror="this.style.display='none'"></div>
+        <div class="card-body"><h3>Metropolitan Central Transit & Rail Hub</h3><div class="loc">📍 Multi-Modal Transport Corridor, Kandy</div>
+          <p>A world-class multimodal high-speed rail terminal featuring a sweeping parametric steel-and-glass canopy, automated passenger logistics, solar glazing, and seismic-damped structural arches.</p>
+          <div class="meta"><span>Budget: <b>$78.5M</b></span><span>Duration: <b>30 Months</b></span><span>★ Client: <b>4.9 / 5.0</b></span></div>
+          <a href="#contact" class="btn btn-ghost">View Project Dossier</a></div></article>
+    </div>
+  </div>
+</section>
+
+<section class="section features" id="capabilities">
+  <div class="container">
+    <div class="section-head reveal"><span class="eyebrow">Enterprise Capabilities</span>
+      <h2>One Platform. <span class="grad">Every Workflow.</span></h2>
+      <p>Designed to give managers complete oversight, field teams speed, and clients crystal-clear visibility into budgets and progress.</p></div>
+    <div class="feat-grid">
+      <div class="feat reveal"><div class="ico" style="background:rgba(255,90,26,0.14)">🗓️</div><h3>Project Lifecycle & Scheduling</h3><p>Manage complete project timelines, milestones, budgets, blueprints, and critical-path schedules with multi-tier role authorization.</p><a href="/manager">Explore Manager Console →</a></div>
+      <div class="feat reveal"><div class="ico" style="background:rgba(14,165,233,0.14)">📦</div><h3>Materials & Inventory</h3><p>Live stock transaction tracking, safety threshold reorder alerts, and digital material requisitions.</p></div>
+      <div class="feat reveal"><div class="ico" style="background:rgba(124,58,237,0.14)">✅</div><h3>Task & Staff Dispatch</h3><p>Assign tasks to supervisors and engineers with deadlines, priorities, and real-time completion tracking.</p></div>
+      <div class="feat reveal"><div class="ico" style="background:rgba(16,185,129,0.14)">📈</div><h3>Progress Reports & Issues</h3><p>Daily field logs, percentage updates, and automated safety issue escalation in SQL Server.</p></div>
+      <div class="feat reveal"><div class="ico" style="background:rgba(255,51,75,0.14)">🛡️</div><h3>Security & RBAC Management</h3><p>Granular permission matrices across 6 specialized organizational roles with JWT authentication.</p></div>
+      <div class="feat reveal"><div class="ico" style="background:rgba(245,158,11,0.16)">🤝</div><h3>Client Portal & Proposals</h3><p>Direct client proposal submissions, instant estimate calculation, and transparent project milestone views.</p><a href="/client">Open Client Portal →</a></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="workflow">
+  <div class="container">
+    <div class="section-head reveal"><span class="eyebrow">Our Methodology</span>
+      <h2>The 4-Step <span class="grad">Delivery Pipeline</span></h2>
+      <p>How WBCMS transforms initial architectural concepts into commissioned, world-class physical structures.</p></div>
+    <div class="steps">
+      <div class="step reveal"><div class="num">01</div><h3>Architectural Planning</h3><p>Feasibility assessment, structural engineering schematics, and 3D digital blueprint verification.</p></div>
+      <div class="step reveal"><div class="num">02</div><h3>Smart Sourcing</h3><p>Verified supplier contracts, automated material requisitions, and inventory safety threshold tracking.</p></div>
+      <div class="step reveal"><div class="num">03</div><h3>Field Execution</h3><p>Daily task dispatching, on-site quality compliance inspection, and real-time progress reporting.</p></div>
+      <div class="step reveal"><div class="num">04</div><h3>Final Commissioning</h3><p>Safety audits, environmental certifications, warranty handovers, and final client sign-off.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="estimator" style="padding-top:0">
+  <div class="container">
+    <div class="estimator reveal">
+      <div><span class="eyebrow" style="color:#ffb089">Instant Estimate</span>
+        <h2>Get a quick project cost estimate</h2>
+        <p>Choose your project type and size to see an indicative budget and timeline. Submit a full proposal through the Client Portal for a detailed quote.</p></div>
+      <div class="est-box">
+        <label>Project type</label>
+        <select id="etype">
+          <option value="1100">Commercial Building</option>
+          <option value="1500">Luxury Residential</option>
+          <option value="1800">Resort / Hospitality</option>
+          <option value="2600">Infrastructure / Bridge</option>
+        </select>
+        <label>Built-up area: <b id="eareaV">20,000</b> sq ft</label>
+        <input type="range" id="earea" min="2000" max="200000" step="1000" value="20000">
+        <div class="result"><div><small>Estimated budget</small><b id="ecost">$0</b></div><div style="text-align:right"><small>Approx. duration</small><b id="edur" style="font-size:22px">0 months</b></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section features" id="reviews">
+  <div class="container">
+    <div class="section-head reveal"><span class="eyebrow">Testimonials</span><h2>Trusted by <span class="grad">Industry Leaders</span></h2></div>
+    <div class="tests">
+      <div class="test reveal"><div class="stars">★★★★★</div><p>“WBCMS unified our on-site supervisors, procurement officers, and engineering leads. Site delays have dropped by over 40% across all active builds.”</p><div class="who"><div class="avatar">LP</div><div><b>Lead Project Manager</b><small>Apex Infrastructure</small></div></div></div>
+      <div class="test reveal"><div class="stars">★★★★★</div><p>“The Client Portal allowed our executives to track budget utilization, view photo reports, and approve change requests without long email chains.”</p><div class="who"><div class="avatar">CD</div><div><b>Chief Development Officer</b><small>Ocean Residences</small></div></div></div>
+      <div class="test reveal"><div class="stars">★★★★★</div><p>“Material stock transactions and reorder alerts saved us countless hours of manual reconciliation. Everything is synchronized with SQL Server.”</p><div class="who"><div class="avatar">SP</div><div><b>Senior Procurement Director</b><small>Enterprise Client</small></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="faq">
+  <div class="container">
+    <div class="section-head reveal"><span class="eyebrow">Support</span><h2>Frequently Asked <span class="grad">Questions</span></h2></div>
+    <div class="faq">
+      <div class="qa open"><button>Who can use the WBCMS platform?</button><div class="ans">Six role types are supported: Admin, Project Manager, Site Engineer, Procurement Officer, Supervisor and Client. Each role sees only the tools and data permitted by RBAC.</div></div>
+      <div class="qa"><button>How secure is my project data?</button><div class="ans">All access is protected by JWT authentication and role-based permissions, with data stored in SQL Server and every transaction logged.</div></div>
+      <div class="qa"><button>Can clients track budgets and progress?</button><div class="ans">Yes. The Client Portal shows milestones, photo reports, budget utilisation and lets clients approve change requests online.</div></div>
+      <div class="qa"><button>How do inventory alerts work?</button><div class="ans">Each material has a safety threshold. When stock drops below it, procurement is notified and a digital requisition can be raised instantly.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="contact" style="padding-top:0">
+  <div class="container">
+    <div class="section-head reveal"><span class="eyebrow">Global Headquarters</span><h2>Visit Our <span class="grad">Offices & Hubs</span></h2>
+      <p>Located in the heart of the commercial capital with direct coordination across our regional construction sites.</p></div>
+    <div class="contact reveal">
+      <div class="contact-info">
+        <span class="open-badge">● Open Now • Mon – Sat 8:00 AM – 6:00 PM</span>
+        <h2>WBCMS Engineering Headquarters</h2>
+        <p>Reach out directly to our engineering desk, schedule a project consultation, or visit our headquarters.</p>
+        <div class="info"><div class="ico">🏢</div><div><b>Headquarters Address</b><span>No. 420, Galle Road, Colombo 03, Western Province, Sri Lanka</span></div></div>
+        <div class="info"><div class="ico">📞</div><div><b>Phone & Hotline</b><span>+94 11 234 5678 / +94 77 123 4567</span></div></div>
+        <div class="info"><div class="ico">✉️</div><div><b>Direct Email</b><span>contact@wbcms.com / info@wbcms.com</span></div></div>
+        <div style="margin-top:28px"><a class="btn btn-ghost" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Galle+Road+Colombo+03">📍 Get Directions</a></div>
+      </div>
+      <form class="form" id="form">
+        <h3>Inquire for a Proposal</h3>
+        <div class="two"><input required placeholder="Full name"><input required type="email" placeholder="Email address"></div>
+        <div class="two"><input placeholder="Phone number"><select><option>Commercial</option><option>Residential</option><option>Hospitality</option><option>Infrastructure</option></select></div>
+        <textarea rows="4" required placeholder="Tell us about your project…"></textarea>
+        <button class="btn btn-primary" type="submit">Send Inquiry →</button>
+        <div class="ok" id="ok">✔ Thank you! Our engineering desk will contact you shortly.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div><div class="logo"><span class="logo-mark">🏗️</span>WBCMS Platform</div><p style="font-size:14.5px">Empowering construction professionals and clients with modern real-time data tracking, resource allocation, and collaborative site management.</p><span class="status">● Enterprise Systems Operational • 99.98% Uptime</span></div>
+      <div><h4>Platform Portals</h4><ul><li><a href="/client">Client Portal</a></li><li><a href="/login">Staff & Admin Login</a></li><li><a href="/projects">Projects Dashboard</a></li><li><a href="/tasks">Task Tracking</a></li><li><a href="/materials">Materials & Inventory</a></li></ul></div>
+      <div><h4>Administration</h4><ul><li><a href="/users">User Management</a></li><li><a href="/roles">Roles & Access (RBAC)</a></li><li><a href="/suppliers">Supplier Directory</a></li><li><a href="/documents">Document Archive</a></li><li><a href="/analytics">Progress Analytics</a></li></ul></div>
+      <div><h4>Stay Updated</h4><p style="font-size:14px;margin-bottom:12px">Subscribe to construction industry briefings, engineering updates, and platform features.</p><form class="sub" onsubmit="event.preventDefault();this.innerHTML='<span style=color:#4ade80>✔ Subscribed!</span>'"><input type="email" required placeholder="Enter your email"><button class="btn btn-primary">Join</button></form></div>
+    </div>
+    <div class="copy"><span>© 2026 WBCMS Construction Management System. All rights reserved.</span><span>SLIIT Software Engineering Project | Spring Boot & SQL Server Architecture</span></div>
+  </div>
+</footer>
+<!-- LOGIN CHOICE MODAL -->
+<div class="login-modal" id="loginModal">
+  <div class="login-modal-card">
+    <button type="button" class="modal-close" onclick="closeLoginChoice()" aria-label="Close modal">✕</button>
+    <div class="modal-icon">🏗️</div>
+    <h3 style="text-align:center;font-size:22px;font-weight:800;margin-bottom:6px;letter-spacing:-.02em">Access WBCMS Portal</h3>
+    <p style="text-align:center;color:var(--muted);font-size:14px;margin-bottom:24px">Select your portal to proceed to your dedicated workspace.</p>
+    <div class="login-choice-grid">
+      <div class="login-choice client-choice" onclick="openClientLogin()">
+        <div class="choice-icon">💼</div>
+        <strong>Client Portal</strong>
+        <small>Track proposals, milestones, project progress & invoices</small>
+      </div>
+      <div class="login-choice staff-choice" onclick="openStaffLogin()">
+        <div class="choice-icon">👷</div>
+        <strong>Staff & Admin</strong>
+        <small>Managers, Site Engineers, Supervisors & Admins</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="top" aria-label="Back to top">↑</button>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s);
+// theme
+const root=document.documentElement;
+try{if(localStorage.getItem('wb-theme')==='dark')root.dataset.theme='dark'}catch(e){}
+const setIcon=()=>$('#theme').textContent=root.dataset.theme==='dark'?'☀️':'🌙';setIcon();
+$('#theme').onclick=()=>{root.dataset.theme=root.dataset.theme==='dark'?'light':'dark';try{localStorage.setItem('wb-theme',root.dataset.theme)}catch(e){}setIcon()};
+// menu
+$('#menu').onclick=()=>$('#links').classList.toggle('open');
+$$('#links a').forEach(a=>a.onclick=()=>$('#links').classList.remove('open'));
+// filters
+$$('#filters .chip').forEach(c=>c.onclick=()=>{
+  $$('#filters .chip').forEach(x=>x.classList.remove('active'));c.classList.add('active');
+  $$('#cards .card').forEach(k=>k.classList.toggle('hide',c.dataset.f!=='all'&&k.dataset.c!==c.dataset.f));
+});
+// reveal
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+$$('.reveal').forEach(el=>io.observe(el));
+// counters + progress
+$$('[data-count]').forEach(el=>{const t=+el.dataset.count,d=+(el.dataset.dec||0),s=el.dataset.suffix||'';let n=0;
+  const step=()=>{n+=t/50;if(n>=t){el.textContent=t.toFixed(d)+s}else{el.textContent=n.toFixed(d)+s;requestAnimationFrame(step)}};step()});
+setTimeout(()=>{const f=$('#fill');f.style.width=f.dataset.w},400);
+// FAQ
+$$('.qa button').forEach(b=>b.onclick=()=>{const q=b.parentElement,o=q.classList.contains('open');$$('.qa').forEach(x=>x.classList.remove('open'));if(!o)q.classList.add('open')});
+// estimator
+function est(){const r=+$('#etype').value,a=+$('#earea').value;$('#eareaV').textContent=a.toLocaleString();
+  const c=r*a;$('#ecost').textContent='$'+(c>=1e6?(c/1e6).toFixed(1)+'M':Math.round(c/1e3)+'K');
+  $('#edur').textContent=Math.max(6,Math.round(6+a/9000*(r>2000?1.6:1)))+' months'}
+$('#etype').onchange=est;$('#earea').oninput=est;est();
+// form
+$('#form').onsubmit=e=>{e.preventDefault();$('#ok').style.display='block';e.target.reset()};
+// back to top
+addEventListener('scroll',()=>$('#top').classList.toggle('show',scrollY>600));
+$('#top').onclick=()=>scrollTo({top:0,behavior:'smooth'});
+
+// Login Modal Handlers
+const loginModal = document.getElementById("loginModal");
+function openLoginChoice() {
+  if (loginModal) {
+    loginModal.classList.add("show");
+    document.body.style.overflow = "hidden";
+  }
+}
+function closeLoginChoice() {
+  if (loginModal) {
+    loginModal.classList.remove("show");
+    document.body.style.overflow = "";
+  }
+}
+function openClientLogin() {
+  window.location.href = "/client-login.html";
+}
+function openStaffLogin() {
+  window.location.href = "/staff-login.html";
+}
+if (loginModal) {
+  loginModal.addEventListener("click", function(event) {
+    if (event.target === loginModal) {
+      closeLoginChoice();
+    }
+  });
+}
+document.addEventListener("keydown", function(event) {
+  if (event.key === "Escape") {
+    closeLoginChoice();
+  }
+});
+</script>
+</body>
+</html>

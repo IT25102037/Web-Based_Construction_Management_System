@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WBCMS | Progress Monitoring</title>
+
+    <!-- Google Fonts: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap Icons & Font Awesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/css/premium-theme.css">
+    <link rel="stylesheet" href="/css/unified-pages.css">
+    <script src="/js/theme-init.js"></script>
+
+    <style>
+        /* Progress Monitoring Styling */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: capitalize;
+            letter-spacing: 0.02em;
+        }
+
+        .status-badge.on_track, .status-badge.in_progress, .status-badge.completed {
+            background: #ecfdf5;
+            color: #059669;
+            border: 1px solid #a7f3d0;
+        }
+
+        .status-badge.delayed, .status-badge.pending {
+            background: #fffbeb;
+            color: #d97706;
+            border: 1px solid #fde68a;
+        }
+
+        .status-badge.blocked, .status-badge.cancelled {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        #progressTableBody td {
+            color: #0f172a !important;
+            font-size: 13px;
+        }
+
+        #progressTableBody td strong {
+            color: #0f172a !important;
+        }
+
+        .table-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            justify-content: center;
+        }
+
+        .table-action {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+            padding: 6px 9px;
+            border-radius: 8px;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            transition: all 0.2s ease;
+        }
+
+        [data-theme="dark"] .table-action {
+            background: #1e293b;
+            border-color: #334155;
+            color: #cbd5e1;
+        }
+
+        .table-action:hover {
+            color: #1a56db;
+            background: #eff6ff;
+            border-color: #bfdbfe;
+            transform: translateY(-1px);
+        }
+
+        [data-theme="dark"] .table-action:hover {
+            background: #334155;
+            color: #60a5fa;
+            border-color: #475569;
+        }
+
+        .table-action.delete:hover {
+            background: #fee2e2;
+            border-color: #fca5a5;
+            color: #dc2626;
+        }
+
+        [data-theme="dark"] .table-action.delete:hover {
+            background: #451a1a;
+            border-color: #991b1b;
+            color: #f87171;
+        }
+
+        .percent-slider-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .percent-slider-wrap input[type="range"] {
+            flex: 1;
+            accent-color: #ea580c;
+            cursor: pointer;
+            padding: 0 !important;
+            height: 6px;
+        }
+
+        .percent-slider-wrap input[type="number"] {
+            width: 75px !important;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .validation-message {
+            color: #ef4444;
+            font-size: 11px;
+            margin-top: 4px;
+            display: block;
+        }
+
+        /* Centered Overlay Modals */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .modal-overlay.show, .modal-overlay.active {
+            display: flex !important;
+            animation: modalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-dialog {
+            background: #ffffff;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh;
+        }
+
+        [data-theme="dark"] .modal-dialog {
+            background: #1e293b;
+            border-color: #334155;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        [data-theme="dark"] .modal-header {
+            border-bottom-color: #334155;
+        }
+
+        .modal-header h3, .modal-header h2 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        [data-theme="dark"] .modal-header h3, [data-theme="dark"] .modal-header h2 {
+            color: #f8fafc;
+        }
+
+        .modal-header p {
+            margin: 4px 0 0;
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .modal-close, .close-button {
+            background: transparent;
+            border: none;
+            color: #64748b;
+            font-size: 18px;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+            transition: all 0.15s;
+        }
+
+        .modal-close:hover, .close-button:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        [data-theme="dark"] .modal-close:hover, [data-theme="dark"] .close-button:hover {
+            background: #334155;
+            color: #f8fafc;
+        }
+
+        .modal-body {
+            padding: 20px 24px;
+            overflow-y: auto;
+        }
+
+        .modal-footer, .modal-actions {
+            padding: 16px 24px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            background: #f8fafc;
+        }
+
+        [data-theme="dark"] .modal-footer, [data-theme="dark"] .modal-actions {
+            border-top-color: #334155;
+            background: #0f172a;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 6px;
+        }
+
+        [data-theme="dark"] .form-group label {
+            color: #cbd5e1;
+        }
+
+        .form-group label span {
+            color: #ef4444;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #0f172a;
+            background: #ffffff;
+            transition: border-color 0.15s, box-shadow 0.15s;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        [data-theme="dark"] .form-group input,
+        [data-theme="dark"] .form-group select,
+        [data-theme="dark"] .form-group textarea {
+            background: #0f172a;
+            border-color: #334155;
+            color: #f8fafc;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #1a56db;
+            box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.15);
+        }
+
+        .progress-bar-bg {
+            background: #e2e8f0;
+            border-radius: 6px;
+            height: 8px;
+            width: 120px;
+            overflow: hidden;
+            display: flex;
+        }
+
+        [data-theme="dark"] .progress-bar-bg {
+            background: rgba(255, 255, 255, 0.12);
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Security Check -->
+<script>
+    (function() {
+        const token = localStorage.getItem("wbcms_token");
+        const userType = (localStorage.getItem("wbcms_user_type") || "").toUpperCase();
+        if (!token || userType === "CLIENT") {
+            window.location.replace("/staff-login.html");
+        }
+    })();
+</script>
+
+<!-- Ambient Light Backdrop -->
+<div class="dashboard-backdrop">
+    <div class="dashboard-backdrop-img"></div>
+    <div class="dashboard-backdrop-overlay"></div>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-brand">
+        <div class="brand-logo">
+            <i class="bi bi-buildings-fill"></i>
+        </div>
+        <div>
+            <h2>WBCMS</h2>
+            <span>CONSTRUCTION</span>
+        </div>
+    </div>
+
+    <nav class="sidebar-navigation">
+        <p class="nav-title">MAIN MENU</p>
+
+        <a href="/dashboard.html" class="nav-item">
+            <i class="bi bi-grid-1x2-fill"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="/projects.html" class="nav-item">
+            <i class="bi bi-building"></i>
+            <span>Projects</span>
+        </a>
+
+        <a href="/tasks.html" class="nav-item">
+            <i class="bi bi-clipboard-check"></i>
+            <span>Tasks</span>
+        </a>
+
+        <a href="/task-assignments.html" class="nav-item">
+            <i class="bi bi-person-workspace"></i>
+            <span>Task Assignments</span>
+        </a>
+
+        <a href="/milestones.html" class="nav-item">
+            <i class="bi bi-flag-fill"></i>
+            <span>Milestones</span>
+        </a>
+
+        <a href="/progress.html" class="nav-item active">
+            <i class="bi bi-graph-up-arrow"></i>
+            <span>Progress Updates</span>
+        </a>
+
+        <a href="/progress-monitoring.html" class="nav-item">
+            <i class="bi bi-activity"></i>
+            <span>Progress Monitoring</span>
+        </a>
+
+        <a href="/material-inventory.html" class="nav-item">
+            <i class="bi bi-box-seam-fill"></i>
+            <span>Material & Inventory</span>
+        </a>
+
+        <a href="/material-requests.html" class="nav-item">
+            <i class="bi bi-file-earmark-plus-fill"></i>
+            <span>Material Requests</span>
+        </a>
+
+        <a href="/documents.html" class="nav-item">
+            <i class="bi bi-file-earmark-text-fill"></i>
+            <span>Documents</span>
+        </a>
+
+        <p class="nav-title management-title">MANAGEMENT</p>
+
+        <a href="/reports.html" class="nav-item">
+            <i class="bi bi-bar-chart-line"></i>
+            <span>Reports</span>
+        </a>
+
+        <a href="/suppliers.html" class="nav-item">
+            <i class="bi bi-truck"></i>
+            <span>Suppliers</span>
+        </a>
+
+        <a href="/users.html" class="nav-item">
+            <i class="bi bi-people-fill"></i>
+            <span>Users</span>
+        </a>
+    </nav>
+
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+        <div class="sidebar-version">
+            WBCMS v1.0
+            <span>Construction Management</span>
+        </div>
+        <button class="logout-button" onclick="logout()">
+            <i class="bi bi-box-arrow-left"></i>
+            Logout
+        </button>
+    </div>
+
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+
+    <!-- TOP HEADER -->
+    <header class="top-header">
+
+        <div class="header-left">
+            <button class="mobile-menu" onclick="toggleSidebar()" aria-label="Toggle navigation">
+                <i class="bi bi-list"></i>
+            </button>
+
+            <div class="header-module-badge">
+                <div class="module-icon">
+                    <i class="bi bi-graph-up-arrow"></i>
+                </div>
+                <div class="module-text">
+                    <span class="module-title">Progress Monitoring</span>
+                    <span class="module-sub"><span class="live-pulse-dot"></span> Field Telemetry</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-center">
+            <div class="header-admin-nav">
+                <button class="hdr-btn primary" onclick="openProgressModal()" title="Log Site Progress">
+                    <i class="bi bi-plus-circle-fill"></i>
+                    <span>Log Progress</span>
+                </button>
+                <a href="/projects.html" class="hdr-btn" title="View Projects">
+                    <i class="bi bi-building"></i>
+                    <span>Projects</span>
+                </a>
+                <a href="/milestones.html" class="hdr-btn" title="View Milestones">
+                    <i class="bi bi-flag-fill"></i>
+                    <span>Milestones</span>
+                </a>
+                <a href="/tasks.html" class="hdr-btn" title="View Tasks">
+                    <i class="bi bi-clipboard-check"></i>
+                    <span>Tasks</span>
+                </a>
+                <a href="/reports.html" class="hdr-btn" title="View Progress Reports">
+                    <i class="bi bi-file-earmark-bar-graph-fill"></i>
+                    <span>Reports</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <button class="notification-button" title="Notifications" onclick="showToast('You have site telemetry alerts.')">
+                <i class="bi bi-bell"></i>
+                <span class="notification-badge" id="topNotifCount">2</span>
+            </button>
+
+            <div class="header-separator"></div>
+
+            <div class="profile" onclick="this.classList.toggle('open')" id="profileCard">
+                <div class="profile-avatar" id="avatarBadge">CS</div>
+                <div class="profile-details">
+                    <strong id="profileName">Supervisor</strong>
+                    <span id="profileRole">CONSTRUCTION SUPERVISOR</span>
+                </div>
+                <i class="bi bi-chevron-down"></i>
+
+                <div class="profile-dropdown-menu">
+                    <div class="dropdown-user-header">
+                        <strong id="dropdownUserName">Supervisor</strong>
+                        <span id="dropdownUserRole">Site Engineering</span>
+                    </div>
+                    <a href="/projects.html" class="dropdown-item">
+                        <i class="bi bi-building"></i>
+                        <span>Projects</span>
+                    </a>
+                    <a href="/tasks.html" class="dropdown-item">
+                        <i class="bi bi-clipboard-check"></i>
+                        <span>Tasks</span>
+                    </a>
+                    <a href="/task-assignments.html" class="dropdown-item">
+                        <i class="bi bi-person-workspace"></i>
+                        <span>Task Assignments</span>
+                    </a>
+                    <a href="/milestones.html" class="dropdown-item">
+                        <i class="bi bi-flag-fill"></i>
+                        <span>Milestones</span>
+                    </a>
+                    <a href="/reports.html" class="dropdown-item">
+                        <i class="bi bi-file-earmark-text"></i>
+                        <span>Reports</span>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item logout" onclick="logout()">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Sign Out</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+    <!-- PAGE CONTENT -->
+    <section class="page-content" style="padding: 24px 32px;">
+
+        <!-- HERO SECTION -->
+        <div class="hero-section">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <span class="hero-label"><i class="bi bi-speedometer2"></i> PROGRESS TELEMETRY & FIELD VERIFICATION</span>
+                <h1>Site Progress Monitoring</h1>
+                <p>Log site progress updates, completion percentages, supervisor notes, and synchronize project milestones in real-time.</p>
+                <div class="hero-meta" style="display:flex; gap:16px; margin-top:14px; flex-wrap:wrap;">
+                    <span style="font-size:12px; color:#cbd5e1; display:inline-flex; align-items:center; gap:6px;">
+                        <i class="bi bi-shield-check" style="color:#10b981;"></i> Supervisor & Field Verified
+                    </span>
+                    <span style="font-size:12px; color:#cbd5e1; display:inline-flex; align-items:center; gap:6px;">
+                        <i class="bi bi-database-check" style="color:#60a5fa;"></i> SQL Server Live Sync
+                    </span>
+                    <span style="font-size:12px; color:#cbd5e1; display:inline-flex; align-items:center; gap:6px;">
+                        <i class="bi bi-activity" style="color:#fbbf24;"></i> Auto Project Percentage Sync
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4 TOP KPI STATS GRID -->
+        <section class="statistics-grid" style="margin-bottom: 24px;">
+
+            <!-- Total Reports -->
+            <div class="stat-card">
+                <div>
+                    <div class="stat-icon blue">
+                        <i class="bi bi-journal-check"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span>Total Reports</span>
+                        <h2 id="totalReports">0</h2>
+                    </div>
+                </div>
+                <div class="stat-content">
+                    <small><i class="bi bi-database-check" style="color:#1a56db;"></i> SQL Server logged reports</small>
+                </div>
+            </div>
+
+            <!-- Average Progress -->
+            <div class="stat-card">
+                <div>
+                    <div class="stat-icon orange">
+                        <i class="bi bi-speedometer2"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span>Average Progress</span>
+                        <h2 id="avgProgress">0%</h2>
+                    </div>
+                </div>
+                <div class="stat-content">
+                    <small><i class="bi bi-activity" style="color:#ea580c;"></i> Across active phases</small>
+                </div>
+            </div>
+
+            <!-- On Track / Completed -->
+            <div class="stat-card">
+                <div>
+                    <div class="stat-icon green">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span>On Track / Completed</span>
+                        <h2 id="onTrackReports">0</h2>
+                    </div>
+                </div>
+                <div class="stat-content">
+                    <small><i class="bi bi-shield-check" style="color:#10b981;"></i> Meeting milestone targets</small>
+                </div>
+            </div>
+
+            <!-- Delayed / Blocked -->
+            <div class="stat-card">
+                <div>
+                    <div class="stat-icon warning">
+                        <i class="bi bi-exclamation-octagon-fill"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span>Delayed / Blocked</span>
+                        <h2 id="delayedReports">0</h2>
+                    </div>
+                </div>
+                <div class="stat-content">
+                    <small><i class="bi bi-alarm" style="color:#f59e0b;"></i> Requires supervisor review</small>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- TABLE CARD -->
+        <section class="inventory-card">
+
+            <div class="card-header" style="display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:18px;">
+                <div>
+                    <span class="section-label">TELEMETRY TIMELINE</span>
+                    <h2 style="font-size:20px; font-weight:800; color:#0f172a; margin:0 0 2px 0;">Progress Updates History</h2>
+                    <p style="font-size:12.5px; color:#64748b; margin:0;">Detailed site status logs, completion rates, and supervisor notes</p>
+                </div>
+
+                <div class="table-filters" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                    <div class="search-container" style="min-width:240px;">
+                        <i class="bi bi-search"></i>
+                        <input
+                                type="text"
+                                id="progressSearch"
+                                placeholder="Search notes, supervisor, project..."
+                                autocomplete="off"
+                        >
+                    </div>
+
+                    <select
+                            id="projectFilter"
+                            onchange="renderProgress()"
+                            style="padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; font-size:13px;"
+                    >
+                        <option value="">All Projects</option>
+                    </select>
+
+                    <button
+                            type="button"
+                            class="action-button primary"
+                            onclick="openProgressModal()"
+                    >
+                        <i class="bi bi-plus-lg"></i>
+                        Log Update
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-container" style="overflow-x:auto;">
+                <table>
+                    <thead>
+                    <tr>
+                        <th style="width: 50px;">#</th>
+                        <th>Project / Task</th>
+                        <th>Completion %</th>
+                        <th>Progress Bar</th>
+                        <th>Status</th>
+                        <th>Reported By</th>
+                        <th>Date Logged</th>
+                        <th style="width: 120px; text-align: center;">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="progressTableBody">
+                    <tr>
+                        <td colspan="8" style="text-align:center; padding: 40px;">
+                            <i class="bi bi-arrow-repeat" style="font-size: 24px; animation: spin 1s linear infinite; display: inline-block; color:var(--orange);"></i>
+                            <p style="margin-top: 8px; color: #8a99ad;">Loading progress reports...</p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="empty-state" id="emptyTable" style="display:none; text-align: center; padding: 40px;">
+                <i class="bi bi-graph-down" style="font-size: 42px; color: #64748b;"></i>
+                <h4 style="margin-top: 12px; color: #475569; font-size: 16px; font-weight:700;">No Progress Reports Found</h4>
+                <p style="color: #64748b; font-size: 13px; max-width:400px; margin:6px auto 0;">Click "Log Update" to record your first site progress milestone.</p>
+            </div>
+
+        </section>
+
+    </section>
+
+</main>
+
+<!-- =========================================================
+     PROGRESS FORM MODAL (CREATE / EDIT) - CENTERED OVERLAY
+========================================================= -->
+<div class="modal-overlay modal" id="progressModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <div>
+                <h3 id="modalTitle">Log Progress Update</h3>
+                <p>Record site telemetry, completion %, and supervisor notes</p>
+            </div>
+            <button type="button" class="modal-close" onclick="closeProgressModal()" aria-label="Close">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <form id="progressForm" onsubmit="saveProgress(event)">
+            <input type="hidden" id="reportId">
+
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="progressProject">Project <span>*</span></label>
+                    <select id="progressProject" required onchange="onProjectSelected(this.value)">
+                        <option value="">Select Project</option>
+                    </select>
+                    <small class="validation-message" id="projectError"></small>
+                </div>
+
+                <div class="form-group" id="taskGroup">
+                    <label for="progressTask">Related Task (Optional)</label>
+                    <select id="progressTask">
+                        <option value="">General Project Milestone (No specific task)</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="completionPercentage">Completion (%) <span>*</span></label>
+                        <div class="percent-slider-wrap">
+                            <input type="range" id="percentRange" min="0" max="100" value="25" oninput="syncPercent(this.value)">
+                            <input type="number" id="completionPercentage" min="0" max="100" value="25" placeholder="0 - 100" required oninput="syncRange(this.value)">
+                        </div>
+                        <small class="validation-message" id="percentError"></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="progressStatus">Status Health <span>*</span></label>
+                        <select id="progressStatus" required>
+                            <option value="ON_TRACK" selected>ON_TRACK (On Schedule)</option>
+                            <option value="IN_PROGRESS">IN_PROGRESS (Ongoing)</option>
+                            <option value="DELAYED">DELAYED (Needs Attention)</option>
+                            <option value="COMPLETED">COMPLETED (100% Done)</option>
+                            <option value="BLOCKED">BLOCKED (Issue Pending)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="statusUpdate">Supervisor Notes & Field Highlights <span>*</span></label>
+                    <textarea id="statusUpdate" rows="3" placeholder="Concrete curing, structural beam installation complete, inspection verified..." required></textarea>
+                    <small class="validation-message" id="notesError"></small>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="action-button" onclick="closeProgressModal()">Cancel</button>
+                <button type="submit" class="action-button primary" id="submitProgressBtn">
+                    <i class="bi bi-check-lg"></i>
+                    <span>Save Update</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- =========================================================
+     VIEW PROGRESS DETAILS MODAL - CENTERED OVERLAY
+========================================================= -->
+<div class="modal-overlay modal" id="viewModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <div>
+                <h3>Progress Report Details</h3>
+                <p>Comprehensive telemetry overview</p>
+            </div>
+            <button type="button" class="modal-close" onclick="closeViewModal()" aria-label="Close">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <div style="display:flex; flex-direction:column; gap:12px; font-size:13px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #f1f5f9; padding-bottom:8px;">
+                    <span style="color:#64748b; font-weight:600;">Report ID:</span>
+                    <strong id="viewId" style="color:#0f172a;">#1</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #f1f5f9; padding-bottom:8px;">
+                    <span style="color:#64748b; font-weight:600;">Project / Task:</span>
+                    <strong id="viewProject" style="color:#1a56db;">Colombo City Center</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #f1f5f9; padding-bottom:8px;">
+                    <span style="color:#64748b; font-weight:600;">Completion Rate:</span>
+                    <strong id="viewPercent" style="color:#059669; font-size:16px;">65%</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #f1f5f9; padding-bottom:8px;">
+                    <span style="color:#64748b; font-weight:600;">Status Health:</span>
+                    <span id="viewStatus" class="status-badge on_track">ON_TRACK</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #f1f5f9; padding-bottom:8px;">
+                    <span style="color:#64748b; font-weight:600;">Reported By:</span>
+                    <strong id="viewReporter" style="color:#0f172a;">Supervisor User</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #f1f5f9; padding-bottom:8px;">
+                    <span style="color:#64748b; font-weight:600;">Date Logged:</span>
+                    <strong id="viewDate" style="color:#334155;">Today</strong>
+                </div>
+                <div style="margin-top: 4px;">
+                    <span style="color:#64748b; font-weight:600; display:block; margin-bottom:6px;">Supervisor Field Notes:</span>
+                    <div id="viewNotes" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px; color:#334155; white-space:pre-wrap; font-size:12.5px; line-height:1.6;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="action-button" onclick="closeViewModal()">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- =========================================================
+     DELETE CONFIRMATION MODAL - CENTERED OVERLAY
+========================================================= -->
+<div class="modal-overlay modal" id="deleteModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog" style="max-width:440px;">
+        <div class="modal-header" style="border-bottom:none; padding-bottom:0;">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <div style="width:40px; height:40px; border-radius:50%; background:#fee2e2; color:#dc2626; display:grid; place-items:center; font-size:18px;">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                </div>
+                <div>
+                    <h3 style="font-size:16px;">Delete Progress Report</h3>
+                    <p style="margin:2px 0 0; font-size:12px; color:#64748b;">This action cannot be undone.</p>
+                </div>
+            </div>
+            <button type="button" class="modal-close" onclick="closeDeleteModal()" aria-label="Close">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <div class="modal-body" style="padding: 16px 24px;">
+            <p style="color:#334155; font-size:13.5px; line-height:1.5; margin:0;">
+                Are you sure you want to delete this progress report? This action cannot be undone.
+            </p>
+        </div>
+
+        <div class="modal-footer" style="border-top:none; background:transparent;">
+            <button type="button" class="action-button" onclick="closeDeleteModal()">Cancel</button>
+            <button type="button" class="action-button" id="confirmDeleteBtn" onclick="executeDeleteProgress()" style="background:#dc2626; color:#ffffff; border-color:#dc2626;">
+                <i class="bi bi-trash"></i>
+                <span>Delete Report</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+    <i class="bi bi-check-circle-fill"></i>
+    <span id="toastMessage">Action successful.</span>
+</div>
+
+<!-- JAVASCRIPT -->
+<script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        if (sidebar) sidebar.classList.toggle("open");
+    }
+
+    function syncPercent(val) {
+        document.getElementById("completionPercentage").value = val;
+    }
+
+    function syncRange(val) {
+        document.getElementById("percentRange").value = Math.min(100, Math.max(0, val || 0));
+    }
+</script>
+<script src="/js/progress.js"></script>
+<script src="/js/notifications.js"></script>
+
+</body>
+
+</html>

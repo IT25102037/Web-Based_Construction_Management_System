@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WBCMS | Client Sign In</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        :root {
+            --navy-dark: #071529;
+            --navy-deep: #091c36;
+            --navy-card: #0c2345;
+            --brand-orange: #ea580c;
+            --brand-orange-hover: #c2410c;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border-light: #e2e8f0;
+            --emerald: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body.login-page {
+            background-color: var(--navy-dark);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at 50% 12%, rgba(26, 86, 219, 0.09) 0%, transparent 60%);
+        }
+
+        .login-shell {
+            width: 100%;
+            max-width: 1080px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .login-panel {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1.08fr 0.92fr;
+            background: #ffffff;
+            border-radius: 26px;
+            overflow: hidden;
+            box-shadow: 0 25px 70px -10px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.08);
+            min-height: 630px;
+        }
+
+        /* =====================================================
+           LEFT COLUMN: FORM AREA
+        ====================================================== */
+        .login-form-area {
+            padding: 44px 50px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .top-nav-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .brand-logo-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .brand-icon-box {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: #0c1e38;
+            display: grid;
+            place-items: center;
+            color: #38bdf8;
+            font-size: 17px;
+            box-shadow: 0 4px 10px rgba(12, 30, 56, 0.25);
+        }
+
+        .brand-title {
+            font-size: 21px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #0c1e38;
+            line-height: 1;
+        }
+
+        .brand-title span {
+            color: var(--brand-orange);
+        }
+
+        .back-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .back-home:hover {
+            color: var(--brand-orange);
+        }
+
+        .portal-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--brand-orange);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .portal-tag::before {
+            content: "";
+            display: inline-block;
+            width: 18px;
+            height: 2.5px;
+            background: var(--brand-orange);
+            border-radius: 2px;
+        }
+
+        .login-heading h1 {
+            font-size: 30px;
+            font-weight: 800;
+            color: #0c1e38;
+            letter-spacing: -0.6px;
+            margin: 0 0 6px 0;
+        }
+
+        .login-heading p {
+            font-size: 13.5px;
+            color: #64748b;
+            margin: 0 0 24px 0;
+            font-weight: 500;
+        }
+
+        /* Form Inputs */
+        .form-field-group {
+            margin-bottom: 16px;
+        }
+
+        .form-field-group label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 6px;
+        }
+
+        .input-box-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-box-wrapper i.field-icon {
+            position: absolute;
+            left: 14px;
+            color: #94a3b8;
+            font-size: 14px;
+            pointer-events: none;
+            transition: color 0.2s;
+        }
+
+        .input-box-wrapper input {
+            width: 100%;
+            padding: 12px 14px 12px 42px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 13.5px;
+            font-weight: 500;
+            color: #0f172a;
+            background: #ffffff;
+            outline: none;
+            transition: all 0.2s;
+            box-sizing: border-box;
+        }
+
+        .input-box-wrapper input::placeholder {
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        .input-box-wrapper input:focus {
+            border-color: var(--brand-orange);
+            box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.12);
+        }
+
+        .input-box-wrapper:focus-within i.field-icon {
+            color: var(--brand-orange);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 6px;
+            display: grid;
+            place-items: center;
+            transition: color 0.2s;
+        }
+
+        .toggle-password:hover {
+            color: #0f172a;
+        }
+
+        /* Remember & Forgot Row */
+        .auth-options-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: -2px;
+            margin-bottom: 22px;
+            font-size: 13px;
+        }
+
+        .remember-checkbox-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #334155;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .remember-checkbox-label input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            accent-color: #0c1e38;
+            cursor: pointer;
+        }
+
+        .forgot-link {
+            color: #0c1e38;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .forgot-link:hover {
+            color: var(--brand-orange);
+        }
+
+        /* Message Box */
+        .form-message {
+            display: none;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            text-align: left;
+        }
+
+        .form-message.error {
+            display: block;
+            background: #fef2f2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+        }
+
+        .form-message.success {
+            display: block;
+            background: #ecfdf5;
+            color: #047857;
+            border: 1px solid #a7f3d0;
+        }
+
+        /* Submit Button */
+        .btn-staff-submit {
+            width: 100%;
+            padding: 13.5px 24px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 8px 20px -3px rgba(234, 88, 12, 0.45);
+            transition: all 0.2s ease;
+        }
+
+        .btn-staff-submit:hover {
+            background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 12px 24px -4px rgba(234, 88, 12, 0.55);
+        }
+
+        .btn-staff-submit:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Switch Mode Row */
+        .auth-switch-box {
+            text-align: center;
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 18px;
+        }
+
+        .auth-switch-box button {
+            background: none;
+            border: none;
+            color: var(--brand-orange);
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            margin-left: 5px;
+            text-decoration: none;
+            padding: 0;
+            transition: color 0.2s;
+        }
+
+        .auth-switch-box button:hover {
+            color: var(--brand-orange-hover);
+            text-decoration: underline;
+        }
+
+        /* Bottom Footer */
+        .card-bottom-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 20px;
+            margin-top: 24px;
+            border-top: 1px solid #f1f5f9;
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .security-badge-item {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-weight: 600;
+        }
+
+        .security-badge-item i {
+            color: var(--emerald);
+            font-size: 13px;
+        }
+
+        .client-portal-link {
+            color: #0c1e38;
+            font-weight: 700;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .client-portal-link:hover {
+            color: var(--brand-orange);
+        }
+
+        /* =====================================================
+           RIGHT COLUMN: CONSTRUCTION CRANE HERO
+        ====================================================== */
+        .login-hero-area {
+            position: relative;
+            background: linear-gradient(165deg, #091d3e 0%, #06152d 100%);
+            padding: 48px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            overflow: hidden;
+            color: #ffffff;
+        }
+
+        /* Vector Backdrop Illustration */
+        .crane-svg-backdrop {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.25;
+            letter-spacing: -0.5px;
+            margin-bottom: 12px;
+        }
+
+        .hero-subtitle {
+            font-size: 14px;
+            line-height: 1.55;
+            color: #cbd5e1;
+            margin-bottom: 22px;
+            max-width: 410px;
+        }
+
+        .hero-divider {
+            width: 100%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.12);
+            margin-bottom: 22px;
+        }
+
+        .hero-checklist {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .hero-checklist li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .hero-checklist li i {
+            color: #f97316;
+            font-size: 13px;
+        }
+
+        /* Responsive Layout */
+        @media (max-width: 960px) {
+            .login-panel {
+                grid-template-columns: 1fr;
+                max-width: 520px;
+            }
+            .login-hero-area {
+                min-height: 420px;
+            }
+            .login-form-area {
+                padding: 36px 30px;
+            }
+        }
+    </style>
+</head>
+
+<body class="login-page">
+
+<div class="login-shell">
+    <div class="login-panel">
+
+        <!-- =================================================
+             LEFT SIDE: SIGN IN / REGISTRATION FORM
+        ================================================== -->
+        <div class="login-form-area">
+            <div>
+                <!-- TOP HEADER ROW -->
+                <div class="top-nav-row">
+                    <a href="/index.html" class="brand-logo-wrap">
+                        <div class="brand-icon-box">
+                            <i class="fa-solid fa-building-user"></i>
+                        </div>
+                        <div class="brand-title">WB<span>CMS</span></div>
+                    </a>
+
+                    <a href="/index.html" class="back-home">
+                        <i class="fa-solid fa-arrow-left"></i> Back to WBCMS
+                    </a>
+                </div>
+
+                <!-- PORTAL BADGE TAG & TITLE -->
+                <div class="portal-tag">CLIENT PORTAL</div>
+                <div class="login-heading">
+                    <h1 id="pageTitle">Client Sign In</h1>
+                    <p id="pageDescription">Access your construction projects and updates.</p>
+                </div>
+
+                <!-- =============================================
+                     1. CLIENT LOGIN FORM
+                ============================================== -->
+                <form id="clientLoginForm">
+                    <!-- USERNAME / EMAIL -->
+                    <div class="form-field-group">
+                        <label for="loginUsername">Username or Email</label>
+                        <div class="input-box-wrapper">
+                            <i class="fa-regular fa-user field-icon"></i>
+                            <input
+                                type="text"
+                                id="loginUsername"
+                                name="username"
+                                placeholder="Enter your username or email"
+                                autocomplete="username"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <!-- PASSWORD -->
+                    <div class="form-field-group">
+                        <label for="loginPassword">Password</label>
+                        <div class="input-box-wrapper">
+                            <i class="fa-solid fa-lock field-icon"></i>
+                            <input
+                                type="password"
+                                id="loginPassword"
+                                name="password"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                required
+                            >
+                            <button
+                                type="button"
+                                class="toggle-password"
+                                id="loginPasswordToggle"
+                                aria-label="Toggle password visibility">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- REMEMBER ME & FORGOT PASSWORD -->
+                    <div class="auth-options-row">
+                        <label class="remember-checkbox-label">
+                            <input type="checkbox" id="clientRememberMe">
+                            <span>Remember me</span>
+                        </label>
+                        <a href="javascript:void(0)" onclick="alert('Please contact WBCMS Support or your Project Manager to reset your client credentials.')" class="forgot-link">Forgot password?</a>
+                    </div>
+
+                    <!-- MESSAGE CONTAINER -->
+                    <div id="loginMessage" class="form-message"></div>
+
+                    <!-- SIGN IN BUTTON -->
+                    <button
+                        type="submit"
+                        id="loginButton"
+                        class="btn-staff-submit">
+                        Sign In <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </form>
+
+                <!-- =============================================
+                     2. CLIENT REGISTRATION FORM (TOGGLED)
+                ============================================== -->
+                <form id="registerForm" style="display:none;">
+                    <div class="form-field-group">
+                        <label for="fullName">Full Name</label>
+                        <div class="input-box-wrapper">
+                            <i class="fa-regular fa-user field-icon"></i>
+                            <input
+                                type="text"
+                                id="fullName"
+                                placeholder="Enter your full name"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-field-group">
+                        <label for="registerUsername">Username</label>
+                        <div class="input-box-wrapper">
+                            <i class="fa-solid fa-at field-icon"></i>
+                            <input
+                                type="text"
+                                id="registerUsername"
+                                placeholder="Choose a username"
+                                autocomplete="username"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-field-group">
+                        <label for="registerEmail">Email Address</label>
+                        <div class="input-box-wrapper">
+                            <i class="fa-regular fa-envelope field-icon"></i>
+                            <input
+                                type="email"
+                                id="registerEmail"
+                                placeholder="Enter your email address"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-field-group">
+                        <label for="phoneNumber">Phone Number</label>
+                        <div class="input-box-wrapper">
+                            <i class="fa-solid fa-phone field-icon"></i>
+                            <input
+                                type="tel"
+                                id="phoneNumber"
+                                placeholder="Enter your phone number"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-field-group">
+                        <label for="registerPassword">Password</label>
+                        <div class="input-box-wrapper">
+                            <i class="fa-solid fa-lock field-icon"></i>
+                            <input
+                                type="password"
+                                id="registerPassword"
+                                placeholder="Create a password"
+                                autocomplete="new-password"
+                                required
+                            >
+                            <button
+                                type="button"
+                                class="toggle-password"
+                                id="registerPasswordToggle"
+                                aria-label="Toggle password visibility">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="password-rule" style="font-size: 11.5px; color: #64748b; margin-top: -8px; margin-bottom: 14px;">
+                        Minimum 8 characters · uppercase · lowercase · number
+                    </div>
+
+                    <div class="form-field-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <div class="input-box-wrapper">
+                            <i class="fa-solid fa-shield-halved field-icon"></i>
+                            <input
+                                type="password"
+                                id="confirmPassword"
+                                placeholder="Confirm your password"
+                                autocomplete="new-password"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div id="registerMessage" class="form-message"></div>
+
+                    <button
+                        type="submit"
+                        id="registerButton"
+                        class="btn-staff-submit">
+                        Create Client Profile <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </form>
+
+                <!-- SWITCH BETWEEN SIGN IN & REGISTER -->
+                <div class="auth-switch-box">
+                    <span id="switchText">Don't have an account?</span>
+                    <button type="button" id="switchButton">Create Client Account</button>
+                </div>
+            </div>
+
+            <!-- CARD BOTTOM FOOTER -->
+            <div class="card-bottom-footer">
+                <div class="security-badge-item">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>256-Bit SSL Encrypted Portal</span>
+                </div>
+                <div>
+                    Are you a staff member? <a href="/staff-login.html" class="client-portal-link">Staff Sign In →</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- =================================================
+             RIGHT SIDE: HERO WITH VECTOR CONSTRUCTION CRANE
+        ================================================== -->
+        <div class="login-hero-area">
+            <!-- Sleek Vector Construction Backdrop SVG -->
+            <svg class="crane-svg-backdrop" viewBox="0 0 520 640" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+                <!-- Distant building silhouette 1 -->
+                <rect x="20" y="240" width="130" height="400" fill="#081a38" opacity="0.65" />
+                <rect x="35" y="260" width="16" height="22" rx="2" fill="#0e2a54" opacity="0.4" />
+                <rect x="65" y="260" width="16" height="22" rx="2" fill="#0e2a54" opacity="0.4" />
+                <rect x="95" y="260" width="16" height="22" rx="2" fill="#0e2a54" opacity="0.4" />
+                <rect x="35" y="300" width="16" height="22" rx="2" fill="#0e2a54" opacity="0.4" />
+                <rect x="65" y="300" width="16" height="22" rx="2" fill="#0e2a54" opacity="0.4" />
+                <rect x="95" y="300" width="16" height="22" rx="2" fill="#0e2a54" opacity="0.4" />
+
+                <!-- Medium building silhouette 2 -->
+                <rect x="180" y="320" width="160" height="320" fill="#091d3d" opacity="0.8" />
+                <rect x="198" y="345" width="22" height="28" rx="2" fill="#0d2c5c" opacity="0.5" />
+                <rect x="235" y="345" width="22" height="28" rx="2" fill="#0d2c5c" opacity="0.5" />
+                <rect x="272" y="345" width="22" height="28" rx="2" fill="#0d2c5c" opacity="0.5" />
+                <rect x="309" y="345" width="22" height="28" rx="2" fill="#0d2c5c" opacity="0.5" />
+                <rect x="198" y="390" width="22" height="28" rx="2" fill="#0d2c5c" opacity="0.5" />
+                <rect x="235" y="390" width="22" height="28" rx="2" fill="#0d2c5c" opacity="0.5" />
+                <rect x="272" y="390" width="22" height="28" rx="2" fill="#0d2c5c" opacity="0.5" />
+                <rect x="309" y="390" width="22" height="28" rx="2" fill="#0d2c5c" opacity="0.5" />
+
+                <!-- Tall background tower behind crane -->
+                <rect x="320" y="200" width="180" height="440" fill="#071936" opacity="0.9" />
+                <line x1="320" y1="280" x2="500" y2="280" stroke="#0e2850" stroke-width="1.5" />
+                <line x1="320" y1="360" x2="500" y2="360" stroke="#0e2850" stroke-width="1.5" />
+                <line x1="320" y1="440" x2="500" y2="440" stroke="#0e2850" stroke-width="1.5" />
+
+                <!-- CONSTRUCTION TOWER CRANE -->
+                <!-- 1. Vertical Lattice Mast (Tower) -->
+                <g stroke="#ea580c" stroke-width="2.5" stroke-linecap="round">
+                    <!-- Left upright chord -->
+                    <line x1="385" y1="140" x2="385" y2="640" stroke-width="3" />
+                    <!-- Right upright chord -->
+                    <line x1="415" y1="140" x2="415" y2="640" stroke-width="3" />
+
+                    <!-- Tower diagonals (X-bracing) -->
+                    <line x1="385" y1="140" x2="415" y2="175" />
+                    <line x1="415" y1="140" x2="385" y2="175" />
+                    <line x1="385" y1="175" x2="415" y2="210" />
+                    <line x1="415" y1="175" x2="385" y2="210" />
+                    <line x1="385" y1="210" x2="415" y2="245" />
+                    <line x1="415" y1="210" x2="385" y2="245" />
+                    <line x1="385" y1="245" x2="415" y2="280" />
+                    <line x1="415" y1="245" x2="385" y2="280" />
+                    <line x1="385" y1="280" x2="415" y2="315" />
+                    <line x1="415" y1="280" x2="385" y2="315" />
+                    <line x1="385" y1="315" x2="415" y2="350" />
+                    <line x1="415" y1="315" x2="385" y2="350" />
+                    <line x1="385" y1="350" x2="415" y2="385" />
+                    <line x1="415" y1="350" x2="385" y2="385" />
+                    <line x1="385" y1="385" x2="415" y2="420" />
+                    <line x1="415" y1="385" x2="385" y2="420" />
+                    <line x1="385" y1="420" x2="415" y2="455" />
+                    <line x1="415" y1="420" x2="385" y2="455" />
+                    <line x1="385" y1="455" x2="415" y2="490" />
+                    <line x1="415" y1="455" x2="385" y2="490" />
+                    <line x1="385" y1="490" x2="415" y2="525" />
+                    <line x1="415" y1="490" x2="385" y2="525" />
+                    <line x1="385" y1="525" x2="415" y2="560" />
+                    <line x1="415" y1="525" x2="385" y2="560" />
+                    <line x1="385" y1="560" x2="415" y2="595" />
+                    <line x1="415" y1="560" x2="385" y2="595" />
+                    <line x1="385" y1="595" x2="415" y2="630" />
+                    <line x1="415" y1="595" x2="385" y2="630" />
+                </g>
+
+                <!-- 2. Slewing Unit & Operator Cabin -->
+                <rect x="375" y="132" width="22" height="18" rx="3" fill="#ea580c" />
+                <rect x="378" y="136" width="10" height="9" rx="1.5" fill="#38bdf8" opacity="0.8" />
+
+                <!-- 3. Tower Peak (Apex) -->
+                <polygon points="385,140 400,75 415,140" fill="none" stroke="#ea580c" stroke-width="2.5" />
+                <!-- Apex Warning Light -->
+                <circle cx="400" cy="75" r="9" fill="#ef4444" opacity="0.3" />
+                <circle cx="400" cy="75" r="4.5" fill="#ef4444" />
+                <circle cx="400" cy="75" r="2" fill="#ffffff" />
+
+                <!-- 4. Counter-Jib (Left) & Counterweights -->
+                <!-- Upper chord -->
+                <line x1="400" y1="140" x2="280" y2="185" stroke="#ea580c" stroke-width="2.5" />
+                <!-- Lower chord -->
+                <line x1="385" y1="140" x2="280" y2="185" stroke="#ea580c" stroke-width="2" />
+                <!-- Counter-jib diagonals -->
+                <line x1="350" y1="158" x2="370" y2="140" stroke="#ea580c" stroke-width="1.8" />
+                <line x1="315" y1="172" x2="340" y2="150" stroke="#ea580c" stroke-width="1.8" />
+
+                <!-- Counterweight block 1 -->
+                <rect x="395" y="125" width="28" height="16" rx="2" fill="#d94e08" stroke="#f97316" stroke-width="1.5" />
+                <!-- Counterweight block 2 on end -->
+                <rect x="425" y="128" width="22" height="14" rx="2" fill="#c2410c" stroke="#f97316" stroke-width="1.5" />
+
+                <!-- 5. Main Working Jib (Horizontal Truss extending right) -->
+                <line x1="400" y1="140" x2="520" y2="175" stroke="#ea580c" stroke-width="2.5" />
+                <line x1="415" y1="140" x2="520" y2="175" stroke="#ea580c" stroke-width="2" />
+                <line x1="420" y1="142" x2="450" y2="152" stroke="#ea580c" stroke-width="1.8" />
+                <line x1="450" y1="152" x2="480" y2="162" stroke="#ea580c" stroke-width="1.8" />
+                <line x1="480" y1="162" x2="510" y2="172" stroke="#ea580c" stroke-width="1.8" />
+
+                <!-- 6. Stay Tie Cables from Apex -->
+                <line x1="400" y1="75" x2="280" y2="185" stroke="#f97316" stroke-width="1.8" opacity="0.9" />
+                <line x1="400" y1="75" x2="340" y2="150" stroke="#f97316" stroke-width="1.8" opacity="0.9" />
+                <line x1="400" y1="75" x2="470" y2="160" stroke="#f97316" stroke-width="1.8" opacity="0.9" />
+
+                <!-- 7. Hoist Trolley, Cables & Suspended Beam -->
+                <!-- Trolley on left jib section -->
+                <rect x="325" y="165" width="16" height="8" rx="1.5" fill="#f97316" />
+                <!-- Vertical Hoist Cable Lines -->
+                <line x1="328" y1="173" x2="328" y2="280" stroke="#ea580c" stroke-width="1.8" />
+                <line x1="338" y1="173" x2="338" y2="280" stroke="#ea580c" stroke-width="1.8" />
+                <!-- Suspended Crane Hook & Cargo Beam -->
+                <polygon points="325,280 341,280 333,292" fill="#ea580c" />
+                <rect x="312" y="292" width="42" height="18" rx="3" fill="#ea580c" stroke="#f97316" stroke-width="1.5" />
+            </svg>
+
+            <!-- HERO CONTENT OVERLAY -->
+            <div class="hero-content">
+                <h2 class="hero-title">Stay connected<br>to your project.</h2>
+                <p class="hero-subtitle">Access real-time project updates, monitor construction milestones, review site documents, and communicate seamlessly.</p>
+                <div class="hero-divider"></div>
+                <ul class="hero-checklist">
+                    <li><i class="fa-solid fa-check"></i> View project progress</li>
+                    <li><i class="fa-solid fa-check"></i> Access project documents</li>
+                    <li><i class="fa-solid fa-check"></i> Receive important updates</li>
+                    <li><i class="fa-solid fa-check"></i> Manage your client profile</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+
+    const loginForm =
+        document.getElementById("clientLoginForm");
+
+    const registerForm =
+        document.getElementById("registerForm");
+
+    const pageTitle =
+        document.getElementById("pageTitle");
+
+    const pageDescription =
+        document.getElementById("pageDescription");
+
+    const switchText =
+        document.getElementById("switchText");
+
+    const switchButton =
+        document.getElementById("switchButton");
+
+
+    let registerMode = false;
+
+
+    /* ==========================================
+       PASSWORD TOGGLE
+    =========================================== */
+
+    function setupPasswordToggle(
+        inputId,
+        buttonId
+    ) {
+
+        const input =
+            document.getElementById(inputId);
+
+        const button =
+            document.getElementById(buttonId);
+
+        button.addEventListener(
+            "click",
+            function () {
+
+                if (input.type === "password") {
+
+                    input.type = "text";
+
+                    button.innerHTML =
+                        '<i class="fa-solid fa-eye-slash"></i>';
+
+                } else {
+
+                    input.type = "password";
+
+                    button.innerHTML =
+                        '<i class="fa-solid fa-eye"></i>';
+
+                }
+
+            }
+        );
+
+    }
+
+
+    setupPasswordToggle(
+        "loginPassword",
+        "loginPasswordToggle"
+    );
+
+    setupPasswordToggle(
+        "registerPassword",
+        "registerPasswordToggle"
+    );
+
+
+    /* ==========================================
+       SWITCH LOGIN / REGISTER
+    =========================================== */
+
+    switchButton.addEventListener(
+        "click",
+        function () {
+
+            registerMode = !registerMode;
+
+            if (registerMode) {
+
+                loginForm.style.display = "none";
+
+                registerForm.style.display = "block";
+
+                pageTitle.textContent =
+                    "Create Client Profile";
+
+                pageDescription.textContent =
+                    "Create your customer account to access WBCMS.";
+
+                switchText.textContent =
+                    "Already have an account?";
+
+                switchButton.textContent =
+                    "Sign In";
+
+            } else {
+
+                loginForm.style.display = "block";
+
+                registerForm.style.display = "none";
+
+                pageTitle.textContent =
+                    "Client Sign In";
+
+                pageDescription.textContent =
+                    "Access your construction projects and updates.";
+
+                switchText.textContent =
+                    "Don't have an account?";
+
+                switchButton.textContent =
+                    "Create Client Account";
+
+            }
+
+        }
+    );
+
+
+    /* ==========================================
+       CLIENT REMEMBER ME PRE-FILL
+    =========================================== */
+    const clientRememberMe =
+        document.getElementById("clientRememberMe");
+
+    const rememberedClient =
+        localStorage.getItem("wbcms_remember_client_username");
+
+    if (rememberedClient) {
+        document.getElementById("loginUsername").value = rememberedClient;
+        if (clientRememberMe) {
+            clientRememberMe.checked = true;
+        }
+        document.getElementById("loginPassword").focus();
+    }
+
+
+    /* ==========================================
+       CLIENT LOGIN
+    =========================================== */
+
+    loginForm.addEventListener(
+        "submit",
+        async function (event) {
+
+            event.preventDefault();
+
+
+            const username =
+                document.getElementById(
+                    "loginUsername"
+                ).value.trim();
+
+            const password =
+                document.getElementById(
+                    "loginPassword"
+                ).value;
+
+            const message =
+                document.getElementById(
+                    "loginMessage"
+                );
+
+            const button =
+                document.getElementById(
+                    "loginButton"
+                );
+
+            const rememberMe =
+                clientRememberMe ? clientRememberMe.checked : false;
+
+
+            message.textContent = "";
+
+            message.className =
+                "form-message";
+
+
+            if (!username || !password) {
+
+                showMessage(
+                    message,
+                    "Please enter your username/email and password.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            button.disabled = true;
+
+            button.innerHTML =
+                '<i class="fa-solid fa-spinner fa-spin"></i> Signing in...';
+
+
+            try {
+
+                const response =
+                    await fetch("/api/auth/login", {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+
+                            username: username,
+
+                            password: password,
+
+                            portalType: "CLIENT",
+
+                            rememberMe: rememberMe
+
+                        })
+
+                    });
+
+
+                const data =
+                    await response.json()
+                        .catch(() => null);
+
+
+                if (!response.ok) {
+
+                    const errorMsg =
+                        (data && (data.message || data.error))
+                            ? (data.message || data.error)
+                            : "Invalid username/email or password.";
+
+                    showMessage(
+                        message,
+                        errorMsg,
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (!data || !data.token) {
+
+                    showMessage(
+                        message,
+                        "Login failed. No authentication token received.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                const returnedRole =
+                    String(
+                        data.role || ""
+                    ).toUpperCase();
+
+
+                if (returnedRole !== "CLIENT") {
+
+                    showMessage(
+                        message,
+                        "This account belongs to staff. Please use the Staff Portal.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                /* ==================================
+                   SAVE CLIENT SESSION
+                =================================== */
+
+                if (rememberMe) {
+                    localStorage.setItem("wbcms_remember_client_username", username);
+                } else {
+                    localStorage.removeItem("wbcms_remember_client_username");
+                }
+
+                localStorage.setItem(
+                    "wbcms_token",
+                    data.token
+                );
+
+                localStorage.setItem(
+                    "wbcms_user_id",
+                    data.userId
+                );
+
+                localStorage.setItem(
+                    "wbcms_username",
+                    data.username || username
+                );
+
+                localStorage.setItem(
+                    "wbcms_role",
+                    "CLIENT"
+                );
+
+                localStorage.setItem(
+                    "wbcms_user_type",
+                    "CLIENT"
+                );
+
+                if (data.fullName) {
+                    localStorage.setItem(
+                        "wbcms_full_name",
+                        data.fullName
+                    );
+                }
+
+
+                showMessage(
+                    message,
+                    "Login successful. Opening Client Dashboard...",
+                    "success"
+                );
+
+
+                setTimeout(
+                    function () {
+
+                        window.location.replace(
+                            "/client-dashboard.html"
+                        );
+
+                    },
+                    500
+                );
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                showMessage(
+                    message,
+                    "Cannot connect to the server.",
+                    "error"
+                );
+
+            } finally {
+
+                button.disabled = false;
+
+                button.innerHTML =
+                    '<i class="fa-solid fa-right-to-bracket"></i> Sign In';
+
+            }
+
+        }
+    );
+
+
+    /* ==========================================
+       CLIENT REGISTRATION
+    =========================================== */
+
+    registerForm.addEventListener(
+        "submit",
+        async function (event) {
+
+            event.preventDefault();
+
+
+            const fullName =
+                document.getElementById(
+                    "fullName"
+                ).value.trim();
+
+            const username =
+                document.getElementById(
+                    "registerUsername"
+                ).value.trim();
+
+            const email =
+                document.getElementById(
+                    "registerEmail"
+                ).value.trim();
+
+            const phoneNumber =
+                document.getElementById(
+                    "phoneNumber"
+                ).value.trim();
+
+            const password =
+                document.getElementById(
+                    "registerPassword"
+                ).value;
+
+            const confirmPassword =
+                document.getElementById(
+                    "confirmPassword"
+                ).value;
+
+
+            const message =
+                document.getElementById(
+                    "registerMessage"
+                );
+
+            const button =
+                document.getElementById(
+                    "registerButton"
+                );
+
+
+            message.textContent = "";
+
+            message.className =
+                "form-message";
+
+
+            /* ==================================
+               VALIDATION
+            =================================== */
+
+            if (!fullName) {
+
+                showMessage(
+                    message,
+                    "Please enter your full name.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            if (!username) {
+
+                showMessage(
+                    message,
+                    "Please choose a username.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            if (!email) {
+
+                showMessage(
+                    message,
+                    "Please enter your email.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            const passwordValid =
+                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/
+                    .test(password);
+
+
+            if (!passwordValid) {
+
+                showMessage(
+                    message,
+                    "Password must contain 8+ characters, uppercase, lowercase and a number.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            if (password !== confirmPassword) {
+
+                showMessage(
+                    message,
+                    "Passwords do not match.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            button.disabled = true;
+
+            button.innerHTML =
+                '<i class="fa-solid fa-spinner fa-spin"></i> Creating Profile...';
+
+
+            try {
+
+                /* ==================================
+                   CREATE CLIENT
+                =================================== */
+
+                const response =
+                    await fetch(
+                        "/api/auth/register",
+                        {
+
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+
+                                fullName:
+                                fullName,
+
+                                username:
+                                username,
+
+                                email:
+                                email,
+
+                                phoneNumber:
+                                phoneNumber,
+
+                                password:
+                                password,
+
+                                role:
+                                "CLIENT"
+
+                            })
+
+                        }
+                    );
+
+
+                const data =
+                    await response.json()
+                        .catch(() => null);
+
+
+                if (!response.ok) {
+
+                    showMessage(
+                        message,
+                        data?.message ||
+                        "Unable to create your client profile.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                /* ==================================
+                   AUTOMATIC LOGIN AFTER REGISTER
+                =================================== */
+
+                const loginResponse =
+                    await fetch(
+                        "/api/auth/login",
+                        {
+
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+
+                                username:
+                                username,
+
+                                password:
+                                password
+
+                            })
+
+                        }
+                    );
+
+
+                const loginData =
+                    await loginResponse.json()
+                        .catch(() => null);
+
+
+                if (
+                    !loginResponse.ok ||
+                    !loginData ||
+                    !loginData.token
+                ) {
+
+                    showMessage(
+                        message,
+                        "Profile created successfully! Please sign in with your username or email.",
+                        "success"
+                    );
+
+                    setTimeout(
+                        function () {
+
+                            registerMode = false;
+
+                            switchButton.click();
+
+                            document.getElementById("loginUsername").value = username;
+
+                            document.getElementById("loginPassword").value = "";
+
+                            document.getElementById("loginPassword").focus();
+
+                        },
+                        1200
+                    );
+
+                    return;
+
+                }
+
+
+                localStorage.setItem(
+                    "wbcms_token",
+                    loginData.token
+                );
+
+                localStorage.setItem(
+                    "wbcms_user_id",
+                    loginData.userId
+                );
+
+                localStorage.setItem(
+                    "wbcms_username",
+                    loginData.username || username
+                );
+
+                localStorage.setItem(
+                    "wbcms_role",
+                    "CLIENT"
+                );
+
+                localStorage.setItem(
+                    "wbcms_user_type",
+                    "CLIENT"
+                );
+
+                if (loginData.fullName) {
+                    localStorage.setItem(
+                        "wbcms_full_name",
+                        loginData.fullName
+                    );
+                }
+
+
+                showMessage(
+                    message,
+                    "Profile created successfully! Redirecting to WBCMS...",
+                    "success"
+                );
+
+
+                /* ==================================
+                   REDIRECT TO MAIN SYSTEM INTERFACE
+                =================================== */
+
+                setTimeout(
+                    function () {
+
+                        window.location.replace(
+                            "/index.html"
+                        );
+
+                    },
+                    700
+                );
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                showMessage(
+                    message,
+                    "Cannot connect to the server. Please make sure Spring Boot is running.",
+                    "error"
+                );
+
+            } finally {
+
+                button.disabled = false;
+
+                button.innerHTML =
+                    '<i class="fa-solid fa-user-plus"></i> Create Client Profile';
+
+            }
+
+        }
+    );
+
+
+    /* ==========================================
+       MESSAGE
+    =========================================== */
+
+    function showMessage(
+        element,
+        text,
+        type
+    ) {
+
+        element.textContent = text;
+
+        element.className =
+            "form-message " + type;
+
+    }
+
+</script>
+
+
+</body>
+
+</html>

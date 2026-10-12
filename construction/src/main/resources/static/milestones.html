@@ -1,0 +1,2358 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WBCMS | Milestone Management & Phase Deliverables</title>
+
+    <!-- Google Fonts: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap Icons & Font Awesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Premium Stylesheets -->
+    <link rel="stylesheet" href="/css/premium-theme.css">
+    <link rel="stylesheet" href="/css/unified-pages.css">
+    <link rel="stylesheet" href="/css/milestones.css">
+    <script src="/js/theme-init.js"></script>
+
+    <style>
+        /* =========================================================
+           WBCMS MILESTONES — MATCHING PROJECT DASHBOARD SPEC
+        ========================================================= */
+        :root {
+            --bg-page: #edf3f8;
+            --sidebar-bg: #15429d;
+            --sidebar-active-bg: #ffffff;
+            --sidebar-active-text: #14429e;
+            --card-bg: rgba(255, 255, 255, 0.94);
+            --card-border: rgba(230, 237, 245, 0.85);
+            --card-shadow: 0 4px 20px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.02);
+            --card-radius: 18px;
+
+            --text-title: #0f172a;
+            --text-body: #334155;
+            --text-muted: #64748b;
+            --text-light: #94a3b8;
+
+            --blue-primary: #1a56db;
+            --blue-soft: #eff6ff;
+            --blue-badge: #e0edff;
+            --orange-primary: #ea580c;
+            --orange-soft: #fff7ed;
+            --green-primary: #10b981;
+            --green-soft: #ecfdf5;
+            --amber-primary: #f59e0b;
+            --amber-soft: #fffbeb;
+            --red-primary: #ef4444;
+            --red-soft: #fef2f2;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            overflow-x: auto !important;
+        }
+
+        body {
+            background-color: #edf3f8 !important;
+            background: #edf3f8 !important;
+            color: var(--text-title);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            position: relative;
+        }
+
+        /* Ambient Light Backdrop */
+        .dashboard-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .dashboard-backdrop-img {
+            position: absolute;
+            inset: -20px;
+            background-image: 
+                radial-gradient(circle at 18% 12%, rgba(255, 107, 22, 0.08) 0%, transparent 45%),
+                radial-gradient(circle at 82% 18%, rgba(26, 86, 219, 0.10) 0%, transparent 50%),
+                radial-gradient(circle at 50% 90%, rgba(16, 185, 129, 0.06) 0%, transparent 40%),
+                url('/images/staff-dashboard-bg.jpg'),
+                url('/images/construction-bg.jpg'),
+                url('/images/main-bg-blur.jpg');
+            background-size: cover;
+            background-position: center 25%;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            filter: blur(2.5px) brightness(1.03) saturate(1.08) contrast(1.02);
+            transform: scale(1.03);
+            opacity: 0.95;
+        }
+
+        .dashboard-backdrop-overlay {
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 85% 15%, rgba(240, 246, 255, 0.72) 0%, rgba(234, 243, 253, 0.82) 55%, rgba(225, 237, 249, 0.90) 100%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(225, 238, 252, 0.70) 100%);
+        }
+
+        /* Sidebar Styling */
+        aside.sidebar, .sidebar {
+            width: 250px;
+            background: #15429d !important;
+            border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.08) !important;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 14px 16px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 4px 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .brand-icon, .brand-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #ff6b16 !important;
+            display: grid;
+            place-items: center;
+            color: #ffffff !important;
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(255, 107, 22, 0.35);
+            flex-shrink: 0;
+        }
+
+        .brand-text h2, .sidebar-brand h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            color: #ffffff !important;
+            margin: 0;
+            line-height: 1.1;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-text span, .sidebar-brand span {
+            font-size: 9.5px;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            color: #ff9944;
+            text-transform: uppercase;
+            display: block;
+            margin-top: 1px;
+        }
+
+        .sidebar-navigation, .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 14px 2px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .nav-title {
+            font-size: 9.5px;
+            font-weight: 800;
+            letter-spacing: 1.2px;
+            color: #8da9e6 !important;
+            text-transform: uppercase;
+            padding: 12px 14px 4px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 24px;
+            color: #c5d7f7 !important;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            color: #ffffff !important;
+            background: rgba(255, 255, 255, 0.12) !important;
+            transform: translateX(3px);
+        }
+
+        .nav-item.active {
+            background: #ffffff !important;
+            color: #14429e !important;
+            font-weight: 700 !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15) !important;
+            border-radius: 24px !important;
+            transform: none !important;
+        }
+
+        .nav-item.active i {
+            color: #14429e !important;
+        }
+
+        .sidebar-footer {
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sidebar-version {
+            font-size: 11px;
+            color: #8da9e6;
+            font-weight: 600;
+            padding-left: 6px;
+        }
+
+        .sidebar-version span {
+            display: block;
+            font-size: 9.5px;
+            color: #6287d3;
+            font-weight: 500;
+        }
+
+        .logout-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 9px 14px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .logout-button:hover {
+            background: rgba(239, 68, 68, 0.25);
+            border-color: rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+        }
+
+        /* Main Content Layout */
+        .main-content {
+            margin-left: 250px;
+            flex: 1;
+            min-height: 100vh;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 1;
+            background: transparent !important;
+        }
+
+        /* Top Header */
+        .top-header {
+            margin-left: 0 !important;
+            padding: 16px 28px !important;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            background: rgba(255, 255, 255, 0.90) !important;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            position: sticky;
+            top: 0;
+            z-index: 90;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.85);
+            box-shadow: 0 2px 14px rgba(15, 23, 42, 0.03);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-left: 0;
+            flex-shrink: 0;
+        }
+
+        .mobile-menu {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #334155;
+            cursor: pointer;
+        }
+
+        .header-module-badge {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-left: 0;
+        }
+
+        .module-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: var(--blue-primary);
+            display: grid;
+            place-items: center;
+            font-size: 22px;
+            box-shadow: 0 2px 8px rgba(26, 86, 219, 0.12);
+            flex-shrink: 0;
+        }
+
+        .module-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            color: #0f172a !important;
+            display: block;
+            line-height: 1.15;
+            letter-spacing: -0.2px;
+        }
+
+        .module-sub {
+            font-size: 12px;
+            color: #64748b !important;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 2px;
+        }
+
+        .live-pulse-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+            display: inline-block;
+        }
+
+        .header-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .header-admin-nav {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+            background: rgba(241, 245, 249, 0.95) !important;
+            padding: 4px 6px !important;
+            border-radius: 30px !important;
+            border: 1px solid #e2e8f0 !important;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04) !important;
+            overflow-x: auto !important;
+            max-width: 100% !important;
+            scrollbar-width: none !important;
+        }
+
+        .header-admin-nav::-webkit-scrollbar {
+            display: none !important;
+        }
+
+        .hdr-btn {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 7px !important;
+            padding: 7px 16px !important;
+            border-radius: 20px !important;
+            font-size: 13px !important;
+            font-weight: 700 !important;
+            color: #334155 !important;
+            text-decoration: none !important;
+            border: 1px solid #e2e8f0 !important;
+            background: #ffffff !important;
+            cursor: pointer !important;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            white-space: nowrap !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03) !important;
+        }
+
+        .hdr-btn i {
+            font-size: 14px !important;
+            color: #1a56db !important;
+        }
+
+        .hdr-btn:hover {
+            color: #0f172a !important;
+            background: #ffffff !important;
+            border-color: #1a56db !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 12px rgba(26, 86, 219, 0.15) !important;
+        }
+
+        .hdr-btn.primary {
+            background: linear-gradient(135deg, #ff7a1a 0%, #ea580c 100%) !important;
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            border: 1px solid transparent !important;
+            box-shadow: 0 3px 12px rgba(234, 88, 12, 0.35) !important;
+        }
+
+        .hdr-btn.primary i {
+            color: #ffffff !important;
+        }
+
+        .hdr-btn.primary:hover {
+            background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%) !important;
+            color: #ffffff !important;
+            box-shadow: 0 6px 18px rgba(234, 88, 12, 0.45) !important;
+            transform: translateY(-1px) !important;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .notification-button {
+            width: 38px !important;
+            height: 38px !important;
+            border-radius: 50% !important;
+            background: #ffffff !important;
+            border: 1.5px solid #cbd5e1 !important;
+            color: #475569 !important;
+            display: grid !important;
+            place-items: center !important;
+            cursor: pointer !important;
+            position: relative !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02) !important;
+            transition: all 0.2s;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 16px;
+            height: 16px;
+            background: #ef4444;
+            color: #fff;
+            font-size: 9.5px;
+            font-weight: 700;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            border: 2px solid #fff;
+        }
+
+        .header-separator {
+            width: 1px;
+            height: 24px;
+            background: #e2e8f0;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            border-radius: 24px;
+            padding: 4px 14px 4px 4px;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .profile-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #ff6b16;
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 700;
+            display: grid;
+            place-items: center;
+        }
+
+        .profile-details strong {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: #0f172a;
+            line-height: 1.1;
+        }
+
+        .profile-details span {
+            display: block;
+            font-size: 10px;
+            color: #64748b;
+            text-transform: uppercase;
+        }
+
+        .profile-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            width: 200px;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+            border: 1px solid #e2e8f0;
+            padding: 8px;
+            display: none;
+            flex-direction: column;
+            gap: 2px;
+            z-index: 100;
+        }
+
+        .profile.open .profile-dropdown-menu {
+            display: flex;
+        }
+
+        .dropdown-user-header {
+            padding: 8px 12px 10px;
+            border-bottom: 1px solid #f1f5f9;
+            margin-bottom: 4px;
+        }
+
+        .dropdown-user-header strong {
+            display: block;
+            font-size: 13px;
+            color: #0f172a;
+        }
+
+        .dropdown-user-header span {
+            font-size: 11px;
+            color: #64748b;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            color: #334155;
+            text-decoration: none;
+            font-size: 12.5px;
+            font-weight: 500;
+            background: none;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+            transition: all 0.15s;
+        }
+
+        .dropdown-item:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .dropdown-item.logout:hover {
+            background: #fef2f2;
+            color: #ef4444;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: #f1f5f9;
+            margin: 4px 0;
+        }
+
+        /* Page Content */
+        .page-content {
+            padding: 20px 24px 40px 24px !important;
+            margin: 0 !important;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+            min-width: 0;
+        }
+
+        /* Hero Banner */
+        .hero-section {
+            background: linear-gradient(135deg, rgba(21, 69, 168, 0.97) 0%, rgba(26, 86, 219, 0.95) 50%, rgba(37, 99, 235, 0.97) 100%);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 20px;
+            padding: 28px 36px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 28px rgba(21, 69, 168, 0.25);
+        }
+
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            right: 20px;
+            top: 0;
+            bottom: 0;
+            width: 320px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 140' fill='none' stroke='rgba(255,255,255,0.22)' stroke-width='2'%3E%3Cpath d='M30 140 L30 20 L220 20 M30 20 L80 0 L130 20 M30 40 L80 20 M30 60 L80 40 M30 80 L80 60 M30 100 L80 80 M30 120 L80 100 M180 20 L180 80 M170 80 L190 80 L180 105 Z M80 20 L130 20 M130 20 L180 20'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right center;
+            background-size: contain;
+            pointer-events: none;
+            opacity: 0.9;
+        }
+
+        .hero-label {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.16);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.2px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .hero-content h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            margin: 0 0 6px 0;
+            color: #ffffff;
+            line-height: 1.15;
+        }
+
+        .hero-content p {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.92);
+            font-size: 13.5px;
+            max-width: 680px;
+        }
+
+        /* 4 Top KPI Stat Cards */
+        .statistics-grid, .stats-grid {
+            display: grid !important;
+            grid-template-columns: repeat(4, 1fr) !important;
+            gap: 20px !important;
+            margin: 0 !important;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.94) !important;
+            backdrop-filter: blur(16px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.9) !important;
+            border-radius: 20px !important;
+            padding: 22px 24px !important;
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.035), 0 1px 3px rgba(15, 23, 42, 0.02) !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: space-between !important;
+            align-items: stretch !important;
+            text-align: left !important;
+            min-height: 156px !important;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px) !important;
+            box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08) !important;
+            background: #ffffff !important;
+        }
+
+        .stat-card .stat-icon {
+            width: 44px !important;
+            height: 44px !important;
+            border-radius: 12px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 20px !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+            margin-bottom: 12px;
+        }
+
+        .stat-card .stat-icon.blue, .stat-card .stat-icon.total { 
+            background: linear-gradient(135deg, #1a56db 0%, #2563eb 100%) !important; 
+        }
+        .stat-card .stat-icon.orange, .stat-card .stat-icon.in-stock { 
+            background: linear-gradient(135deg, #ff7a1a 0%, #ea580c 100%) !important; 
+        }
+        .stat-card .stat-icon.green, .stat-card .stat-icon.completed { 
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; 
+        }
+        .stat-card .stat-icon.warning, .stat-card .stat-icon.low-stock { 
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important; 
+        }
+
+        .stat-content span, .stat-card .stat-title {
+            font-size: 12.5px !important;
+            color: #64748b !important;
+            font-weight: 600 !important;
+            display: block !important;
+            margin-bottom: 2px !important;
+            letter-spacing: 0.2px !important;
+        }
+
+        .stat-content h2, .stat-card h2 {
+            font-family: 'Outfit', sans-serif !important;
+            font-size: 34px !important;
+            font-weight: 800 !important;
+            color: #0f172a !important;
+            margin: 0 0 8px 0 !important;
+            line-height: 1 !important;
+        }
+
+        .stat-content small, .stat-card small {
+            font-size: 11.5px !important;
+            color: #64748b !important;
+            font-weight: 500 !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+            padding-top: 8px !important;
+            border-top: 1px solid rgba(226, 232, 240, 0.8) !important;
+        }
+
+        /* Two-column Layout */
+        .inventory-layout {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 22px;
+            align-items: start;
+            min-width: 0;
+        }
+
+        /* Main Card Container */
+        .inventory-card {
+            background: rgba(255, 255, 255, 0.94) !important;
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.9) !important;
+            border-radius: 20px;
+            padding: 24px 26px;
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.035), 0 1px 3px rgba(15, 23, 42, 0.02);
+            min-width: 0;
+        }
+
+        .inventory-header {
+            margin-bottom: 18px;
+        }
+
+        .section-label {
+            font-size: 10.5px;
+            font-weight: 800;
+            color: var(--blue-primary);
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .inventory-header h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 22px;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0 0 2px 0;
+        }
+
+        .inventory-header p {
+            font-size: 12.5px;
+            color: #64748b;
+            margin: 0;
+        }
+
+        /* Filter Area */
+        .filter-area, .table-filters {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .material-search {
+            flex: 1;
+            min-width: 240px;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .material-search input {
+            width: 100%;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 20px;
+            padding: 8px 16px 8px 36px;
+            font-size: 12.5px;
+            color: #0f172a;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .material-search input:focus {
+            border-color: var(--blue-primary);
+            box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.12);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        .filter-select-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .filter-select-wrapper select {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 20px;
+            padding: 8px 28px 8px 32px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #334155;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            transition: all 0.2s;
+        }
+
+        .filter-select-wrapper select:focus {
+            border-color: var(--blue-primary);
+            box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.12);
+        }
+
+        .filter-select-icon {
+            position: absolute;
+            left: 12px;
+            color: #64748b;
+            font-size: 13px;
+            pointer-events: none;
+        }
+
+        .reset-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: 20px;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            color: #64748b;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .reset-button:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+            border-color: #94a3b8;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: 20px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #334155;
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+            transition: all 0.2s ease;
+        }
+
+        .action-button:hover {
+            background: #ffffff;
+            color: var(--blue-primary);
+            border-color: var(--blue-primary);
+            transform: translateY(-1px);
+        }
+
+        .action-button.primary {
+            background: linear-gradient(135deg, #ff7a1a 0%, #ea580c 100%) !important;
+            color: #ffffff !important;
+            border: none;
+            box-shadow: 0 4px 14px rgba(234, 88, 12, 0.35);
+        }
+
+        .action-button.primary:hover {
+            box-shadow: 0 6px 20px rgba(234, 88, 12, 0.45);
+            transform: translateY(-2px);
+        }
+
+        /* Clean Table Container & Table */
+        .table-container {
+            width: 100%;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            border-radius: 14px;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            padding-bottom: 6px;
+            margin-bottom: 8px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(148, 163, 184, 0.6) rgba(0, 0, 0, 0.04);
+        }
+
+        .table-container::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .table-container::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.04);
+            border-radius: 8px;
+            margin: 0 4px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.55);
+            border-radius: 8px;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            transition: background 0.2s ease;
+        }
+
+        .table-container::-webkit-scrollbar-thumb:hover {
+            background: #ea580c;
+        }
+
+        table {
+            width: 100%;
+            min-width: 950px;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        thead tr {
+            background: #f8fafc !important;
+        }
+
+        th {
+            padding: 13px 16px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #475569 !important;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid #e2e8f0 !important;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 13px;
+            color: #334155;
+            vertical-align: middle;
+        }
+
+        tbody tr {
+            transition: background 0.15s ease;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc !important;
+        }
+
+        .project-title-link {
+            color: #0f172a;
+            font-weight: 700;
+            font-size: 13.5px;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 2px;
+            transition: color 0.2s;
+        }
+
+        .project-title-link:hover {
+            color: #ea580c;
+        }
+
+        .project-scope-desc {
+            font-size: 11.5px;
+            color: #64748b;
+            max-width: 280px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .project-id-chip {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            color: #64748b;
+            background: #f1f5f9;
+            padding: 2px 7px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .manager-cell-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12.5px;
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        .manager-avatar-mini {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1a56db, #2563eb);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+        }
+
+        .timeline-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            color: #475569;
+            font-weight: 500;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            white-space: nowrap;
+        }
+
+        .status-badge.pending { background: #f8fafc; color: #64748b; border: 1px solid #e2e8f0; }
+        .status-badge.in_progress, .status-badge.in-progress { background: #eff6ff; color: #1a56db; border: 1px solid #bfdbfe; }
+        .status-badge.completed { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; }
+        .status-badge.delayed { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
+        .status-badge.cancelled { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+
+        /* Action Buttons in Table */
+        .btn-action-icon, .table-action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 14px;
+            margin: 0 3px;
+            border: 1px solid transparent;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+            text-decoration: none;
+        }
+
+        .btn-action-icon.view { background: #eff6ff; border-color: #bfdbfe; color: #1a56db; }
+        .btn-action-icon.view:hover { background: #1a56db; color: #ffffff; border-color: #1a56db; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(26, 86, 219, 0.35); }
+
+        .btn-action-icon.edit, .action-button.edit { background: #fff7ed; border-color: #fed7aa; color: #ea580c; }
+        .btn-action-icon.edit:hover, .action-button.edit:hover { background: #ea580c; color: #ffffff; border-color: #ea580c; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(234, 88, 12, 0.35); }
+
+        .btn-action-icon.delete, .action-button.delete { background: #fef2f2; border-color: #fecaca; color: #ef4444; }
+        .btn-action-icon.delete:hover, .action-button.delete:hover { background: #ef4444; color: #ffffff; border-color: #ef4444; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35); }
+
+        .empty-table, .empty-state {
+            padding: 48px 20px;
+            text-align: center;
+        }
+
+        .empty-table h3, .empty-state h4 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 12px 0 4px;
+        }
+
+        .empty-table p, .empty-state p {
+            font-size: 13px;
+            color: #64748b;
+            margin: 0;
+        }
+
+        /* Right Panel Side Cards */
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .side-card {
+            background: rgba(255, 255, 255, 0.94) !important;
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.9) !important;
+            border-radius: 20px;
+            padding: 20px 22px;
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.035), 0 1px 3px rgba(15, 23, 42, 0.02);
+        }
+
+        .side-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .side-card-badge {
+            font-size: 9.5px;
+            font-weight: 800;
+            letter-spacing: 1.2px;
+            color: var(--blue-primary);
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .side-card-header h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0;
+        }
+
+        .side-card-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 14px;
+            font-size: 11px;
+            font-weight: 700;
+            background: #eff6ff;
+            color: var(--blue-primary);
+            border: 1px solid #bfdbfe;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .side-card-btn:hover {
+            background: var(--blue-primary);
+            color: #fff;
+        }
+
+        .alert-list, .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .stock-alert-item {
+            background: rgba(248, 250, 252, 0.85);
+            border: 1px solid #f1f5f9;
+            border-radius: 12px;
+            padding: 12px 14px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .alert-icon-box {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .alert-item-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .alert-item-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .alert-item-top strong {
+            font-size: 12.5px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .alert-pill {
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 10px;
+        }
+
+        .alert-pill.warning { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+        .alert-pill.online { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; }
+
+        .alert-item-content span {
+            font-size: 11.5px;
+            color: #64748b;
+        }
+
+        .alert-item-content small {
+            font-size: 10.5px;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            background: rgba(248, 250, 252, 0.85);
+            border: 1px solid #f1f5f9;
+            border-radius: 12px;
+            transition: all 0.2s;
+        }
+
+        .activity-item:hover {
+            background: #ffffff;
+            border-color: #cbd5e1;
+            transform: translateX(2px);
+        }
+
+        .activity-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            display: grid;
+            place-items: center;
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+
+        .activity-item strong {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .activity-item span {
+            display: block;
+            font-size: 11px;
+            color: #64748b;
+        }
+
+        /* =========================================================
+           CENTERED MODALS (FIXING EDIT & DELETE OVERLAYS)
+        ========================================================= */
+        .modal-overlay, .modal {
+            position: fixed !important;
+            inset: 0 !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            background: rgba(15, 23, 42, 0.65) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            display: none !important;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 9999 !important;
+            padding: 20px !important;
+            box-sizing: border-box !important;
+        }
+
+        .modal-overlay.active, .modal-overlay.show,
+        .modal.active, .modal.show {
+            display: flex !important;
+        }
+
+        .modal-box, .modal-dialog {
+            background: #ffffff !important;
+            border: 1px solid rgba(226, 232, 240, 0.9) !important;
+            border-radius: 20px !important;
+            box-shadow: 0 25px 65px rgba(15, 23, 42, 0.25) !important;
+            color: #0f172a !important;
+            padding: 28px 32px !important;
+            width: 100% !important;
+            max-width: 680px !important;
+            max-height: 90vh !important;
+            overflow-y: auto !important;
+            position: relative !important;
+            margin: auto !important;
+            animation: modalAppear 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        }
+
+        .modal-box.modal-sm, .modal-dialog.modal-sm {
+            max-width: 440px !important;
+            text-align: center !important;
+            padding: 28px 24px !important;
+        }
+
+        @keyframes modalAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-header {
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 14px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            color: #0f172a;
+            font-size: 19px;
+            font-weight: 800;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .modal-header span, .modal-subtitle {
+            color: #ea580c;
+            font-size: 10.5px;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .modal-close, .close-button {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            color: #64748b;
+            font-size: 15px;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover, .close-button:hover {
+            color: #ef4444;
+            background: #fef2f2;
+            border-color: #fecaca;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            text-align: left;
+        }
+
+        .form-group label {
+            color: #0f172a !important;
+            font-size: 13px !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.01em;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .form-group label span {
+            color: #ef4444 !important;
+            font-weight: 800;
+        }
+
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea,
+        .modal-box input,
+        .modal-box select,
+        .modal-box textarea {
+            background-color: #f8fafc !important;
+            background: #f8fafc !important;
+            border: 1.5px solid #cbd5e1 !important;
+            color: #0f172a !important;
+            -webkit-text-fill-color: #0f172a !important;
+            border-radius: 10px !important;
+            padding: 10px 14px !important;
+            font-size: 13.5px !important;
+            font-weight: 600 !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            outline: none !important;
+            transition: all 0.2s ease !important;
+            font-family: inherit !important;
+            color-scheme: light !important;
+            opacity: 1 !important;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder,
+        .modal-box input::placeholder,
+        .modal-box textarea::placeholder {
+            color: #94a3b8 !important;
+            -webkit-text-fill-color: #94a3b8 !important;
+            font-weight: 500 !important;
+        }
+
+        .form-group input:focus, 
+        .form-group select:focus, 
+        .form-group textarea:focus,
+        .modal-box input:focus,
+        .modal-box select:focus,
+        .modal-box textarea:focus {
+            border-color: #1a56db !important;
+            box-shadow: 0 0 0 3.5px rgba(26, 86, 219, 0.16) !important;
+            background-color: #ffffff !important;
+            background: #ffffff !important;
+            color: #0f172a !important;
+            -webkit-text-fill-color: #0f172a !important;
+        }
+
+        .modal-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .modal-btn, .cancel-button, .save-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .modal-btn.cancel, .cancel-button {
+            background: #f1f5f9;
+            border-color: #e2e8f0;
+            color: #475569;
+        }
+
+        .modal-btn.cancel:hover, .cancel-button:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        .modal-btn.primary, .save-button {
+            background: linear-gradient(135deg, #ff7a1a 0%, #ea580c 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(234, 88, 12, 0.35);
+        }
+
+        .modal-btn.primary:hover, .save-button:hover {
+            box-shadow: 0 6px 20px rgba(234, 88, 12, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .modal-btn.danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.35);
+        }
+
+        .modal-btn.danger:hover {
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5);
+            transform: translateY(-1px);
+        }
+
+        /* Detail Tiles Grid */
+        .detail-tiles-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .detail-tile {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 10px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            text-align: left;
+        }
+
+        .detail-tile-label {
+            font-size: 10.5px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .detail-tile-val {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #0f172a;
+            color: #ffffff;
+            padding: 12px 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: none;
+            align-items: center;
+            gap: 10px;
+            z-index: 10000;
+            font-size: 13px;
+            font-weight: 600;
+            animation: toastIn 0.25s ease;
+        }
+
+        .toast.show {
+            display: flex !important;
+        }
+
+        .toast.success {
+            background: #0f172a;
+            border-left: 4px solid #10b981;
+        }
+
+        .toast.success i {
+            color: #10b981;
+        }
+
+        .toast.error {
+            background: #0f172a;
+            border-left: 4px solid #ef4444;
+        }
+
+        .toast.error i {
+            color: #ef4444;
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1400px) {
+            .inventory-layout { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 1100px) {
+            .statistics-grid, .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+
+        @media (max-width: 900px) {
+            aside.sidebar, .sidebar { transform: translateX(-100%); }
+            aside.sidebar.open, .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; width: 100%; }
+            .mobile-menu { display: block; }
+            .statistics-grid, .stats-grid { grid-template-columns: 1fr !important; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Ambient Light Backdrop -->
+<div class="dashboard-backdrop">
+    <div class="dashboard-backdrop-img"></div>
+    <div class="dashboard-backdrop-overlay"></div>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-brand">
+        <div class="brand-icon">
+            <i class="bi bi-buildings-fill"></i>
+        </div>
+        <div class="brand-text">
+            <h2>WBCMS</h2>
+            <span>CONSTRUCTION</span>
+        </div>
+    </div>
+
+    <nav class="sidebar-navigation">
+        <p class="nav-title">MAIN MENU</p>
+
+        <a href="/dashboard.html" class="nav-item">
+            <i class="bi bi-grid-1x2-fill"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="/material-inventory.html" class="nav-item">
+            <i class="bi bi-box-seam-fill"></i>
+            <span>Material & Inventory</span>
+        </a>
+
+        <a href="/material-requests.html" class="nav-item">
+            <i class="bi bi-file-earmark-plus-fill"></i>
+            <span>Material Requests</span>
+        </a>
+
+        <a href="/projects.html" class="nav-item">
+            <i class="bi bi-building"></i>
+            <span>Projects</span>
+        </a>
+
+        <a href="/tasks.html" class="nav-item">
+            <i class="bi bi-clipboard-check"></i>
+            <span>Tasks</span>
+        </a>
+
+        <a href="/milestones.html" class="nav-item active">
+            <i class="bi bi-flag-fill"></i>
+            <span>Milestones</span>
+        </a>
+
+        <a href="/progress.html" class="nav-item">
+            <i class="bi bi-graph-up-arrow"></i>
+            <span>Progress Monitoring</span>
+        </a>
+
+        <a href="/documents.html" class="nav-item">
+            <i class="bi bi-file-earmark-text-fill"></i>
+            <span>Documents</span>
+        </a>
+
+        <p class="nav-title management-title">MANAGEMENT</p>
+
+        <a href="/reports.html" class="nav-item">
+            <i class="bi bi-bar-chart-line"></i>
+            <span>Reports</span>
+        </a>
+
+        <a href="/suppliers.html" class="nav-item">
+            <i class="bi bi-truck"></i>
+            <span>Suppliers</span>
+        </a>
+
+        <a href="/users.html" class="nav-item">
+            <i class="bi bi-people-fill"></i>
+            <span>Users</span>
+        </a>
+
+        <a href="/dashboard.html?tab=profile" class="nav-item">
+            <i class="bi bi-person-badge"></i>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+        <div class="sidebar-version">
+            WBCMS v1.0
+            <span>Construction Management</span>
+        </div>
+        <button class="logout-button" onclick="logout()">
+            <i class="bi bi-box-arrow-left"></i>
+            Logout
+        </button>
+    </div>
+
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+
+    <!-- TOP HEADER -->
+    <header class="top-header">
+
+        <div class="header-left">
+            <button class="mobile-menu" onclick="toggleSidebar()" aria-label="Toggle navigation">
+                <i class="bi bi-list"></i>
+            </button>
+
+            <div class="header-module-badge">
+                <div class="module-icon">
+                    <i class="bi bi-flag-fill"></i>
+                </div>
+                <div class="module-text">
+                    <span class="module-title">Milestones Console</span>
+                    <span class="module-sub"><span class="live-pulse-dot"></span> Live DB Sync</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-center">
+            <div class="header-admin-nav">
+                <button class="hdr-btn primary" onclick="openMilestoneModal()" title="Add New Project Milestone">
+                    <i class="bi bi-plus-circle-fill"></i>
+                    <span>Add Milestone</span>
+                </button>
+                <a href="/projects.html" class="hdr-btn" title="View Projects">
+                    <i class="bi bi-building"></i>
+                    <span>Projects</span>
+                </a>
+                <a href="/tasks.html" class="hdr-btn" title="View Tasks">
+                    <i class="bi bi-clipboard-check"></i>
+                    <span>Tasks</span>
+                </a>
+                <a href="/progress.html" class="hdr-btn" title="Progress Tracking">
+                    <i class="bi bi-graph-up-arrow"></i>
+                    <span>Progress</span>
+                </a>
+                <a href="/reports.html" class="hdr-btn" title="View Reports">
+                    <i class="bi bi-file-earmark-bar-graph-fill"></i>
+                    <span>Reports</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <button class="notification-button" title="Notifications">
+                <i class="bi bi-bell"></i>
+                <span class="notification-badge">3</span>
+            </button>
+
+            <div class="header-separator"></div>
+
+            <div class="profile" onclick="this.classList.toggle('open')" id="profileCard">
+                <div class="profile-avatar">
+                    <i class="bi bi-person-fill"></i>
+                </div>
+                <div class="profile-details">
+                    <strong id="profileName">Staff User</strong>
+                    <span id="profileRole">Staff</span>
+                </div>
+                <i class="bi bi-chevron-down"></i>
+
+                <div class="profile-dropdown-menu">
+                    <div class="dropdown-user-header">
+                        <strong id="dropdownUserName">Staff User</strong>
+                        <span>Milestones Tracking</span>
+                    </div>
+                    <a href="/projects.html" class="dropdown-item">
+                        <i class="bi bi-building"></i>
+                        <span>Projects</span>
+                    </a>
+                    <a href="/progress.html" class="dropdown-item">
+                        <i class="bi bi-graph-up-arrow"></i>
+                        <span>Progress</span>
+                    </a>
+                    <a href="/reports.html" class="dropdown-item">
+                        <i class="bi bi-file-earmark-text"></i>
+                        <span>Reports</span>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item logout" onclick="logout()">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Sign Out</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+    <!-- PAGE CONTENT -->
+    <section class="page-content">
+
+        <!-- HERO SECTION -->
+        <div class="hero-section">
+            <div class="hero-content">
+                <span class="hero-label">MAJOR CONTRACT PHASES & TARGET DATES</span>
+                <h1>Milestone Management Console</h1>
+                <p>Track critical construction project milestones, concrete curing windows, target handover dates, and delivery completion.</p>
+                <div style="display:flex; gap:16px; margin-top:14px; flex-wrap:wrap;">
+                    <span style="font-size:12px; color:#e2e8f0; display:inline-flex; align-items:center; gap:6px;">
+                        <i class="bi bi-flag-fill" style="color:#ff9944;"></i> Phase Verification Gateways
+                    </span>
+                    <span style="font-size:12px; color:#e2e8f0; display:inline-flex; align-items:center; gap:6px;">
+                        <i class="bi bi-database-check" style="color:#93c5fd;"></i> SQL Server Live Sync
+                    </span>
+                    <span style="font-size:12px; color:#e2e8f0; display:inline-flex; align-items:center; gap:6px;">
+                        <i class="bi bi-check-circle-fill" style="color:#6ee7b7;"></i> Deliverable Approvals
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4 TOP KPI STATS GRID -->
+        <section class="statistics-grid">
+
+            <!-- Total Milestones -->
+            <div class="stat-card">
+                <div>
+                    <div class="stat-icon blue">
+                        <i class="bi bi-flag-fill"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span>Total Milestones</span>
+                        <h2 id="totalMilestones">0</h2>
+                    </div>
+                </div>
+                <div class="stat-content">
+                    <small><i class="bi bi-clock-history" style="color:#1a56db;"></i> Across all active projects</small>
+                </div>
+            </div>
+
+            <!-- In Progress -->
+            <div class="stat-card">
+                <div>
+                    <div class="stat-icon orange">
+                        <i class="bi bi-arrow-repeat"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span>In Progress</span>
+                        <h2 id="inProgressMilestones">0</h2>
+                    </div>
+                </div>
+                <div class="stat-content">
+                    <small><i class="bi bi-gear-wide-connected" style="color:#ea580c;"></i> Active phase executions</small>
+                </div>
+            </div>
+
+            <!-- Completed -->
+            <div class="stat-card">
+                <div>
+                    <div class="stat-icon green">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span>Completed</span>
+                        <h2 id="completedMilestones">0</h2>
+                    </div>
+                </div>
+                <div class="stat-content">
+                    <small><i class="bi bi-shield-check" style="color:#10b981;"></i> Approved & verified</small>
+                </div>
+            </div>
+
+            <!-- Delayed -->
+            <div class="stat-card">
+                <div>
+                    <div class="stat-icon warning">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span>Delayed</span>
+                        <h2 id="delayedMilestones">0</h2>
+                    </div>
+                </div>
+                <div class="stat-content">
+                    <small><i class="bi bi-alarm" style="color:#f59e0b;"></i> Requires immediate attention</small>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- TWO-COLUMN LAYOUT -->
+        <div class="inventory-layout">
+
+            <!-- MAIN MILESTONES CARD -->
+            <section class="inventory-card">
+
+                <div class="inventory-header" style="display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:18px;">
+                    <div>
+                        <span class="section-label">PROJECT CHECKPOINTS OVERVIEW</span>
+                        <h2>Project Milestones</h2>
+                        <p>Major structural checkpoints, client sign-offs, and critical target dates</p>
+                    </div>
+                </div>
+
+                <!-- FILTER AREA -->
+                <div class="filter-area">
+                    <div class="material-search">
+                        <i class="bi bi-search search-icon"></i>
+                        <input
+                                type="text"
+                                id="milestoneSearch"
+                                placeholder="Search milestone name or project..."
+                                autocomplete="off"
+                        >
+                    </div>
+
+                    <div class="filter-select-wrapper">
+                        <i class="bi bi-building filter-select-icon"></i>
+                        <select id="projectFilter">
+                            <option value="">All Projects</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-select-wrapper">
+                        <i class="bi bi-funnel filter-select-icon"></i>
+                        <select id="statusFilter">
+                            <option value="">All Statuses</option>
+                            <option value="PENDING">Pending</option>
+                            <option value="IN_PROGRESS">In Progress</option>
+                            <option value="COMPLETED">Completed</option>
+                            <option value="DELAYED">Delayed</option>
+                            <option value="CANCELLED">Cancelled</option>
+                        </select>
+                    </div>
+
+                    <button
+                            type="button"
+                            class="reset-button"
+                            onclick="resetFilters()"
+                            title="Reset all filters"
+                    >
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                        Reset
+                    </button>
+
+                    <button
+                            type="button"
+                            class="action-button primary"
+                            onclick="openMilestoneModal()"
+                    >
+                        <i class="bi bi-plus-circle-fill"></i>
+                        <span>Add Milestone</span>
+                    </button>
+                </div>
+
+                <!-- TABLE CONTAINER -->
+                <div class="table-container">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th style="width: 60px;">#</th>
+                            <th>Milestone Details</th>
+                            <th>Project</th>
+                            <th>Target Date</th>
+                            <th>Completed Date</th>
+                            <th>Status</th>
+                            <th style="width: 130px; text-align: right;">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="milestoneTableBody">
+                        <tr>
+                            <td colspan="7" style="text-align:center; padding:48px 20px;">
+                                <i class="bi bi-arrow-repeat" style="font-size:24px; animation:spin 1s linear infinite; display:inline-block; color:#ea580c;"></i>
+                                <p style="margin-top:10px; color:#64748b; font-weight:600;">Loading milestones from database...</p>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- EMPTY STATE -->
+                <div id="emptyTable" class="empty-state" style="display:none;">
+                    <i class="bi bi-flag" style="font-size:42px; color:#94a3b8;"></i>
+                    <h4>No Milestones Found</h4>
+                    <p>No milestone records match the current search or status filter criteria.</p>
+                </div>
+
+            </section>
+
+            <!-- RIGHT PANEL SIDE CARDS -->
+            <aside class="right-panel">
+
+                <!-- Phase Gateways & Database Sync -->
+                <section class="side-card">
+                    <div class="side-card-header">
+                        <div>
+                            <span class="side-card-badge"><i class="bi bi-shield-check"></i> SYSTEM STATUS</span>
+                            <h3>Milestone Telemetry</h3>
+                        </div>
+                    </div>
+
+                    <div class="alert-list">
+                        <!-- Database Sync -->
+                        <div class="stock-alert-item online">
+                            <div class="alert-icon-box" style="background:rgba(16,185,129,0.12); color:#10b981;">
+                                <i class="bi bi-database-check"></i>
+                            </div>
+                            <div class="alert-item-content">
+                                <div class="alert-item-top">
+                                    <strong>Database Live</strong>
+                                    <span class="alert-pill online"><span class="live-pulse-dot" style="width:6px; height:6px;"></span> Connected</span>
+                                </div>
+                                <span>SQL Server live synchronization</span>
+                                <small><i class="bi bi-shield-check" style="color: #1a56db;"></i> REST API authenticated</small>
+                            </div>
+                        </div>
+
+                        <!-- Phase Verification -->
+                        <div class="stock-alert-item warning" style="cursor:default;" title="Verification Gateways">
+                            <div class="alert-icon-box" style="background:rgba(234,88,12,0.12); color:#ea580c;">
+                                <i class="bi bi-flag-fill"></i>
+                            </div>
+                            <div class="alert-item-content">
+                                <div class="alert-item-top">
+                                    <strong>Phase Verification</strong>
+                                    <span class="alert-pill warning">Gateways Active</span>
+                                </div>
+                                <span>Quality sign-offs and target date gates</span>
+                                <small><i class="bi bi-graph-up" style="color: #10b981;"></i> Milestone tracker active</small>
+                            </div>
+                        </div>
+
+                        <!-- Operations Access -->
+                        <div class="stock-alert-item" style="border-left: 3px solid #1a56db;">
+                            <div class="alert-icon-box" style="background:rgba(26,86,219,0.12); color:#1a56db;">
+                                <i class="bi bi-person-workspace"></i>
+                            </div>
+                            <div class="alert-item-content">
+                                <div class="alert-item-top">
+                                    <strong>Phase Authority</strong>
+                                    <span class="alert-pill" style="background:#eff6ff; color:#1a56db; border:1px solid #bfdbfe;">Full Access</span>
+                                </div>
+                                <span>Create, update, verify, and complete milestones</span>
+                                <small><i class="bi bi-check2" style="color: #10b981;"></i> Role permissions active</small>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- OPERATIONS HUB SHORTCUTS -->
+                <section class="side-card">
+                    <div class="side-card-header">
+                        <div>
+                            <span class="side-card-badge"><i class="bi bi-lightning-charge"></i> SHORTCUTS</span>
+                            <h3>Operations Hub</h3>
+                        </div>
+                    </div>
+
+                    <div class="activity-list">
+                        <a href="/projects.html" class="activity-item" style="text-decoration:none; color:inherit;">
+                            <div class="activity-icon" style="background:rgba(26,86,219,0.12); color:#1a56db;">
+                                <i class="bi bi-building"></i>
+                            </div>
+                            <div>
+                                <strong>Projects Portfolio</strong>
+                                <span>Project manager console and budgets</span>
+                            </div>
+                        </a>
+
+                        <a href="/tasks.html" class="activity-item" style="text-decoration:none; color:inherit;">
+                            <div class="activity-icon" style="background:rgba(234,88,12,0.12); color:#ea580c;">
+                                <i class="bi bi-clipboard-check"></i>
+                            </div>
+                            <div>
+                                <strong>Tasks Requisition</strong>
+                                <span>Assign site tasks and monitor sprints</span>
+                            </div>
+                        </a>
+
+                        <a href="/progress.html" class="activity-item" style="text-decoration:none; color:inherit;">
+                            <div class="activity-icon" style="background:rgba(16,185,129,0.12); color:#10b981;">
+                                <i class="bi bi-graph-up-arrow"></i>
+                            </div>
+                            <div>
+                                <strong>Progress Monitoring</strong>
+                                <span>Site progress logs, issues, and safety</span>
+                            </div>
+                        </a>
+
+                        <a href="/material-inventory.html" class="activity-item" style="text-decoration:none; color:inherit;">
+                            <div class="activity-icon" style="background:rgba(245,158,11,0.12); color:#f59e0b;">
+                                <i class="bi bi-box-seam-fill"></i>
+                            </div>
+                            <div>
+                                <strong>Material & Inventory</strong>
+                                <span>Stock levels and supplier tracking</span>
+                            </div>
+                        </a>
+                    </div>
+                </section>
+
+            </aside>
+
+        </div>
+
+    </section>
+
+</main>
+
+<!-- =========================================================
+     ADD / EDIT MILESTONE MODAL (CENTERED OVERLAY)
+========================================================= -->
+<div class="modal-overlay modal" id="milestoneModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-box modal-dialog">
+        <div class="modal-header">
+            <div>
+                <span class="modal-subtitle">MILESTONE OPERATIONS</span>
+                <h2 id="modalTitle">Add New Milestone</h2>
+            </div>
+            <button type="button" class="modal-close" onclick="closeMilestoneModal()" aria-label="Close">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <form id="milestoneForm" onsubmit="saveMilestone(event)">
+            <input type="hidden" id="milestoneId">
+
+            <div class="form-group">
+                <label for="milestoneName">Milestone Name <span>*</span></label>
+                <input
+                        type="text"
+                        id="milestoneName"
+                        maxlength="150"
+                        placeholder="e.g. Substructure Foundation Completed"
+                        required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="milestoneProject">Project <span>*</span></label>
+                <select id="milestoneProject" required>
+                    <option value="">Select Project</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="targetDate">Target Date <span>*</span></label>
+                    <input
+                            type="date"
+                            id="targetDate"
+                            required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="completedDate">Completed Date</label>
+                    <input
+                            type="date"
+                            id="completedDate"
+                    >
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="milestoneStatus">Status <span>*</span></label>
+                <select id="milestoneStatus" required>
+                    <option value="PENDING" selected>Pending</option>
+                    <option value="IN_PROGRESS">In Progress</option>
+                    <option value="COMPLETED">Completed</option>
+                    <option value="DELAYED">Delayed</option>
+                    <option value="CANCELLED">Cancelled</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="milestoneDescription">Milestone Description & Scope</label>
+                <textarea
+                        id="milestoneDescription"
+                        rows="3"
+                        maxlength="2000"
+                        placeholder="Describe key requirements, quality testing results, or completion deliverables..."
+                ></textarea>
+            </div>
+
+            <div class="modal-actions">
+                <button
+                        type="button"
+                        class="modal-btn cancel"
+                        onclick="closeMilestoneModal()"
+                >
+                    Cancel
+                </button>
+                <button
+                        type="submit"
+                        id="saveMilestoneBtn"
+                        class="modal-btn primary"
+                >
+                    <i class="bi bi-check-lg"></i>
+                    <span>Save Milestone</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- =========================================================
+     VIEW MILESTONE DETAILS MODAL (CENTERED OVERLAY)
+========================================================= -->
+<div class="modal-overlay modal" id="viewMilestoneModal" role="dialog" aria-modal="true" aria-labelledby="viewMilestoneTitle">
+    <div class="modal-box modal-dialog">
+        <div class="modal-header">
+            <div>
+                <span class="modal-subtitle">MILESTONE PROFILE</span>
+                <h2 id="viewMilestoneTitle">Milestone Details</h2>
+            </div>
+            <button type="button" class="modal-close" onclick="closeViewModal()" aria-label="Close">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <div class="detail-tiles-grid">
+            <div class="detail-tile">
+                <span class="detail-tile-label">Milestone ID</span>
+                <span class="detail-tile-val" id="viewMilestoneId">#MLS---</span>
+            </div>
+            <div class="detail-tile">
+                <span class="detail-tile-label">Current Status</span>
+                <span class="detail-tile-val" id="viewMilestoneStatus">--</span>
+            </div>
+            <div class="detail-tile">
+                <span class="detail-tile-label">Associated Project</span>
+                <span class="detail-tile-val" id="viewMilestoneProject">--</span>
+            </div>
+            <div class="detail-tile">
+                <span class="detail-tile-label">Target Completion Date</span>
+                <span class="detail-tile-val" id="viewMilestoneTargetDate" style="color:#ea580c;">--</span>
+            </div>
+            <div class="detail-tile">
+                <span class="detail-tile-label">Actual Completion Date</span>
+                <span class="detail-tile-val" id="viewMilestoneCompletedDate">--</span>
+            </div>
+            <div class="detail-tile">
+                <span class="detail-tile-label">Timeline Status</span>
+                <span class="detail-tile-val" id="viewMilestoneTimeline">--</span>
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-top:12px;">
+            <label style="color:#475569; font-size:11px; text-transform:uppercase; font-weight:700;">Milestone Scope & Requirements</label>
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px; font-size:13px; color:#334155; line-height:1.5;" id="viewMilestoneDescription">
+                No description provided.
+            </div>
+        </div>
+
+        <div class="modal-actions" style="margin-top:20px;">
+            <button type="button" class="modal-btn cancel" onclick="closeViewModal()">Close</button>
+            <button type="button" class="modal-btn primary" id="viewEditMilestoneBtn" onclick="editFromViewModal()">
+                <i class="bi bi-pencil-fill"></i>
+                <span>Edit Milestone</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- =========================================================
+     DELETE CONFIRMATION MODAL (CENTERED OVERLAY)
+========================================================= -->
+<div class="modal-overlay modal" id="deleteMilestoneModal" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
+    <div class="modal-box modal-dialog modal-sm">
+        <div style="width:54px; height:54px; border-radius:50%; background:rgba(239,68,68,0.12); color:#ef4444; font-size:26px; display:grid; place-items:center; margin:0 auto 16px;">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+        </div>
+
+        <h3 id="deleteModalTitle" style="font-size:18px; font-weight:700; color:#0f172a; margin:0 0 8px 0;">Delete Milestone</h3>
+        <p style="font-size:13px; color:#64748b; line-height:1.5; margin:0 0 20px 0;">
+            Are you sure you want to permanently delete <strong id="deleteMilestoneName" style="color:#0f172a;">this milestone</strong>? This action cannot be undone.
+        </p>
+
+        <div style="display:flex; gap:12px; justify-content:center;">
+            <button type="button" class="modal-btn cancel" onclick="closeDeleteModal()">Cancel</button>
+            <button type="button" class="modal-btn danger" id="confirmDeleteBtn" onclick="confirmDeleteMilestone()">
+                <i class="bi bi-trash-fill"></i>
+                <span>Delete Milestone</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+    <i class="bi bi-check-circle-fill"></i>
+    <span id="toastMessage">Action successful.</span>
+</div>
+
+<!-- JAVASCRIPT -->
+<script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        if (sidebar) sidebar.classList.toggle("open");
+    }
+</script>
+<script src="/js/milestones.js"></script>
+<script src="/js/notifications.js"></script>
+
+</body>
+
+</html>

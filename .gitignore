@@ -1,11 +1,12 @@
 HELP.md
+**/HELP.md
 target/
+**/target/
+\${project.build.directory}/
+**/\${project.build.directory}/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-.idea/
-*.class
-*.log
 
 ### STS ###
 .apt_generated
@@ -17,7 +18,10 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/shelf
 *.iws
 *.iml
 *.ipr
@@ -34,3 +38,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### OS Files ###
+.DS_Store
+Thumbs.db
