@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WBCMS | Supplier Portal & Material Requisitions</title>
+
+    <!-- Google Fonts: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap Icons & Font Awesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/css/premium-theme.css">
+    <link rel="stylesheet" href="/css/unified-pages.css">
+    <script src="/js/theme-init.js"></script>
+
+    <style>
+        /* Supplier Portal Enhancements */
+        .status.approved, .status.fulfilled, .status.accepted {
+            background: #ecfdf5;
+            color: #059669;
+            border: 1px solid #a7f3d0;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status.pending {
+            background: #fffbeb;
+            color: #d97706;
+            border: 1px solid #fde68a;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status.rejected, .status.cancelled, .status.declined {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .actions button, .actions a {
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid transparent;
+        }
+
+        .actions button.accept-btn {
+            background: #ecfdf5;
+            border-color: #a7f3d0;
+            color: #059669;
+        }
+        .actions button.accept-btn:hover {
+            background: #d1fae5;
+            border-color: #6ee7b7;
+            color: #047857;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 6px rgba(5,150,105,0.15);
+        }
+
+        .actions button.decline-btn {
+            background: #fef2f2;
+            border-color: #fecaca;
+            color: #dc2626;
+        }
+        .actions button.decline-btn:hover {
+            background: #fee2e2;
+            border-color: #fca5a5;
+            color: #b91c1c;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 6px rgba(220,38,38,0.15);
+        }
+
+        .actions button.view-btn {
+            background: #eff6ff;
+            border-color: #bfdbfe;
+            color: #1d4ed8;
+        }
+        .actions button.view-btn:hover {
+            background: #dbeafe;
+            border-color: #93c5fd;
+            color: #1e40af;
+            transform: translateY(-1px);
+        }
+
+        /* Modal Overlays */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-dialog {
+            background: #ffffff;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+            border: 1px solid #e2e8f0;
+            transform: scale(0.96);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal-overlay.show .modal-dialog {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .modal-header p {
+            margin: 4px 0 0;
+            font-size: 12.5px;
+            color: #64748b;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 6px;
+            transition: all 0.15s;
+        }
+
+        .modal-close:hover {
+            color: #0f172a;
+            background: #f1f5f9;
+        }
+
+        .modal-body {
+            padding: 20px 24px;
+        }
+
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+            background: #f8fafc;
+            border-bottom-left-radius: 16px;
+            border-bottom-right-radius: 16px;
+        }
+
+        /* Detail Tiles */
+        .detail-tiles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .detail-tile {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .detail-tile-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: #64748b;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-tile-val {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        /* Tab Buttons */
+        .inventory-tabs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 12px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid transparent;
+            background: transparent;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-btn:hover {
+            color: #0f172a;
+            background: #f1f5f9;
+        }
+
+        .tab-btn.active {
+            background: #1a56db;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(26, 86, 219, 0.25);
+        }
+
+        .tab-count {
+            background: rgba(0, 0, 0, 0.08);
+            padding: 2px 7px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .tab-btn.active .tab-count {
+            background: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+        }
+
+        .spin {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Ambient Light Backdrop -->
+<div class="dashboard-backdrop">
+    <div class="dashboard-backdrop-img"></div>
+    <div class="dashboard-backdrop-overlay"></div>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-brand">
+        <div class="brand-logo">
+            <i class="bi bi-truck"></i>
+        </div>
+        <div>
+            <h2>WBCMS</h2>
+            <span>SUPPLIER PORTAL</span>
+        </div>
+    </div>
+
+    <nav class="sidebar-navigation">
+        <p class="nav-title">SUPPLIER CONSOLE</p>
+
+        <a href="/supplier-dashboard.html" class="nav-item active">
+            <i class="bi bi-box-seam-fill"></i>
+            <span>Incoming Requests</span>
+        </a>
+
+        <a href="/suppliers.html" class="nav-item">
+            <i class="bi bi-truck"></i>
+            <span>Vendor Directory</span>
+        </a>
+
+        <a href="/material-requests.html" class="nav-item">
+            <i class="bi bi-file-earmark-plus-fill"></i>
+            <span>Requisitions Console</span>
+        </a>
+
+        <a href="/material-inventory.html" class="nav-item">
+            <i class="bi bi-boxes"></i>
+            <span>Materials Catalog</span>
+        </a>
+
+        <a href="/projects.html" class="nav-item">
+            <i class="bi bi-building"></i>
+            <span>Projects Directory</span>
+        </a>
+
+        <p class="nav-title management-title">SYSTEM</p>
+
+        <a href="/dashboard.html" class="nav-item">
+            <i class="bi bi-grid-1x2-fill"></i>
+            <span>Main Dashboard</span>
+        </a>
+    </nav>
+
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+        <div class="sidebar-version">
+            WBCMS v1.0
+            <span>Supplier Integration</span>
+        </div>
+        <button class="logout-button" onclick="logout()">
+            <i class="bi bi-box-arrow-left"></i>
+            Logout
+        </button>
+    </div>
+
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+
+    <!-- TOP HEADER -->
+    <header class="top-header">
+
+        <div class="header-left">
+            <button class="mobile-menu" onclick="toggleSidebar()" aria-label="Toggle navigation">
+                <i class="bi bi-list"></i>
+            </button>
+
+            <div class="header-module-badge">
+                <div class="module-icon">
+                    <i class="bi bi-truck"></i>
+                </div>
+                <div class="module-text">
+                    <span class="module-title">Supplier Dashboard</span>
+                    <span class="module-sub"><span class="live-pulse-dot"></span> Live Sync</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-center">
+            <div class="header-admin-nav">
+                <a href="/material-requests.html" class="hdr-btn" title="View Requisitions Console">
+                    <i class="bi bi-file-earmark-plus-fill"></i>
+                    <span>Requisitions Console</span>
+                </a>
+                <a href="/suppliers.html" class="hdr-btn" title="Suppliers Directory">
+                    <i class="bi bi-truck"></i>
+                    <span>Suppliers Directory</span>
+                </a>
+                <a href="/material-inventory.html" class="hdr-btn" title="Material Inventory">
+                    <i class="bi bi-boxes"></i>
+                    <span>Inventory</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <button class="notification-button" title="Notifications" onclick="loadRequests(true)">
+                <i class="bi bi-bell"></i>
+                <span class="notification-badge" id="pendingNotifCount" style="display:none;">0</span>
+            </button>
+
+            <div class="header-separator"></div>
+
+            <div class="profile" onclick="this.classList.toggle('open')" id="profileCard">
+                <div class="profile-avatar" id="avatarInitials">
+                    SP
+                </div>
+                <div class="profile-details">
+                    <strong id="profileName">Supplier User</strong>
+                    <span id="profileRole">Material Supplier</span>
+                </div>
+                <i class="bi bi-chevron-down"></i>
+
+                <div class="profile-dropdown-menu">
+                    <div class="dropdown-user-header">
+                        <strong id="dropdownUserName">Supplier User</strong>
+                        <span>Material Vendor Portal</span>
+                    </div>
+                    <a href="/material-requests.html" class="dropdown-item">
+                        <i class="bi bi-file-earmark-text"></i>
+                        <span>Requisitions Console</span>
+                    </a>
+                    <a href="/suppliers.html" class="dropdown-item">
+                        <i class="bi bi-truck"></i>
+                        <span>Supplier Directory</span>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item logout" onclick="logout()">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Sign Out</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+    <!-- PAGE CONTENT -->
+    <section class="page-content" style="padding: 24px 32px 40px;">
+
+        <!-- HERO SECTION -->
+        <div class="hero-section">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <span class="hero-label">PROCUREMENT FULFILLMENT & DISPATCH CONSOLE</span>
+                <h1>Incoming Material Requests & Orders</h1>
+                <p>Review construction site requisitions dispatched by Procurement Officers, verify technical quantities, and accept or decline supply fulfillment in real-time.</p>
+                <div class="hero-meta" style="display:flex; gap:16px; margin-top:14px; flex-wrap:wrap;">
+                    <span style="font-size:12px; color:#cbd5e1; display:inline-flex; align-items:center; gap:6px;">
+                        <i class="bi bi-check-all" style="color:var(--green);"></i> Real-Time Two-Way Sync
+                    </span>
+                    <span style="font-size:12px; color:#cbd5e1; display:inline-flex; align-items:center; gap:6px;">
+                        <i class="bi bi-database-check" style="color:var(--blue);"></i> SQL Server Live Database
+                    </span>
+                    <span style="font-size:12px; color:#cbd5e1; display:inline-flex; align-items:center; gap:6px;">
+                        <i class="bi bi-shield-check" style="color:var(--orange);"></i> Role-Based Authentication
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- STATS GRID -->
+        <section class="stats-grid" style="margin-bottom: 24px;">
+
+            <!-- Total Requests -->
+            <div class="stat-card">
+                <div class="stat-icon total">
+                    <i class="bi bi-clipboard-data-fill"></i>
+                </div>
+                <div>
+                    <span class="stat-title">Total Incoming Requests</span>
+                    <h2 id="totalRequests">0</h2>
+                </div>
+            </div>
+
+            <!-- Pending Review -->
+            <div class="stat-card">
+                <div class="stat-icon pending">
+                    <i class="bi bi-hourglass-split"></i>
+                </div>
+                <div>
+                    <span class="stat-title">Pending Decision</span>
+                    <h2 id="pendingRequests">0</h2>
+                </div>
+            </div>
+
+            <!-- Accepted -->
+            <div class="stat-card">
+                <div class="stat-icon in-stock">
+                    <i class="bi bi-check2-circle"></i>
+                </div>
+                <div>
+                    <span class="stat-title">Accepted Orders</span>
+                    <h2 id="acceptedRequests">0</h2>
+                </div>
+            </div>
+
+            <!-- Declined -->
+            <div class="stat-card">
+                <div class="stat-icon out-of-stock">
+                    <i class="bi bi-x-circle-fill"></i>
+                </div>
+                <div>
+                    <span class="stat-title">Declined Requisitions</span>
+                    <h2 id="declinedRequests">0</h2>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- MAIN TABLE CARD -->
+        <section class="inventory-card">
+
+            <div class="card-header" style="display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:18px;">
+                <div>
+                    <span class="section-label">ORDER QUEUE</span>
+                    <h2 style="font-size:20px; font-weight:800; color:#0f172a; margin:0 0 2px 0;">Incoming Material Requisitions</h2>
+                    <p style="font-size:12.5px; color:#64748b; margin:0;">Dispatched material requisitions awaiting supplier confirmation and logistics scheduling.</p>
+                </div>
+
+                <div class="table-filters" style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                    <div class="search-container" style="min-width:260px;">
+                        <i class="bi bi-search"></i>
+                        <input
+                                type="text"
+                                id="searchInput"
+                                placeholder="Search by code, material, project..."
+                                autocomplete="off"
+                        >
+                    </div>
+
+                    <button
+                            type="button"
+                            class="action-button"
+                            onclick="loadRequests()"
+                            title="Refresh from Database"
+                    >
+                        <i class="bi bi-arrow-clockwise"></i>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- TABS -->
+            <div class="inventory-tabs">
+                <button class="tab-btn active" onclick="setTab('ALL', this)">
+                    All Requests
+                    <span class="tab-count" id="tabCountAll">0</span>
+                </button>
+                <button class="tab-btn" onclick="setTab('PENDING', this)">
+                    Pending Review
+                    <span class="tab-count" id="tabCountPending">0</span>
+                </button>
+                <button class="tab-btn" onclick="setTab('ACCEPTED', this)">
+                    Accepted Orders
+                    <span class="tab-count" id="tabCountAccepted">0</span>
+                </button>
+                <button class="tab-btn" onclick="setTab('DECLINED', this)">
+                    Declined
+                    <span class="tab-count" id="tabCountDeclined">0</span>
+                </button>
+            </div>
+
+            <!-- TABLE -->
+            <div class="table-container" style="overflow-x:auto;">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Req Code</th>
+                        <th>Material Name</th>
+                        <th>Quantity & Unit</th>
+                        <th>Project Site</th>
+                        <th>Requested By</th>
+                        <th>Required By Date</th>
+                        <th>Status</th>
+                        <th>Supplier Remarks</th>
+                        <th style="width: 220px;">Decision Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="supplierTableBody">
+                    <tr>
+                        <td colspan="9" style="text-align:center; padding: 40px;">
+                            <i class="bi bi-arrow-repeat spin" style="font-size: 24px; display: inline-block; color:var(--orange);"></i>
+                            <p style="margin-top: 8px; color: #8a99ad;">Connecting to SQL Server and loading material requests...</p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- EMPTY STATE -->
+            <div id="emptyMessage" class="empty-state" style="display:none; text-align: center; padding: 40px;">
+                <i class="bi bi-inbox" style="font-size: 42px; color: #64748b;"></i>
+                <h4 style="margin-top: 12px; color: #cbd5e1; font-size: 16px;">No Material Requests Found</h4>
+                <p style="color: #64748b; font-size: 13px; max-width:400px; margin:6px auto 0;">No requisition records match the selected filter tab or search query.</p>
+            </div>
+
+        </section>
+
+    </section>
+
+</main>
+
+<!-- =========================================================
+     SUPPLIER DECISION MODAL (ACCEPT / DECLINE)
+========================================================= -->
+<div class="modal-overlay" id="decisionModal" role="dialog" aria-modal="true" aria-labelledby="decisionModalTitle">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <div>
+                <h3 id="decisionModalTitle">Supplier Requisition Decision</h3>
+                <p id="decisionModalSubtitle">Confirm order fulfillment or decline the site requisition.</p>
+            </div>
+            <button type="button" class="modal-close" onclick="closeDecisionModal()" aria-label="Close">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <form id="decisionForm">
+            <input type="hidden" id="decisionReqId">
+            <input type="hidden" id="decisionTargetStatus">
+
+            <div class="modal-body">
+                <!-- Requisition Summary Card -->
+                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:14px; margin-bottom:18px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                        <span style="font-weight:700; color:#1a56db; font-family:monospace; background:#eff6ff; padding:3px 8px; border-radius:6px; border:1px solid #dbeafe;" id="summaryReqCode">REQ-000</span>
+                        <span id="summaryReqStatus" class="status pending">Pending</span>
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:13px;">
+                        <div><span style="color:#64748b;">Material:</span> <strong id="summaryMaterial" style="color:#0f172a;">--</strong></div>
+                        <div><span style="color:#64748b;">Quantity:</span> <strong id="summaryQuantity" style="color:#0f172a;">--</strong></div>
+                        <div><span style="color:#64748b;">Project:</span> <strong id="summaryProject" style="color:#0f172a;">--</strong></div>
+                        <div><span style="color:#64748b;">Required Date:</span> <strong id="summaryDate" style="color:#0f172a;">--</strong></div>
+                    </div>
+                    <div style="margin-top:8px; font-size:12.5px; color:#475569;">
+                        <span style="color:#64748b;">Purpose:</span> <span id="summaryReason">--</span>
+                    </div>
+                </div>
+
+                <!-- Decision Toggle -->
+                <div class="form-group" style="margin-bottom:14px;">
+                    <label style="font-weight:700; font-size:12px; text-transform:uppercase; color:#475569; margin-bottom:6px; display:block;">Your Decision <span>*</span></label>
+                    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
+                        <button
+                                type="button"
+                                id="btnSelectAccept"
+                                onclick="selectDecision('ACCEPTED')"
+                                style="padding:11px 6px; border-radius:10px; font-weight:700; font-size:13px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; border:2px solid #a7f3d0; background:#ecfdf5; color:#047857; transition:all 0.2s;"
+                        >
+                            <i class="bi bi-check-circle-fill"></i> Accept Order
+                        </button>
+                        <button
+                                type="button"
+                                id="btnSelectDecline"
+                                onclick="selectDecision('DECLINED')"
+                                style="padding:11px 6px; border-radius:10px; font-weight:700; font-size:13px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; border:2px solid #e2e8f0; background:#f8fafc; color:#64748b; transition:all 0.2s;"
+                        >
+                            <i class="bi bi-x-circle-fill"></i> Decline Requisition
+                        </button>
+                        <button
+                                type="button"
+                                id="btnSelectPending"
+                                onclick="selectDecision('PENDING')"
+                                style="padding:11px 6px; border-radius:10px; font-weight:700; font-size:13px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; border:2px solid #e2e8f0; background:#f8fafc; color:#64748b; transition:all 0.2s;"
+                        >
+                            <i class="bi bi-clock-history"></i> Pending Review
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Supplier Name / Identity -->
+                <div class="form-group" style="margin-bottom:14px;">
+                    <label for="decisionSupplierName">Supplier Company / Representative</label>
+                    <input
+                            type="text"
+                            id="decisionSupplierName"
+                            maxlength="150"
+                            placeholder="Enter supplier company name"
+                            value=""
+                            required
+                    >
+                </div>
+
+                <!-- Decision Remarks -->
+                <div class="form-group" style="margin-bottom:0;">
+                    <label for="decisionRemarks">Decision Remarks / Notes <span>*</span></label>
+                    <textarea
+                            id="decisionRemarks"
+                            rows="3"
+                            maxlength="1000"
+                            placeholder="e.g. Order accepted, batch ready for delivery on schedule (or reason for declining)..."
+                            required
+                    ></textarea>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="action-button" onclick="closeDecisionModal()">Cancel</button>
+                <button type="submit" class="action-button primary" id="submitDecisionBtn">
+                    <i class="bi bi-check-lg"></i>
+                    <span>Confirm Decision</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- =========================================================
+     VIEW MATERIAL REQUEST DETAILS MODAL
+========================================================= -->
+<div class="modal-overlay" id="viewRequestModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <div>
+                <h3>Material Requisition Details</h3>
+                <p>Complete requisition specifications and site allocation parameters</p>
+            </div>
+            <button type="button" class="modal-close" onclick="closeViewModal()" aria-label="Close">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="detail-tiles-grid">
+                <div class="detail-tile">
+                    <span class="detail-tile-label">Request Code</span>
+                    <span class="detail-tile-val" id="viewReqCode">--</span>
+                </div>
+                <div class="detail-tile">
+                    <span class="detail-tile-label">Status</span>
+                    <span class="detail-tile-val" id="viewReqStatus">--</span>
+                </div>
+                <div class="detail-tile">
+                    <span class="detail-tile-label">Material Name</span>
+                    <span class="detail-tile-val" id="viewReqMaterial">--</span>
+                </div>
+                <div class="detail-tile">
+                    <span class="detail-tile-label">Quantity & Unit</span>
+                    <span class="detail-tile-val" id="viewReqQuantity">--</span>
+                </div>
+                <div class="detail-tile">
+                    <span class="detail-tile-label">Project Site</span>
+                    <span class="detail-tile-val" id="viewReqProject">--</span>
+                </div>
+                <div class="detail-tile">
+                    <span class="detail-tile-label">Requested By</span>
+                    <span class="detail-tile-val" id="viewReqRequestedBy">--</span>
+                </div>
+                <div class="detail-tile">
+                    <span class="detail-tile-label">Required Date</span>
+                    <span class="detail-tile-val" id="viewReqDate">--</span>
+                </div>
+                <div class="detail-tile">
+                    <span class="detail-tile-label">Assigned Supplier</span>
+                    <span class="detail-tile-val" id="viewReqSupplier">--</span>
+                </div>
+            </div>
+
+            <!-- Supplier Response Section -->
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:14px; margin-bottom:14px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <span style="font-size:11px; text-transform:uppercase; font-weight:700; color:#475569; letter-spacing:0.5px;">
+                        <i class="bi bi-truck" style="margin-right:4px;"></i> Supplier Decision Details
+                    </span>
+                    <span id="viewDetailDecisionBadge" class="status pending">Pending</span>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:12.5px; margin-bottom:8px;">
+                    <div><span style="color:#64748b;">Decided By:</span> <strong id="viewDetailDecisionBy" style="color:#0f172a;">--</strong></div>
+                    <div><span style="color:#64748b;">Decision Date:</span> <strong id="viewDetailDecisionDate" style="color:#0f172a;">--</strong></div>
+                </div>
+                <div>
+                    <span style="font-size:11px; color:#64748b; display:block; margin-bottom:4px;">Supplier Remarks:</span>
+                    <div id="viewDetailDecisionRemarks" style="background:#ffffff; border:1px solid #cbd5e1; border-radius:8px; padding:8px 10px; font-size:12.5px; color:#334155; min-height:36px;">
+                        --
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom:0;">
+                <label style="color:#475569; font-size:11px; text-transform:uppercase; font-weight:700;">Site Purpose / Requisition Reason</label>
+                <div id="viewReqReason" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px; font-size:13px; color:#334155; line-height:1.5; min-height:50px;">
+                    --
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="action-button" onclick="closeViewModal()">Close</button>
+            <button type="button" class="action-button primary" id="viewModalDecideBtn">
+                <i class="bi bi-pencil-square"></i>
+                <span>Review & Decide</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+    <i class="bi bi-check-circle-fill"></i>
+    <span id="toastMessage">Operation successful</span>
+</div>
+
+<!-- SCRIPTS -->
+<script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        if (sidebar) sidebar.classList.toggle("open");
+    }
+    function logout() {
+        localStorage.removeItem("wbcms_token");
+        localStorage.removeItem("wbcms_user_type");
+        localStorage.removeItem("wbcms_role");
+        localStorage.removeItem("wbcms_username");
+        localStorage.removeItem("wbcms_full_name");
+        window.location.replace("/staff-login.html");
+    }
+</script>
+<script src="/js/supplier-dashboard.js"></script>
+<script src="/js/notifications.js"></script>
+
+</body>
+
+</html>
