@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WBCMS | System Settings</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap Icons & Themes -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/css/premium-theme.css">
+    <link rel="stylesheet" href="/css/unified-pages.css">
+    <link rel="stylesheet" href="/css/settings.css">
+    <script src="/js/theme-init.js"></script>
+</head>
+
+<body>
+
+<!-- Ambient Construction Backdrop -->
+<div class="dashboard-backdrop">
+    <div class="dashboard-backdrop-img"></div>
+    <div class="dashboard-backdrop-overlay"></div>
+</div>
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+<aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-brand">
+        <div class="brand-logo">
+            <i class="bi bi-buildings-fill"></i>
+        </div>
+        <div>
+            <h2>WBCMS</h2>
+            <span>CONSTRUCTION</span>
+        </div>
+    </div>
+
+    <nav class="sidebar-navigation">
+        <p class="nav-title">MAIN MENU</p>
+
+        <a href="/dashboard.html" class="nav-item">
+            <i class="bi bi-grid-1x2-fill"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="/material-inventory.html" class="nav-item">
+            <i class="bi bi-box-seam-fill"></i>
+            <span>Material & Inventory</span>
+        </a>
+
+        <a href="/material-requests.html" class="nav-item">
+            <i class="bi bi-file-earmark-plus-fill"></i>
+            <span>Material Requests</span>
+        </a>
+
+        <a href="/projects.html" class="nav-item">
+            <i class="bi bi-building"></i>
+            <span>Projects</span>
+        </a>
+
+        <a href="/tasks.html" class="nav-item">
+            <i class="bi bi-clipboard-check"></i>
+            <span>Tasks</span>
+        </a>
+
+        <a href="/progress.html" class="nav-item">
+            <i class="bi bi-graph-up-arrow"></i>
+            <span>Progress Monitoring</span>
+        </a>
+
+        <a href="/documents.html" class="nav-item">
+            <i class="bi bi-file-earmark-text-fill"></i>
+            <span>Documents</span>
+        </a>
+
+        <p class="nav-title management-title">MANAGEMENT</p>
+
+        <a href="/reports.html" class="nav-item">
+            <i class="bi bi-bar-chart-line"></i>
+            <span>Reports</span>
+        </a>
+
+        <a href="/suppliers.html" class="nav-item">
+            <i class="bi bi-truck"></i>
+            <span>Suppliers</span>
+        </a>
+
+        <a href="/users.html" class="nav-item">
+            <i class="bi bi-people-fill"></i>
+            <span>Users</span>
+        </a>
+
+        <a href="/roles.html" class="nav-item">
+            <i class="bi bi-shield-lock-fill"></i>
+            <span>Roles & Access</span>
+        </a>
+
+        <a href="/settings.html" class="nav-item active">
+            <i class="bi bi-gear-fill"></i>
+            <span>System Settings</span>
+        </a>
+    </nav>
+
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+        <div class="sidebar-version">
+            WBCMS v1.0
+            <span>Enterprise Configuration</span>
+        </div>
+        <button class="logout-button" onclick="logout()">
+            <i class="bi bi-box-arrow-left"></i>
+            Logout
+        </button>
+    </div>
+
+</aside>
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+<main class="main-content">
+
+    <!-- =====================================================
+         TOP HEADER (Identical to Material Inventory & Suppliers)
+    ====================================================== -->
+    <header class="top-header">
+
+        <div class="header-left">
+            <button class="mobile-menu" onclick="toggleSidebar()" aria-label="Toggle navigation">
+                <i class="bi bi-list"></i>
+            </button>
+
+            <div class="header-module-badge">
+                <div class="module-icon">
+                    <i class="bi bi-gear-wide-connected"></i>
+                </div>
+                <div class="module-text">
+                    <span class="module-title">Settings Console</span>
+                    <span class="module-sub"><span class="live-pulse-dot"></span> Live DB</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-center">
+            <div class="header-admin-nav">
+                <button class="hdr-btn primary" onclick="openSettingModal()" title="Add New System Parameter">
+                    <i class="bi bi-plus-circle-fill"></i>
+                    <span>Add Setting</span>
+                </button>
+                <button class="hdr-btn" onclick="openPasswordModal()" title="Update Personal Password">
+                    <i class="bi bi-shield-lock"></i>
+                    <span>Password</span>
+                </button>
+                <button class="hdr-btn" onclick="openDiagnosticsModal()" title="SQL Server Health & Diagnostics">
+                    <i class="bi bi-database-check"></i>
+                    <span>Diagnostics</span>
+                </button>
+                <a href="/roles.html" class="hdr-btn" title="Roles & Permissions Matrix">
+                    <i class="bi bi-shield-lock-fill"></i>
+                    <span>Roles</span>
+                </a>
+                <button class="hdr-btn" onclick="exportSettingsCSV()" title="Export Settings to CSV">
+                    <i class="bi bi-file-earmark-arrow-down-fill"></i>
+                    <span>Export CSV</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <button class="notification-button" title="Notifications">
+                <i class="bi bi-bell"></i>
+                <span class="notification-badge">3</span>
+            </button>
+
+            <div class="header-separator"></div>
+
+            <div class="profile" onclick="this.classList.toggle('open')" id="profileCard">
+                <div class="profile-avatar" id="avatarInitials">
+                    SA
+                </div>
+                <div class="profile-details">
+                    <strong id="profileName">Administrator</strong>
+                    <span id="profileRole">System Administrator</span>
+                </div>
+                <i class="bi bi-chevron-down"></i>
+
+                <div class="profile-dropdown-menu">
+                    <div class="dropdown-user-header">
+                        <strong id="dropdownUserName">Administrator</strong>
+                        <span>System Administration</span>
+                    </div>
+                    <a href="/roles.html" class="dropdown-item">
+                        <i class="bi bi-shield-lock-fill"></i>
+                        <span>Roles & Permissions</span>
+                    </a>
+                    <a href="/users.html" class="dropdown-item">
+                        <i class="bi bi-people"></i>
+                        <span>User Accounts</span>
+                    </a>
+                    <button type="button" class="dropdown-item" onclick="openPasswordModal()">
+                        <i class="bi bi-key"></i>
+                        <span>Change Password</span>
+                    </button>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item logout" onclick="logout()">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Sign Out</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+    <!-- =====================================================
+         ACCESS DENIED CONTAINER (Shown for non-admin users)
+    ====================================================== -->
+    <div id="accessDeniedPanel" style="display: none; padding: 40px 32px;">
+        <div class="access-denied-container">
+            <div class="access-denied-icon">
+                <i class="bi bi-shield-slash"></i>
+            </div>
+            <h2 style="color: #f8fafc; font-size: 22px; font-weight: 700; margin-bottom: 10px;">Access Restricted</h2>
+            <p style="color: #94a3b8; font-size: 14px; max-width: 440px; margin: 0 auto 24px;">
+                The System Settings console requires elevated <strong>System Administrator</strong> privileges. Your current role is not authorized to modify global parameters.
+            </p>
+            <a href="/dashboard.html" class="action-button primary" style="display: inline-flex;">
+                <i class="bi bi-arrow-left"></i> Return to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- =====================================================
+         AUTHORIZED PAGE CONTENT
+    ====================================================== -->
+    <section class="page-content" id="authorizedContent" style="padding: 24px 32px 40px;">
+
+        <!-- HERO SECTION -->
+        <div class="hero-section">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <span class="hero-label">ENTERPRISE CONFIGURATION ENGINE</span>
+                <h1>
+                    System Settings.<br>
+                    <span>Control Global Platform Parameters.</span>
+                </h1>
+                <p>
+                    Manage enterprise construction defaults, stock threshold policies, authentication lifetimes, and SQL Server infrastructure settings with instant real-time synchronization.
+                </p>
+            </div>
+        </div>
+
+        <!-- =================================================
+             STATISTICS (4 Cards with Glows & Database Subtitle)
+        ================================================== -->
+        <section class="statistics-grid">
+
+            <!-- TOTAL SETTINGS -->
+            <div class="stat-card">
+                <div class="stat-icon orange">
+                    <i class="bi bi-sliders2"></i>
+                </div>
+                <div class="stat-content">
+                    <span>Total Settings</span>
+                    <h2 id="totalSettings">0</h2>
+                    <small class="positive">
+                        <i class="bi bi-database-check"></i>
+                        From SQL Server
+                    </small>
+                </div>
+            </div>
+
+            <!-- ACTIVE PARAMETERS -->
+            <div class="stat-card">
+                <div class="stat-icon green">
+                    <i class="bi bi-check-circle-fill"></i>
+                </div>
+                <div class="stat-content">
+                    <span>Active Parameters</span>
+                    <h2 id="activeSettings">0</h2>
+                    <small class="positive">
+                        <i class="bi bi-patch-check"></i>
+                        Enforced system-wide
+                    </small>
+                </div>
+            </div>
+
+            <!-- CATEGORIES -->
+            <div class="stat-card">
+                <div class="stat-icon blue">
+                    <i class="bi bi-grid-3x3-gap-fill"></i>
+                </div>
+                <div class="stat-content">
+                    <span>Active Categories</span>
+                    <h2 id="categoryCount">4</h2>
+                    <small class="positive">
+                        <i class="bi bi-layers"></i>
+                        Modular subsystems
+                    </small>
+                </div>
+            </div>
+
+            <!-- DATABASE STATUS -->
+            <div class="stat-card">
+                <div class="stat-icon warning">
+                    <i class="bi bi-hdd-network-fill"></i>
+                </div>
+                <div class="stat-content">
+                    <span>Database Health</span>
+                    <h2 id="dbHealth">ONLINE</h2>
+                    <small class="positive">
+                        <i class="bi bi-lightning-charge-fill"></i>
+                        SQL Server (24ms)
+                    </small>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- =================================================
+             QUICK ACTIONS BAR
+        ================================================== -->
+        <section class="quick-actions">
+            <button class="action-button primary" onclick="openSettingModal()">
+                <i class="bi bi-plus-lg"></i>
+                <span>Add Setting</span>
+            </button>
+
+            <button class="action-button" onclick="exportSettingsCSV()">
+                <i class="bi bi-file-earmark-arrow-down-fill"></i>
+                <span>Export CSV</span>
+            </button>
+
+            <button class="action-button" onclick="openPasswordModal()">
+                <i class="bi bi-key-fill"></i>
+                <span>Change Password</span>
+            </button>
+
+            <button class="action-button" onclick="openDiagnosticsModal()">
+                <i class="bi bi-database-gear"></i>
+                <span>DB Diagnostics</span>
+            </button>
+
+            <button class="action-button" onclick="loadSettings()">
+                <i class="bi bi-arrow-clockwise"></i>
+                <span>Refresh Data</span>
+            </button>
+        </section>
+
+        <!-- =================================================
+             THEME & APPEARANCE MODE CUSTOMIZATION (DARK / LIGHT)
+        ================================================== -->
+        <section class="inventory-card" style="margin-bottom: 24px;">
+            <div class="inventory-header">
+                <div>
+                    <span class="section-label" style="display:block; font-size:11px; font-weight:700; color:var(--orange); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:4px;">
+                        INTERFACE PREFERENCES
+                    </span>
+                    <h2>Theme & Appearance Mode</h2>
+                    <p style="margin:2px 0 0 0; color:var(--muted); font-size:12.5px;">
+                        Select your preferred visual theme for the Staff Dashboard and all management workspaces.
+                    </p>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; padding: 18px 24px 24px;">
+                <!-- LIGHT THEME OPTION (DEFAULT) -->
+                <div class="theme-select-card" id="themeCardLight" onclick="setAppTheme('light')" style="cursor:pointer; border: 2px solid #1a56db; background: rgba(26,86,219,0.08); border-radius: 14px; padding: 20px; transition: all 0.25s ease; position: relative;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(26,86,219,0.12); color: #1a56db; display: grid; place-items: center; font-size: 20px;">
+                                <i class="bi bi-sun-fill"></i>
+                            </div>
+                            <div>
+                                <strong style="color: var(--text-main); font-size: 15px; display: block;">Light Theme</strong>
+                                <span style="color: var(--text-subtle); font-size: 12px;">Modern Light Construction Theme</span>
+                            </div>
+                        </div>
+                        <div class="theme-indicator" id="lightCheck" style="width: 24px; height: 24px; border-radius: 50%; background: #1a56db; color: #ffffff; display: grid; place-items: center; font-size: 13px; font-weight: bold;">
+                            <i class="bi bi-check-lg"></i>
+                        </div>
+                    </div>
+                    <p style="color: var(--text-muted); font-size: 12.5px; margin: 0; line-height: 1.5;">
+                        Clean royal blue navigation, crisp white cards, blue & orange construction accents, and optimal daytime readability.
+                    </p>
+                </div>
+
+                <!-- DARK THEME OPTION -->
+                <div class="theme-select-card" id="themeCardDark" onclick="setAppTheme('dark')" style="cursor:pointer; border: 2px solid var(--card-border); background: var(--card-bg-sub); border-radius: 14px; padding: 20px; transition: all 0.25s ease; position: relative;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(255,107,22,0.15); color: var(--orange); display: grid; place-items: center; font-size: 20px;">
+                                <i class="bi bi-moon-stars-fill"></i>
+                            </div>
+                            <div>
+                                <strong style="color: var(--text-main); font-size: 15px; display: block;">Dark Theme</strong>
+                                <span style="color: var(--text-subtle); font-size: 12px;">Professional Night Mode</span>
+                            </div>
+                        </div>
+                        <div class="theme-indicator" id="darkCheck" style="width: 24px; height: 24px; border-radius: 50%; background: rgba(0,0,0,0.06); color: transparent; display: grid; place-items: center; font-size: 13px; font-weight: bold;">
+                            <i class="bi bi-check-lg"></i>
+                        </div>
+                    </div>
+                    <p style="color: var(--text-muted); font-size: 12.5px; margin: 0; line-height: 1.5;">
+                        Deep slate backgrounds, high-contrast luminous elements, vibrant neon status indicators, and low-glare dark view.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================
+             SYSTEM SETTINGS TABLE CARD
+        ================================================== -->
+        <section class="inventory-card" style="margin-bottom: 24px;">
+
+            <div class="inventory-header">
+                <div>
+                    <span class="section-label" style="display:block; font-size:11px; font-weight:700; color:var(--orange); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:4px;">
+                        SYSTEM CONFIGURATION
+                    </span>
+                    <h2>Enterprise System Parameters</h2>
+                    <p style="margin:2px 0 0 0; color:var(--muted); font-size:12.5px;">
+                        Search, filter by category, edit parameter values, and manage platform configurations in real-time.
+                    </p>
+                </div>
+            </div>
+
+            <!-- TABS (CATEGORY FILTER OPTIONS) -->
+            <div class="inventory-tabs">
+                <button class="tab-button active" onclick="changeTab('all', this)">
+                    All Settings
+                    <span id="allCount">0</span>
+                </button>
+
+                <button class="tab-button" onclick="changeTab('GENERAL', this)">
+                    General & Company
+                    <span id="generalCount">0</span>
+                </button>
+
+                <button class="tab-button" onclick="changeTab('INVENTORY', this)">
+                    Inventory & Stock
+                    <span id="inventoryCount">0</span>
+                </button>
+
+                <button class="tab-button" onclick="changeTab('SECURITY', this)">
+                    Security & Auth
+                    <span id="securityCount">0</span>
+                </button>
+
+                <button class="tab-button" onclick="changeTab('SYSTEM', this)">
+                    Database & System
+                    <span id="systemCount">0</span>
+                </button>
+            </div>
+
+            <!-- FILTERS & SEARCH BAR -->
+            <div class="filter-area">
+                <div class="material-search">
+                    <i class="bi bi-search search-icon"></i>
+                    <input type="text"
+                           id="settingSearch"
+                           placeholder="Search setting key, parameter value, category, or description..."
+                           autocomplete="off">
+                </div>
+
+                <div class="filter-select-wrapper">
+                    <i class="bi bi-folder filter-select-icon"></i>
+                    <select id="categoryFilter" onchange="applyFilters()">
+                        <option value="">All Categories</option>
+                        <option value="GENERAL">General</option>
+                        <option value="INVENTORY">Inventory</option>
+                        <option value="SECURITY">Security</option>
+                        <option value="SYSTEM">System</option>
+                        <option value="FINANCE">Finance</option>
+                        <option value="NOTIFICATION">Notification</option>
+                    </select>
+                </div>
+
+                <div class="filter-select-wrapper">
+                    <i class="bi bi-funnel filter-select-icon"></i>
+                    <select id="statusFilter" onchange="applyFilters()">
+                        <option value="">All Status</option>
+                        <option value="ACTIVE">Active</option>
+                        <option value="INACTIVE">Inactive</option>
+                    </select>
+                </div>
+
+                <div class="filter-select-wrapper">
+                    <i class="bi bi-sort-alpha-down filter-select-icon"></i>
+                    <select id="sortFilter" onchange="applyFilters()">
+                        <option value="newest">Newest First</option>
+                        <option value="key_asc">Key: A to Z</option>
+                        <option value="key_desc">Key: Z to A</option>
+                        <option value="category">Category</option>
+                        <option value="oldest">Oldest First</option>
+                    </select>
+                </div>
+
+                <button class="reset-button"
+                        onclick="resetFilters()"
+                        title="Reset all search & filters">
+                    <i class="bi bi-arrow-clockwise"></i>
+                    <span>Reset</span>
+                </button>
+            </div>
+
+            <!-- TABLE CONTAINER -->
+            <div class="table-container">
+                <table>
+                    <thead>
+                    <tr>
+                        <th style="width: 40px;">#</th>
+                        <th>Setting Key</th>
+                        <th>Category</th>
+                        <th>Configured Value</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th style="text-align: right; width: 140px;">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="settingTableBody">
+                    <tr>
+                        <td colspan="8" style="text-align:center; padding:36px;">
+                            <i class="bi bi-arrow-repeat" style="font-size:24px; animation:spin 1s linear infinite; display:inline-block; color:var(--orange);"></i>
+                            <p style="margin-top:8px; color:#8a99ad;">Loading system settings from SQL Server...</p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <!-- EMPTY STATE -->
+                <div class="empty-state" id="emptyTable" style="display:none; text-align:center; padding:48px 20px;">
+                    <i class="bi bi-sliders2" style="font-size:44px; color:#64748b;"></i>
+                    <h4 style="margin:12px 0 4px; color:#cbd5e1; font-size:16px;">No Settings Found</h4>
+                    <p style="color:#64748b; font-size:13px; max-width:380px; margin:0 auto 16px;">
+                        No system configuration parameters match your search criteria.
+                    </p>
+                    <button class="reset-button" onclick="resetFilters()">
+                        <i class="bi bi-arrow-clockwise"></i>
+                        <span>Reset Filters</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- TABLE FOOTER -->
+            <div class="table-footer">
+                <span id="tableResult">Loading settings...</span>
+
+                <div class="pagination" id="paginationContainer">
+                    <button class="page-btn" id="prevPageBtn" onclick="changePage(-1)" disabled>
+                        <i class="bi bi-chevron-left"></i>
+                    </button>
+                    <span class="page-btn page-number active" id="currentPageDisplay">1</span>
+                    <button class="page-btn" id="nextPageBtn" onclick="changePage(1)" disabled>
+                        <i class="bi bi-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- =================================================
+             BOTTOM SUMMARY CARDS
+        ================================================== -->
+        <section class="summary-grid">
+            <div class="summary-card card-cyan">
+                <div class="module-icon" style="background: rgba(56, 189, 248, 0.16); border-color: rgba(56, 189, 248, 0.4); color: #38bdf8; width: 42px; height: 42px; font-size: 18px;">
+                    <i class="bi bi-shield-check"></i>
+                </div>
+                <div>
+                    <span class="summary-tag">Centralized Policy</span>
+                    <h3>Zero-Downtime Hot Updates</h3>
+                    <small class="positive">
+                        <i class="bi bi-check-circle-fill"></i>
+                        Live application parameter sync
+                    </small>
+                </div>
+            </div>
+
+            <div class="summary-card card-orange">
+                <div class="module-icon" style="background: rgba(255, 122, 26, 0.16); border-color: rgba(255, 122, 26, 0.4); color: #ff8522; width: 42px; height: 42px; font-size: 18px;">
+                    <i class="bi bi-key-fill"></i>
+                </div>
+                <div>
+                    <span class="summary-tag">Security & Encryption</span>
+                    <h3>Protected Audit Trails</h3>
+                    <small class="positive">
+                        <i class="bi bi-lock-fill"></i>
+                        Role-based access enforcement
+                    </small>
+                </div>
+            </div>
+
+            <div class="summary-card card-purple">
+                <div class="module-icon" style="background: rgba(168, 85, 247, 0.16); border-color: rgba(168, 85, 247, 0.4); color: #c084fc; width: 42px; height: 42px; font-size: 18px;">
+                    <i class="bi bi-boxes"></i>
+                </div>
+                <div>
+                    <span class="summary-tag">Cross-Module Integration</span>
+                    <h3>Inventory & Material Links</h3>
+                    <a href="/material-inventory.html" class="summary-link" style="margin-top: 4px;">
+                        <span>View Inventory</span>
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </section>
+</main>
+
+<!-- =========================================================
+     MODAL 1: ADD / EDIT SYSTEM SETTING MODAL
+========================================================= -->
+<div class="modal-overlay" id="settingModal">
+    <div class="modal-box" style="max-width: 620px; width: 100%;">
+
+        <div class="modal-header">
+            <div>
+                <span style="font-size: 11px; font-weight: 700; color: var(--orange); letter-spacing: 0.08em; text-transform: uppercase;">
+                    SYSTEM CONFIGURATION
+                </span>
+                <h2 id="modalTitle">Add New System Setting</h2>
+            </div>
+            <button type="button" class="modal-close" onclick="closeSettingModal()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <form id="settingForm" onsubmit="saveSetting(event)">
+            <!-- Hidden ID -->
+            <input type="hidden" id="settingId">
+
+            <!-- Setting Key & Category -->
+            <div class="form-row">
+                <div class="form-group" style="flex: 1.3;">
+                    <label for="settingKey">
+                        Setting Key <span>*</span>
+                    </label>
+                    <input type="text"
+                           id="settingKey"
+                           placeholder="e.g. INVENTORY_DEFAULT_THRESHOLD"
+                           maxlength="100"
+                           required
+                           style="text-transform: uppercase; font-family: monospace;">
+                    <small class="validation-message" id="keyError"></small>
+                </div>
+
+                <div class="form-group" style="flex: 1;">
+                    <label for="settingCategory">Category <span>*</span></label>
+                    <select id="settingCategory" required>
+                        <option value="GENERAL">GENERAL</option>
+                        <option value="INVENTORY">INVENTORY</option>
+                        <option value="SECURITY">SECURITY</option>
+                        <option value="SYSTEM">SYSTEM</option>
+                        <option value="FINANCE">FINANCE</option>
+                        <option value="NOTIFICATION">NOTIFICATION</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Data Type & Status -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="settingDataType">Data Type <span>*</span></label>
+                    <select id="settingDataType" required>
+                        <option value="STRING">STRING (Text)</option>
+                        <option value="NUMBER">NUMBER (Integer/Decimal)</option>
+                        <option value="BOOLEAN">BOOLEAN (true / false)</option>
+                        <option value="JSON">JSON (Object / Array)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="settingStatus">Status <span>*</span></label>
+                    <select id="settingStatus" required>
+                        <option value="ACTIVE">ACTIVE</option>
+                        <option value="INACTIVE">INACTIVE</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Setting Value -->
+            <div class="form-group">
+                <label for="settingValue">
+                    Setting Value <span>*</span>
+                </label>
+                <textarea id="settingValue"
+                          rows="3"
+                          maxlength="2000"
+                          placeholder="Enter configuration parameter value..."
+                          required
+                          style="font-family: monospace;"></textarea>
+                <small class="validation-message" id="valueError"></small>
+            </div>
+
+            <!-- Description -->
+            <div class="form-group">
+                <label for="settingDescription">Description / Usage Context</label>
+                <textarea id="settingDescription"
+                          rows="2"
+                          maxlength="500"
+                          placeholder="Describe how this setting affects WBCMS operations..."></textarea>
+            </div>
+
+            <!-- Modal Actions -->
+            <div class="modal-actions">
+                <button type="button" class="cancel-button" onclick="closeSettingModal()">
+                    Cancel
+                </button>
+                <button type="submit" class="save-button" id="btnSaveSetting">
+                    <i class="bi bi-check-lg"></i>
+                    <span>Save Setting</span>
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<!-- =========================================================
+     MODAL 2: VIEW SETTING DOSSIER MODAL
+========================================================= -->
+<div class="modal-overlay" id="viewSettingModal">
+    <div class="modal-box" style="max-width: 650px; width: 100%;">
+
+        <div class="modal-header">
+            <div>
+                <span style="font-size: 11px; font-weight: 700; color: var(--blue); letter-spacing: 0.08em; text-transform: uppercase;">
+                    PARAMETER INSPECTOR
+                </span>
+                <h2>System Setting Details</h2>
+            </div>
+            <button type="button" class="modal-close" onclick="closeViewSettingModal()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <div class="dossier-hero">
+            <div class="dossier-icon">
+                <i class="bi bi-sliders"></i>
+            </div>
+            <div class="dossier-info" style="flex:1;">
+                <h3 id="viewKey" style="font-family:monospace; margin:0 0 6px 0; color:#fff; font-size:17px; word-break:break-all;">SETTING_KEY</h3>
+                <div class="dossier-meta" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                    <span id="viewCategoryBadge" class="category-badge general">GENERAL</span>
+                    <span id="viewStatusBadge" class="status-badge active">ACTIVE</span>
+                    <span id="viewIdTag" style="color:#64748b; font-size:12px;">ID: #1</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="dossier-grid">
+            <div class="dossier-item">
+                <label><i class="bi bi-code-slash"></i> Data Type</label>
+                <div class="dossier-item-value" id="viewDataType">STRING</div>
+            </div>
+
+            <div class="dossier-item">
+                <label><i class="bi bi-clock-history"></i> Last Modified</label>
+                <div class="dossier-item-value" id="viewLastUpdated">-</div>
+            </div>
+        </div>
+
+        <!-- Setting Value Box -->
+        <div style="margin-bottom: 16px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+                <label style="font-size:11px; text-transform:uppercase; letter-spacing:0.06em; color:#64748b; font-weight:700;">
+                    <i class="bi bi-file-earmark-code"></i> Configured Value
+                </label>
+                <button type="button" class="copy-chip" id="copyValueBtn" title="Copy value">
+                    <i class="bi bi-clipboard"></i> Copy
+                </button>
+            </div>
+            <pre class="dossier-value-pre" id="viewValue"></pre>
+        </div>
+
+        <!-- Description -->
+        <div class="dossier-item" style="margin-bottom: 18px;">
+            <label><i class="bi bi-info-circle"></i> Description / Context</label>
+            <div id="viewDescription" style="color:#cbd5e1; font-size:13px; line-height:1.5;">-</div>
+        </div>
+
+        <div class="modal-actions" style="margin-top:10px;">
+            <button type="button" class="cancel-button" onclick="closeViewSettingModal()">
+                Close
+            </button>
+            <button type="button" class="action-button primary" id="dossierEditBtn" style="margin-left:auto;">
+                <i class="bi bi-pencil"></i>
+                <span>Edit Setting</span>
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<!-- =========================================================
+     MODAL 3: YES/NO DELETE CONFIRMATION MODAL
+========================================================= -->
+<div class="modal-overlay" id="deleteConfirmModal">
+    <div class="modal-box" style="max-width: 500px; width: 100%;">
+
+        <div class="modal-danger-header">
+            <div class="danger-icon-box">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+            </div>
+            <div>
+                <h3 style="margin:0 0 4px 0; color:#f87171; font-size:16px; font-weight:700;">Confirm Deletion</h3>
+                <p style="margin:0; font-size:12px; color:#cbd5e1;">This action is permanent and will remove the setting from SQL Server.</p>
+            </div>
+        </div>
+
+        <p style="color:#f1f5f9; font-size:14px; margin-bottom:12px; line-height:1.5;">
+            Are you sure you want to delete the system setting:
+        </p>
+        <div style="background:rgba(9,16,32,0.8); border:1px solid rgba(255,255,255,0.1); padding:10px 14px; border-radius:8px; margin-bottom:20px;">
+            <strong id="deleteSettingKey" style="color:#ff9944; font-family:monospace; font-size:13.5px; word-break:break-all;">KEY_NAME</strong>
+        </div>
+
+        <div class="modal-actions">
+            <button type="button" class="cancel-button" onclick="closeDeleteConfirmModal()">
+                No, Cancel
+            </button>
+            <button type="button" class="danger-button" id="btnConfirmDelete">
+                <i class="bi bi-trash-fill"></i>
+                <span>Yes, Delete Setting</span>
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<!-- =========================================================
+     MODAL 4: CHANGE PASSWORD MODAL (Preserved Feature)
+========================================================= -->
+<div class="modal-overlay" id="passwordModal">
+    <div class="modal-box" style="max-width: 520px; width: 100%;">
+
+        <div class="modal-header">
+            <div>
+                <span style="font-size: 11px; font-weight: 700; color: var(--orange); letter-spacing: 0.08em; text-transform: uppercase;">
+                    ADMIN SECURITY
+                </span>
+                <h2>Update Account Password</h2>
+            </div>
+            <button type="button" class="modal-close" onclick="closePasswordModal()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <div id="changePwdAlert" style="display: none; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-size: 13px;"></div>
+
+        <form id="passwordForm" onsubmit="handleAccountChangePassword(event)">
+            <div class="form-group">
+                <label for="currentPasswordInput">Current Password <span>*</span></label>
+                <div style="position: relative;">
+                    <input type="password" id="currentPasswordInput" placeholder="Enter current password" required style="padding-right: 40px;">
+                    <button type="button" onclick="toggleFieldPassword('currentPasswordInput', this)" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #8294aa; cursor: pointer;">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="newPasswordInput">New Password <span>*</span></label>
+                <div style="position: relative;">
+                    <input type="password" id="newPasswordInput" placeholder="Minimum 8 characters" required style="padding-right: 40px;">
+                    <button type="button" onclick="toggleFieldPassword('newPasswordInput', this)" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #8294aa; cursor: pointer;">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmNewPasswordInput">Confirm New Password <span>*</span></label>
+                <div style="position: relative;">
+                    <input type="password" id="confirmNewPasswordInput" placeholder="Re-type new password" required style="padding-right: 40px;">
+                    <button type="button" onclick="toggleFieldPassword('confirmNewPasswordInput', this)" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #8294aa; cursor: pointer;">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="cancel-button" onclick="closePasswordModal()">
+                    Cancel
+                </button>
+                <button type="submit" class="save-button" id="btnChangePassword">
+                    <i class="bi bi-shield-lock-fill"></i>
+                    <span>Update Password</span>
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<!-- =========================================================
+     MODAL 5: DIAGNOSTICS MODAL
+========================================================= -->
+<div class="modal-overlay" id="diagnosticsModal">
+    <div class="modal-box" style="max-width: 550px; width: 100%;">
+
+        <div class="modal-header">
+            <div>
+                <span style="font-size: 11px; font-weight: 700; color: var(--green); letter-spacing: 0.08em; text-transform: uppercase;">
+                    INFRASTRUCTURE DIAGNOSTICS
+                </span>
+                <h2>Database & System Status</h2>
+            </div>
+            <button type="button" class="modal-close" onclick="closeDiagnosticsModal()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 18px;">
+            <div class="dossier-item">
+                <label><i class="bi bi-server"></i> Database Engine</label>
+                <div class="dossier-item-value" style="color:#38bdf8;">Microsoft SQL Server</div>
+            </div>
+            <div class="dossier-item">
+                <label><i class="bi bi-activity"></i> Response Latency</label>
+                <div class="dossier-item-value" style="color:#34d399;">24ms (Optimal)</div>
+            </div>
+            <div class="dossier-item">
+                <label><i class="bi bi-shield-check"></i> Connection Pool</label>
+                <div class="dossier-item-value" style="color:#f8fafc;">HikariCP Active (10/10)</div>
+            </div>
+            <div class="dossier-item">
+                <label><i class="bi bi-clock"></i> Server Local Time</label>
+                <div class="dossier-item-value" id="diagTime">-</div>
+            </div>
+        </div>
+
+        <div class="modal-actions">
+            <button type="button" class="cancel-button" onclick="closeDiagnosticsModal()">
+                Close
+            </button>
+            <button type="button" class="action-button primary" onclick="pingDatabase()">
+                <i class="bi bi-arrow-repeat"></i>
+                <span>Test DB Ping</span>
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<!-- =========================================================
+     TOAST NOTIFICATION
+========================================================= -->
+<div class="toast" id="toast">
+    <i class="bi bi-check-circle-fill"></i>
+    <span id="toastMessage">Action successful.</span>
+</div>
+
+<!-- JAVASCRIPT -->
+<script src="/js/settings.js"></script>
+<script src="/js/notifications.js"></script>
+
+</body>
+</html>
