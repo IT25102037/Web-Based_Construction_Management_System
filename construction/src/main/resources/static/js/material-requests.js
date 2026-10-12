@@ -600,8 +600,8 @@ async function editRequest(id) {
 
             statusEl.innerHTML = `
                 <option value="PENDING" ${!isAccepted && !isDeclined && !isFulfilled ? 'selected' : ''}>Pending</option>
-                <option value="ACCEPTED" ${isAccepted ? 'selected' : ''}>Accepted by Supplier</option>
-                <option value="DECLINED" ${isDeclined ? 'selected' : ''}>Declined by Supplier</option>
+                <option value="ACCEPTED" ${isAccepted ? 'selected' : ''}>Accept</option>
+                <option value="DECLINED" ${isDeclined ? 'selected' : ''}>Declined</option>
                 ${isFulfilled ? '<option value="FULFILLED" selected>Fulfilled</option>' : ''}
             `;
             statusEl.value = isAccepted ? 'ACCEPTED' : (isDeclined ? 'DECLINED' : (isFulfilled ? 'FULFILLED' : 'PENDING'));
@@ -795,10 +795,10 @@ function formatStatus(status) {
             return "Pending";
         case "ACCEPTED":
         case "APPROVED":
-            return "Accepted by Supplier";
+            return "Accept";
         case "DECLINED":
         case "REJECTED":
-            return "Declined by Supplier";
+            return "Declined";
         case "FULFILLED":
             return "Fulfilled";
         default:

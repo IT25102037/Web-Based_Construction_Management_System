@@ -733,10 +733,10 @@ function formatStatus(status) {
             return "Pending";
         case "ACCEPTED":
         case "APPROVED":
-            return "Accepted by Supplier";
+            return "Accept";
         case "DECLINED":
         case "REJECTED":
-            return "Declined by Supplier";
+            return "Declined";
         case "FULFILLED":
             return "Fulfilled";
         default:
