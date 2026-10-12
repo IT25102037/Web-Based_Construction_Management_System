@@ -29,6 +29,7 @@ import sliit.construction.construction.entity.Document;
 import sliit.construction.construction.entity.Notification;
 import sliit.construction.construction.repository.DocumentRepository;
 import sliit.construction.construction.repository.NotificationRepository;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @Configuration
 public class DataInitializer {
@@ -42,10 +43,31 @@ public class DataInitializer {
             DocumentRepository documentRepository,
             NotificationRepository notificationRepository,
             sliit.construction.construction.repository.ProgressIssueRepository progressIssueRepository,
-            sliit.construction.construction.repository.TaskRepository taskRepository
+            sliit.construction.construction.repository.TaskRepository taskRepository,
+            JdbcTemplate jdbcTemplate
     ) {
 
         return args -> {
+
+            // Drop stale SQL Server check constraints on users.role and material_requests.status if present
+            try {
+                jdbcTemplate.execute("""
+                    BEGIN TRY
+                        DECLARE @sql NVARCHAR(MAX) = N'';
+                        SELECT @sql += N'ALTER TABLE ' + QUOTENAME(s.name) + N'.' + QUOTENAME(t.name) + 
+                                       N' DROP CONSTRAINT ' + QUOTENAME(c.name) + N';'
+                        FROM sys.check_constraints c
+                        JOIN sys.tables t ON c.parent_object_id = t.object_id
+                        JOIN sys.schemas s ON t.schema_id = s.schema_id
+                        WHERE (t.name = 'users' AND (c.definition LIKE '%role%' OR c.name LIKE '%role%'))
+                           OR (t.name = 'material_requests' AND (c.definition LIKE '%status%' OR c.name LIKE '%status%'));
+                        IF LEN(@sql) > 0 EXEC sp_executesql @sql;
+                    END TRY
+                    BEGIN CATCH
+                    END CATCH
+                """);
+            } catch (Exception ignored) {
+            }
 
             // ==========================================
             // 0. SEED SYSTEM ROLES & PERMISSIONS
@@ -138,6 +160,23 @@ public class DataInitializer {
                     Role.CLIENT,
                     "Apex Towers Client"
             );
+
+            // ==========================================
+            // 6.1 SUPPLIER ACCOUNT (Unique Credentials)
+            // ==========================================
+            try {
+                createOrUpdateUser(
+                        userRepository,
+                        encoder,
+                        "supplier",
+                        "supplier@wbcms.com",
+                        "Supplier#2026Pass!",
+                        Role.SUPPLIER,
+                        "Apex Material Supplies (PVT) Ltd"
+                );
+            } catch (Exception e) {
+                System.err.println("Warning: Could not seed default supplier user: " + e.getMessage());
+            }
 
             // ==========================================
             // 7. INITIAL PROJECTS (For Project Manager)
@@ -519,6 +558,20 @@ public class DataInitializer {
                 true,
                 Set.of(
                         "PROJECT_VIEW", "MILESTONE_VIEW", "PROGRESS_VIEW", "DOCUMENT_VIEW", "REPORT_VIEW"
+                )
+        );
+
+        // 6.1 SUPPLIER ROLE
+        createOrUpdateRole(
+                roleRepository,
+                "SUPPLIER",
+                "Material Supplier / Vendor",
+                "PROCUREMENT",
+                "#38bdf8",
+                "Supplies construction materials, reviews material requisitions dispatched by procurement, and accepts or declines orders.",
+                true,
+                Set.of(
+                        "MATERIAL_VIEW", "MATERIAL_REQUEST_VIEW", "MATERIAL_REQUEST_APPROVE", "MATERIAL_REQUEST_REJECT", "SUPPLIER_VIEW"
                 )
         );
 

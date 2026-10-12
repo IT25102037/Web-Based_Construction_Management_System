@@ -571,6 +571,7 @@
                                 <option value="SITE_ENGINEER">Site Engineer</option>
                                 <option value="CONSTRUCTION_SUPERVISOR">Construction Supervisor</option>
                                 <option value="PROCUREMENT_OFFICER">Procurement Officer</option>
+                                <option value="SUPPLIER">Material Supplier / Vendor</option>
                                 <option value="SYSTEM_ADMINISTRATOR">System Administrator</option>
                             </select>
                             <i class="fa-solid fa-chevron-down select-arrow"></i>
@@ -633,6 +634,7 @@
                                 <option value="PROJECT_MANAGER">Project Manager</option>
                                 <option value="CONSTRUCTION_SUPERVISOR">Construction Supervisor</option>
                                 <option value="PROCUREMENT_OFFICER">Procurement Officer</option>
+                                <option value="SUPPLIER">Material Supplier / Vendor</option>
                                 <option value="SYSTEM_ADMINISTRATOR">System Administrator</option>
                             </select>
                             <i class="fa-solid fa-chevron-down select-arrow"></i>
@@ -1185,6 +1187,19 @@
                         function () {
                             window.location.replace(
                                 "/projects.html"
+                            );
+                        },
+                        500
+                    );
+                } else if (returnedRole === "SUPPLIER") {
+                    showSuccess(
+                        "Login successful. Detected role: Material Supplier / Vendor. Opening Supplier Dashboard..."
+                    );
+
+                    setTimeout(
+                        function () {
+                            window.location.replace(
+                                "/supplier-dashboard.html"
                             );
                         },
                         500

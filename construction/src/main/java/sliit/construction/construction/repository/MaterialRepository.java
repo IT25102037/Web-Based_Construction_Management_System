@@ -21,6 +21,8 @@ public interface MaterialRepository extends JpaRepository<Material, Long> {
 
     Page<Material> findByNameContainingIgnoreCase(String name, Pageable pageable);
 
+    java.util.List<Material> findByNameIgnoreCase(String name);
+
     Page<Material> findByDeliveryStatus(DeliveryStatus status, Pageable pageable);
 
     @Query("SELECT m FROM Material m WHERE " +

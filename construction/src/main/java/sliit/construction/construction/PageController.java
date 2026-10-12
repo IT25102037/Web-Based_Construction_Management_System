@@ -126,6 +126,11 @@ public class PageController {
 		return "forward:/suppliers.html";
 	}
 
+	@GetMapping("/supplier-dashboard")
+	public String supplierDashboard() {
+		return "forward:/supplier-dashboard.html";
+	}
+
 	@GetMapping("/client-login")
 	public String clientLogin() {
 		return "forward:/client-login.html";

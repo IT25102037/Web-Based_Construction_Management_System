@@ -89,6 +89,8 @@ public class SecurityConfig {
                                 "/material-requests",
                                 "/material-inventory",
                                 "/suppliers",
+                                "/supplier-dashboard",
+                                "/supplier-dashboard.html",
                                 "/client-login",
                                 "/client-register",
                                 "/client-dashboard",

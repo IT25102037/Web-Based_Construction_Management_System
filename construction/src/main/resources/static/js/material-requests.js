@@ -21,9 +21,13 @@ if (!token || userType !== "STAFF") {
 // PAGE LOAD
 // ===============================
 
+let syncPollInterval = null;
+
 document.addEventListener("DOMContentLoaded", () => {
     loadUserProfile();
     loadRequests();
+    loadSupplierSuggestions();
+    startLiveSync();
 
     const form = document.getElementById("requestForm");
     if (form) {
@@ -62,6 +66,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
+function startLiveSync() {
+    if (syncPollInterval) clearInterval(syncPollInterval);
+    // Poll every 4 seconds to synchronize supplier decisions and new requisitions automatically
+    syncPollInterval = setInterval(() => {
+        loadRequests(true);
+    }, 4000);
+}
 
 // ===============================
 // USER PROFILE DISPLAY
@@ -151,6 +163,16 @@ async function loadRequests(isSilent = false) {
             return (b.id || 0) - (a.id || 0);
         });
 
+        // Detect if any status changed while running silent sync
+        if (isSilent && allRequestsList.length > 0) {
+            loadedList.forEach(fresh => {
+                const prev = allRequestsList.find(r => r.id === fresh.id);
+                if (prev && prev.status !== fresh.status) {
+                    showToast(`Requisition #${fresh.requestCode} was updated to ${formatStatus(fresh.status)}!`, "info");
+                }
+            });
+        }
+
         allRequestsList = loadedList;
 
         updateStatistics();
@@ -161,7 +183,7 @@ async function loadRequests(isSilent = false) {
         if (tbody && allRequestsList.length === 0) {
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="8" style="text-align:center; padding: 35px; color:#ef4444;">
+                    <td colspan="9" style="text-align:center; padding: 35px; color:#ef4444;">
                         <i class="bi bi-exclamation-triangle" style="font-size:24px;"></i>
                         <p style="margin-top:8px;">${escapeHtml(error.message || "Failed to load material requests.")}</p>
                         <button type="button" class="action-button" style="margin-top:10px;" onclick="loadRequests()">Retry</button>
@@ -170,7 +192,8 @@ async function loadRequests(isSilent = false) {
             `;
         }
         if (isSilent) {
-            showToast(error.message || "Failed to refresh material requests.", "error");
+            // Silently log in background without disruption
+            console.debug("Silent background sync:", error.message);
         }
     }
 }
@@ -243,13 +266,22 @@ function renderRequests() {
                 </span>
             </td>
             <td>
+                ${request.supplierName ? `
+                    <span style="font-size:12.5px; font-weight:600; color:#0f172a; display:inline-flex; align-items:center; gap:5px;">
+                        <i class="bi bi-truck" style="color:#2563eb;"></i>${escapeHtml(request.supplierName)}
+                    </span>
+                ` : `
+                    <span style="font-size:12px; color:#94a3b8; font-style:italic;">Open / Any Vendor</span>
+                `}
+            </td>
+            <td>
                 <span style="color:#475569; font-size:12.5px;">
                     <i class="bi bi-calendar3" style="margin-right:4px; color:#64748b;"></i>${request.requiredDate || "-"}
                 </span>
             </td>
             <td>
                 <span class="status ${getStatusClass(request.status)}">
-                    ${escapeHtml(request.status)}
+                    ${formatStatus(request.status)}
                 </span>
             </td>
             <td class="actions">
@@ -276,7 +308,10 @@ function renderRequests() {
 function updateStatistics() {
     const total = allRequestsList.length;
     const pending = allRequestsList.filter(r => (r.status || "").toUpperCase() === "PENDING").length;
-    const approved = allRequestsList.filter(r => (r.status || "").toUpperCase() === "APPROVED").length;
+    const approved = allRequestsList.filter(r => {
+        const s = (r.status || "").toUpperCase();
+        return s === "APPROVED" || s === "ACCEPTED";
+    }).length;
     const fulfilled = allRequestsList.filter(r => (r.status || "").toUpperCase() === "FULFILLED").length;
 
     const totalEl = document.getElementById("totalRequests");
@@ -294,7 +329,19 @@ function updateStatistics() {
 // CREATE MODAL
 // ===============================
 
+function generateNextRequestCode() {
+    const yr = new Date().getFullYear();
+    let num = (allRequestsList ? allRequestsList.length : 0) + 1;
+    let candidate = `REQ-${yr}-${num.toString().padStart(3, "0")}`;
+    while (allRequestsList && allRequestsList.some(r => r.requestCode === candidate)) {
+        num++;
+        candidate = `REQ-${yr}-${num.toString().padStart(3, "0")}`;
+    }
+    return candidate;
+}
+
 function openCreateModal() {
+    loadSupplierSuggestions();
     const form = document.getElementById("requestForm");
     if (form) form.reset();
 
@@ -308,6 +355,14 @@ function openCreateModal() {
     if (subEl) subEl.textContent = "Fill in the requisition details and procurement parameters below.";
     if (idEl) idEl.value = "";
     if (statusEl) statusEl.value = "PENDING";
+
+    const reqCodeInput = document.getElementById("requestCode");
+    if (reqCodeInput) {
+        reqCodeInput.value = generateNextRequestCode();
+    }
+
+    const supplierEl = document.getElementById("supplierName");
+    if (supplierEl) supplierEl.value = "";
 
     // Auto set date to today if blank
     const dateInput = document.getElementById("requiredDate");
@@ -399,6 +454,8 @@ async function saveRequest(event) {
         return;
     }
 
+    const supplierName = document.getElementById("supplierName")?.value.trim() || null;
+
     const requestData = {
         requestCode,
         materialName,
@@ -408,14 +465,20 @@ async function saveRequest(event) {
         requestedBy,
         requiredDate,
         reason: reason || null,
-        status: status || "PENDING"
+        status: status || "PENDING",
+        supplierName: supplierName || null
     };
 
     const saveBtn = document.getElementById("saveRequestBtn");
-    const originalBtnHtml = saveBtn ? saveBtn.innerHTML : "";
+    const originalBtnHtml = isEdit
+        ? '<i class="bi bi-pencil-square"></i> <span>Edit Request</span>'
+        : '<i class="bi bi-check-lg"></i> <span>Save Request</span>';
+
     if (saveBtn) {
         saveBtn.disabled = true;
-        saveBtn.innerHTML = '<i class="bi bi-arrow-repeat spin"></i> <span>Saving...</span>';
+        saveBtn.innerHTML = isEdit
+            ? '<i class="bi bi-arrow-repeat spin"></i> <span>Updating Request...</span>'
+            : '<i class="bi bi-arrow-repeat spin"></i> <span>Saving...</span>';
     }
 
     isSavingRequest = true;
@@ -469,7 +532,7 @@ async function saveRequest(event) {
         closeModal();
 
         showToast(
-            isEdit ? "Successfully edited request!" : "Successfully created request!",
+            isEdit ? "Successfully updated request!" : "Successfully created request!",
             "success"
         );
 
@@ -495,6 +558,7 @@ async function saveRequest(event) {
 // ===============================
 
 async function editRequest(id) {
+    loadSupplierSuggestions();
     try {
         let request = allRequestsList.find(r => r.id === id);
 
@@ -530,10 +594,12 @@ async function editRequest(id) {
         document.getElementById("requiredDate").value = request.requiredDate || "";
         document.getElementById("reason").value = request.reason || "";
         document.getElementById("status").value = request.status || "PENDING";
+        const supplierInput = document.getElementById("supplierName");
+        if (supplierInput) supplierInput.value = request.supplierName || "";
 
         if (saveBtn) {
             saveBtn.disabled = false;
-            saveBtn.innerHTML = '<i class="bi bi-check-lg"></i> <span>Update Request</span>';
+            saveBtn.innerHTML = '<i class="bi bi-pencil-square"></i> <span>Edit Request</span>';
         }
 
         // Close view modal if it was open
@@ -578,19 +644,34 @@ async function viewRequest(id) {
     const projEl = document.getElementById("viewReqProject");
     const reqByEl = document.getElementById("viewReqRequestedBy");
     const dateEl = document.getElementById("viewReqDate");
+    const supplierEl = document.getElementById("viewReqSupplier");
     const reasonEl = document.getElementById("viewReqReason");
     const editBtn = document.getElementById("viewModalEditBtn");
 
+    const decisionBadge = document.getElementById("viewReqDecisionBadge");
+    const decisionBy = document.getElementById("viewReqDecisionBy");
+    const decisionDate = document.getElementById("viewReqDecisionDate");
+    const decisionRemarks = document.getElementById("viewReqDecisionRemarks");
+
     if (codeEl) codeEl.textContent = request.requestCode || `#${request.id}`;
     if (statusEl) {
-        statusEl.innerHTML = `<span class="status ${getStatusClass(request.status)}">${escapeHtml(request.status)}</span>`;
+        statusEl.innerHTML = `<span class="status ${getStatusClass(request.status)}">${formatStatus(request.status)}</span>`;
     }
     if (matEl) matEl.textContent = request.materialName || "-";
     if (qtyEl) qtyEl.textContent = `${request.quantity} ${request.unit || ""}`;
     if (projEl) projEl.textContent = request.projectName || "-";
     if (reqByEl) reqByEl.textContent = request.requestedBy || "-";
     if (dateEl) dateEl.textContent = request.requiredDate || "-";
+    if (supplierEl) supplierEl.textContent = request.supplierName || "Open / Unassigned";
     if (reasonEl) reasonEl.textContent = request.reason || "No site purpose or remarks provided.";
+
+    if (decisionBadge) {
+        decisionBadge.className = `status ${getStatusClass(request.status)}`;
+        decisionBadge.textContent = formatStatus(request.status);
+    }
+    if (decisionBy) decisionBy.textContent = request.decisionBy || (request.supplierName ? request.supplierName : "Pending Review");
+    if (decisionDate) decisionDate.textContent = request.decisionDate ? new Date(request.decisionDate).toLocaleString() : "Not decided yet";
+    if (decisionRemarks) decisionRemarks.textContent = request.decisionRemarks || "No response remarks provided by supplier.";
 
     if (editBtn) {
         editBtn.onclick = () => editRequest(request.id);
@@ -682,13 +763,34 @@ function getStatusClass(status) {
         case "PENDING":
             return "pending";
         case "APPROVED":
+        case "ACCEPTED":
             return "approved";
         case "REJECTED":
+        case "DECLINED":
+        case "CANCELLED":
             return "rejected";
         case "FULFILLED":
             return "fulfilled";
         default:
-            return "";
+            return "pending";
+    }
+}
+
+function formatStatus(status) {
+    const s = String(status || "").toUpperCase();
+    switch (s) {
+        case "PENDING":
+            return "Pending Review";
+        case "ACCEPTED":
+        case "APPROVED":
+            return "Accepted by Supplier";
+        case "DECLINED":
+        case "REJECTED":
+            return "Declined by Supplier";
+        case "FULFILLED":
+            return "Fulfilled";
+        default:
+            return s || "Pending Review";
     }
 }
 
@@ -767,4 +869,48 @@ function showToast(message, type = "success") {
     setTimeout(() => {
         toast.classList.remove("show");
     }, 3500);
+}
+
+// ===============================
+// SUPPLIER SUGGESTIONS
+// ===============================
+
+async function loadSupplierSuggestions() {
+    const dataList = document.getElementById("supplierListSuggestions");
+    if (!dataList) return;
+
+    try {
+        const response = await fetch(`/api/suppliers?page=0&size=100&_t=${Date.now()}`, {
+            headers: getHeaders(),
+            cache: "no-store"
+        });
+
+        const namesSet = new Set();
+
+        if (response.ok) {
+            const data = await response.json();
+            const list = Array.isArray(data) ? data : (data.content || []);
+            list.forEach(s => {
+                if (s && s.name && s.name.trim()) {
+                    namesSet.add(s.name.trim());
+                }
+            });
+        }
+
+        // Also add suppliers currently in requests list
+        if (Array.isArray(allRequestsList)) {
+            allRequestsList.forEach(r => {
+                if (r && r.supplierName && r.supplierName.trim()) {
+                    namesSet.add(r.supplierName.trim());
+                }
+            });
+        }
+
+        dataList.innerHTML = Array.from(namesSet)
+            .sort((a, b) => a.localeCompare(b))
+            .map(name => `<option value="${escapeHtml(name)}"></option>`)
+            .join("");
+    } catch (err) {
+        console.warn("Could not load supplier suggestions:", err);
+    }
 }

@@ -45,7 +45,10 @@ public final class MaterialRequestDtos {
             @Size(max = 1000)
             String reason,
 
-            MaterialRequestStatus status
+            MaterialRequestStatus status,
+
+            @Size(max = 150)
+            String supplierName
     ) {
     }
 
@@ -61,8 +64,25 @@ public final class MaterialRequestDtos {
             LocalDate requiredDate,
             String reason,
             MaterialRequestStatus status,
+            String supplierName,
+            String decisionRemarks,
+            LocalDateTime decisionDate,
+            String decisionBy,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
+    ) {
+    }
+
+    public record StatusUpdateRequest(
+
+            @NotNull(message = "Status is required.")
+            MaterialRequestStatus status,
+
+            @Size(max = 1000, message = "Remarks cannot exceed 1000 characters.")
+            String remarks,
+
+            @Size(max = 150)
+            String supplierName
     ) {
     }
 }

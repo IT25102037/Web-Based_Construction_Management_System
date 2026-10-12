@@ -213,6 +213,7 @@ public class UserServiceImpl implements UserService {
   stats.put("supervisors", repo.countByRole(Role.CONSTRUCTION_SUPERVISOR));
   stats.put("procurementOfficers", repo.countByRole(Role.PROCUREMENT_OFFICER));
   stats.put("clients", repo.countByRole(Role.CLIENT));
+  stats.put("suppliers", repo.countByRole(Role.SUPPLIER));
   return stats;
  }
 

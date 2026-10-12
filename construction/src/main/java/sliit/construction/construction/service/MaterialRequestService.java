@@ -25,5 +25,11 @@ public interface MaterialRequestService {
             MaterialRequestDtos.Request request
     );
 
+    MaterialRequestDtos.Response updateStatus(
+            Long id,
+            MaterialRequestDtos.StatusUpdateRequest request,
+            String actorUsername
+    );
+
     void delete(Long id);
 }

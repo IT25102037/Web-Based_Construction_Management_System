@@ -50,6 +50,17 @@ public class MaterialRequest {
     @Column(nullable = false, length = 30)
     private MaterialRequestStatus status;
 
+    @Column(length = 150)
+    private String supplierName;
+
+    @Column(length = 1000)
+    private String decisionRemarks;
+
+    private LocalDateTime decisionDate;
+
+    @Column(length = 120)
+    private String decisionBy;
+
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;

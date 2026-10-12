@@ -40,13 +40,28 @@ let isProcessingStock = false;
 let loadMaterialsSeq = 0;
 
 // =========================================================
-// PAGE INITIALIZATION
+// PAGE INITIALIZATION & LIVE SYNC
 // =========================================================
+
+let inventoryLiveSyncInterval = null;
+
+function startLiveSync() {
+    if (inventoryLiveSyncInterval) clearInterval(inventoryLiveSyncInterval);
+    inventoryLiveSyncInterval = setInterval(() => {
+        const materialModalOpen = document.getElementById("materialModal")?.classList.contains("show");
+        const stockModalOpen = document.getElementById("stockModal")?.classList.contains("show");
+        const dossierModalOpen = document.getElementById("materialDossierModal")?.classList.contains("show");
+        if (!document.hidden && !isSavingMaterial && !isProcessingStock && !isDeletingMaterial && !materialModalOpen && !stockModalOpen && !dossierModalOpen) {
+            loadMaterials(true);
+        }
+    }, 4000);
+}
 
 document.addEventListener("DOMContentLoaded", function () {
     loadUserInformation();
     setupEventListeners();
     loadMaterials();
+    startLiveSync();
 });
 
 // =========================================================

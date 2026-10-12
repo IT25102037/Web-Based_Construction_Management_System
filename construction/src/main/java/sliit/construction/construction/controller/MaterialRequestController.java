@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import sliit.construction.construction.dto.MaterialRequestDtos;
@@ -68,6 +69,7 @@ public class MaterialRequestController {
             'CONSTRUCTION_SUPERVISOR',
             'PROJECT_MANAGER',
             'PROCUREMENT_OFFICER',
+            'SUPPLIER',
             'SYSTEM_ADMINISTRATOR'
             )
             """)
@@ -76,6 +78,61 @@ public class MaterialRequestController {
             @Valid @RequestBody MaterialRequestDtos.Request request) {
 
         return service.update(id, request);
+    }
+
+    // UPDATE STATUS (SUPPLIER ACCEPT / DECLINE / APPROVE / REJECT / PENDING)
+    @PatchMapping("/{id}/status")
+    @PreAuthorize("""
+            hasAnyRole(
+            'SUPPLIER',
+            'PROCUREMENT_OFFICER',
+            'PROJECT_MANAGER',
+            'SYSTEM_ADMINISTRATOR'
+            )
+            """)
+    public MaterialRequestDtos.Response updateStatusPatch(
+            @PathVariable Long id,
+            @Valid @RequestBody MaterialRequestDtos.StatusUpdateRequest request,
+            Authentication authentication) {
+
+        String username = authentication != null ? authentication.getName() : "system";
+        return service.updateStatus(id, request, username);
+    }
+
+    @PutMapping("/{id}/status")
+    @PreAuthorize("""
+            hasAnyRole(
+            'SUPPLIER',
+            'PROCUREMENT_OFFICER',
+            'PROJECT_MANAGER',
+            'SYSTEM_ADMINISTRATOR'
+            )
+            """)
+    public MaterialRequestDtos.Response updateStatusPut(
+            @PathVariable Long id,
+            @Valid @RequestBody MaterialRequestDtos.StatusUpdateRequest request,
+            Authentication authentication) {
+
+        String username = authentication != null ? authentication.getName() : "system";
+        return service.updateStatus(id, request, username);
+    }
+
+    @PostMapping("/{id}/status")
+    @PreAuthorize("""
+            hasAnyRole(
+            'SUPPLIER',
+            'PROCUREMENT_OFFICER',
+            'PROJECT_MANAGER',
+            'SYSTEM_ADMINISTRATOR'
+            )
+            """)
+    public MaterialRequestDtos.Response updateStatusPost(
+            @PathVariable Long id,
+            @Valid @RequestBody MaterialRequestDtos.StatusUpdateRequest request,
+            Authentication authentication) {
+
+        String username = authentication != null ? authentication.getName() : "system";
+        return service.updateStatus(id, request, username);
     }
 
     // DELETE
