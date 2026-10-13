@@ -166,12 +166,22 @@ function setupEventListeners() {
         });
     }
 
+    const deleteMaterialModal = document.getElementById("deleteMaterialModal");
+    if (deleteMaterialModal) {
+        deleteMaterialModal.addEventListener("click", function (event) {
+            if (event.target === this) {
+                closeDeleteMaterialModal();
+            }
+        });
+    }
+
     // Escape key dismissal
     document.addEventListener("keydown", function (event) {
         if (event.key === "Escape") {
             closeMaterialModal();
             closeStockModal();
             closeMaterialDossierModal();
+            closeDeleteMaterialModal();
         }
     });
 }
@@ -983,7 +993,9 @@ function clearValidation() {
 // DELETE MATERIAL
 // =========================================================
 
-async function deleteMaterial(id) {
+let activeDeleteMaterialId = null;
+
+function deleteMaterial(id) {
     if (isDeletingMaterial) {
         return;
     }
@@ -993,15 +1005,40 @@ async function deleteMaterial(id) {
         return;
     }
 
-    const confirmed = confirm(
-        `Are you sure you want to delete "${material.name}"?\n\nThis will permanently remove the material record from the database.`
-    );
+    activeDeleteMaterialId = id;
+    const nameEl = document.getElementById("deleteMaterialName");
+    if (nameEl) {
+        nameEl.textContent = `${material.name} (${material.code || 'MAT-' + material.id})`;
+    }
 
-    if (!confirmed) {
+    const modal = document.getElementById("deleteMaterialModal");
+    if (modal) {
+        modal.classList.add("show");
+    }
+}
+
+function closeDeleteMaterialModal() {
+    activeDeleteMaterialId = null;
+    const modal = document.getElementById("deleteMaterialModal");
+    if (modal) {
+        modal.classList.remove("show");
+    }
+}
+
+async function confirmDeleteMaterial() {
+    if (!activeDeleteMaterialId || isDeletingMaterial) {
         return;
     }
 
+    const id = activeDeleteMaterialId;
     isDeletingMaterial = true;
+
+    const confirmBtn = document.getElementById("confirmDeleteMaterialBtn");
+    const originalHtml = confirmBtn ? confirmBtn.innerHTML : "";
+    if (confirmBtn) {
+        confirmBtn.disabled = true;
+        confirmBtn.innerHTML = '<i class="bi bi-arrow-repeat spin"></i> <span>Deleting...</span>';
+    }
 
     try {
         const response = await fetch(`/api/materials/${id}`, {
@@ -1028,7 +1065,8 @@ async function deleteMaterial(id) {
         populateStockMaterials();
         renderMaterials();
 
-        showToast("Successfully deleted material!", "success");
+        closeDeleteMaterialModal();
+        showToast("Material permanently deleted successfully!", "success");
 
         // Sync with verified backend state
         await loadMaterials(true);
@@ -1038,6 +1076,10 @@ async function deleteMaterial(id) {
         showToast(error.message || "Error deleting material.", "error");
     } finally {
         isDeletingMaterial = false;
+        if (confirmBtn) {
+            confirmBtn.disabled = false;
+            confirmBtn.innerHTML = originalHtml;
+        }
     }
 }
 

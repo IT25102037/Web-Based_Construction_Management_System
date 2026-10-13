@@ -2668,7 +2668,43 @@
     </div>
 </div>
 
+<!-- =========================================================
+     DELETE CONFIRMATION MODAL (CENTERED OVERLAY)
+========================================================= -->
+<div class="modal-overlay" id="deleteMaterialModal" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
+    <div class="modal-box" style="max-width: 440px; width: 100%; border-radius: 16px; overflow: hidden; padding: 0; box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);">
+        <div class="modal-header" style="border-bottom: none; padding: 22px 24px 0; margin-bottom: 0; display:flex; align-items:flex-start; justify-content:space-between;">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <div style="width:42px; height:42px; border-radius:50%; background:#fee2e2; color:#dc2626; display:grid; place-items:center; font-size:20px; flex-shrink:0;">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                </div>
+                <div>
+                    <h3 id="deleteModalTitle" style="font-size:18px; font-weight:700; color:var(--text-title, #0f172a); margin:0;">Delete Material</h3>
+                    <p style="margin:2px 0 0; font-size:12px; color:#64748b;">This action cannot be undone.</p>
+                </div>
+            </div>
+            <button type="button" class="modal-close" onclick="closeDeleteMaterialModal()" aria-label="Close" style="background:transparent; border:none; cursor:pointer; font-size:18px; color:#94a3b8; padding:4px; border-radius:6px; display:grid; place-items:center;">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
 
+        <div class="modal-body" style="padding: 16px 24px;">
+            <p style="font-size:13.5px; color:#334155; line-height:1.55; margin:0;">
+                Are you sure you want to permanently delete material <strong id="deleteMaterialName" style="color:#0f172a;">--</strong> from the system?
+            </p>
+        </div>
+
+        <div class="modal-footer" style="padding: 12px 24px 22px; border-top: none; background: transparent; display:flex; justify-content:flex-end; gap:10px;">
+            <button type="button" class="cancel-button" onclick="closeDeleteMaterialModal()" style="padding:9px 20px; border-radius:8px; font-weight:600; font-size:13.5px; cursor:pointer; background:#f8fafc; color:#475569; border:1px solid #e2e8f0;">
+                Cancel
+            </button>
+            <button type="button" class="action-button" id="confirmDeleteMaterialBtn" onclick="confirmDeleteMaterial()" style="padding:9px 20px; border-radius:8px; font-weight:600; font-size:13.5px; cursor:pointer; background:#dc2626 !important; color:#ffffff !important; border:1px solid #dc2626 !important; display:inline-flex; align-items:center; gap:7px;">
+                <i class="bi bi-trash-fill"></i>
+                <span>Yes, Delete Material</span>
+            </button>
+        </div>
+    </div>
+</div>
 
 <!-- =========================================================
      TOAST

@@ -58,10 +58,22 @@ function setupEventListeners() {
         const supplierModal = document.getElementById("supplierModal");
         const viewModal = document.getElementById("viewSupplierModal");
         const inquiryModal = document.getElementById("inquiryModal");
+        const deleteModal = document.getElementById("deleteSupplierModal");
 
         if (e.target === supplierModal) closeSupplierModal();
         if (e.target === viewModal) closeViewSupplierModal();
         if (e.target === inquiryModal) closeInquiryModal();
+        if (e.target === deleteModal) closeDeleteSupplierModal();
+    });
+
+    // Escape key dismissal
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+            closeSupplierModal();
+            closeViewSupplierModal();
+            closeInquiryModal();
+            closeDeleteSupplierModal();
+        }
     });
 
     // Close profile dropdown when clicking outside
@@ -945,15 +957,49 @@ async function editSupplier(id) {
     }
 }
 
-async function deleteSupplier(id) {
+let pendingDeleteSupplierId = null;
+let isDeletingSupplier = false;
+
+function deleteSupplier(id) {
+    if (isDeletingSupplier) return;
+
     const supplier = allSuppliers.find(s => s.id === id);
-    const name = supplier ? supplier.name : `Supplier #${id}`;
+    if (!supplier) return;
 
-    const confirmed = confirm(
-        `Are you sure you want to delete "${name}"?\n\nThis will remove the supplier record from SQL Server.`
-    );
+    pendingDeleteSupplierId = id;
+    const name = supplier.name || `Supplier #${id}`;
 
-    if (!confirmed) return;
+    const nameEl = document.getElementById("deleteSupplierName");
+    if (nameEl) {
+        nameEl.textContent = name;
+    }
+
+    const modal = document.getElementById("deleteSupplierModal");
+    if (modal) {
+        modal.classList.add("show");
+    }
+}
+
+function closeDeleteSupplierModal() {
+    pendingDeleteSupplierId = null;
+    const modal = document.getElementById("deleteSupplierModal");
+    if (modal) {
+        modal.classList.remove("show");
+    }
+}
+
+async function confirmDeleteSupplier() {
+    if (!pendingDeleteSupplierId || isDeletingSupplier) return;
+
+    const id = pendingDeleteSupplierId;
+    isDeletingSupplier = true;
+
+    const confirmBtn = document.getElementById("confirmDeleteSupplierBtn");
+    const originalHtml = confirmBtn ? confirmBtn.innerHTML : "";
+    if (confirmBtn) {
+        confirmBtn.disabled = true;
+        confirmBtn.innerHTML = '<i class="bi bi-arrow-repeat spin"></i> <span>Deleting...</span>';
+    }
 
     try {
         const response = await fetch(`${API_URL}/${id}`, {
@@ -961,14 +1007,25 @@ async function deleteSupplier(id) {
             headers: getHeaders()
         });
 
-        if (!response.ok) throw new Error(await getApiError(response));
+        if (!response.ok) {
+            throw new Error(await getApiError(response));
+        }
 
-        showToast("Successfully deleted supplier!", "success");
+        allSuppliers = allSuppliers.filter(s => s.id !== id);
+
+        closeDeleteSupplierModal();
+        showToast("Supplier permanently deleted successfully!", "success");
         await loadSuppliers();
 
     } catch (error) {
         console.error("Delete supplier error:", error);
         showToast(error.message || "Error deleting supplier.", "error");
+    } finally {
+        isDeletingSupplier = false;
+        if (confirmBtn) {
+            confirmBtn.disabled = false;
+            confirmBtn.innerHTML = originalHtml;
+        }
     }
 }
 
