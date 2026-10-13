@@ -663,11 +663,46 @@
             padding: 26px 30px !important;
             width: 100%;
             max-width: 720px;
-            max-height: 92vh;
+            max-height: min(88vh, 600px);
             overflow-y: auto;
             position: relative;
             box-sizing: border-box;
             animation: dossierModalFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            scrollbar-width: thin;
+            scrollbar-color: #94a3b8 #f1f5f9;
+        }
+
+        .modal-dialog::-webkit-scrollbar,
+        #materialModal .modal-box::-webkit-scrollbar {
+            width: 7px;
+            display: block;
+        }
+
+        .modal-dialog::-webkit-scrollbar-track,
+        #materialModal .modal-box::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 8px;
+            margin: 6px 0;
+        }
+
+        .modal-dialog::-webkit-scrollbar-thumb,
+        #materialModal .modal-box::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 8px;
+            border: 1px solid #f1f5f9;
+        }
+
+        .modal-dialog::-webkit-scrollbar-thumb:hover,
+        #materialModal .modal-box::-webkit-scrollbar-thumb:hover {
+            background: #ea580c;
+        }
+
+        #materialModal .modal-box {
+            max-height: min(88vh, 580px) !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            scrollbar-width: thin;
+            scrollbar-color: #94a3b8 #f1f5f9;
         }
 
         @keyframes dossierModalFadeIn {

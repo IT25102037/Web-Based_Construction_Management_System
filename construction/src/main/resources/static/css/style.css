@@ -164,7 +164,7 @@ img {
     color: white;
     background: var(--gradient-brand);
     background-size: 160% 160%;
-    box-shadow: 0 12px 34px rgba(255, 76, 90, 0.35);
+    box-shadow: 0 12px 34px rgb(19, 234, 12);
 }
 
 .btn-primary::after {

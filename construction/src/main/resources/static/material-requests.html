@@ -172,7 +172,7 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            max-height: calc(100vh - 40px);
+            max-height: min(90vh, 620px);
             margin: auto;
             position: relative;
         }
@@ -253,10 +253,52 @@
 
         .modal-body {
             padding: 20px 24px !important;
+            max-height: clamp(280px, 54vh, 420px) !important;
             overflow-y: auto !important;
+            overflow-x: hidden !important;
             flex: 1 1 auto !important;
             min-height: 0 !important;
             -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: #94a3b8 #f1f5f9;
+        }
+
+        .modal-body::-webkit-scrollbar {
+            width: 7px;
+            display: block;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 8px;
+            margin: 4px 0;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 8px;
+            border: 1px solid #f1f5f9;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb:hover {
+            background: #ea580c;
+        }
+
+        [data-theme="dark"] .modal-body {
+            scrollbar-color: #475569 #0f172a;
+        }
+
+        [data-theme="dark"] .modal-body::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        [data-theme="dark"] .modal-body::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-color: #0f172a;
+        }
+
+        [data-theme="dark"] .modal-body::-webkit-scrollbar-thumb:hover {
+            background: #fb923c;
         }
 
         .modal-footer {
